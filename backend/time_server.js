@@ -36,6 +36,6 @@ app.listen(port, () => {
     console.log(`Server running on port ${port}`);
 });
 
-// Update time initially and then every 30 minutes
+// Update time initially and then every 15 minutes
 updateTimeFromNTP();
-setInterval(updateTimeFromNTP, 30 * 60 * 1000); // 30 minutes in milliseconds
+setInterval(updateTimeFromNTP, 15 * 60 * 1000); // 15 minutes in milliseconds
