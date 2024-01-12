@@ -1,5 +1,6 @@
 {
   "dependencies": {
+    "concurrently": "^8.2.2",
     "express": "^4.18.2",
     "ntp-client": "^0.5.3",
     "serve": "^14.2.1",
@@ -11,6 +12,8 @@
   },
   "scripts": {
     "build": "npx vite build",
-    "start": "serve -s dist"
+    "start": "concurrently \"npm run start-frontend\" \"npm run start-backend\"",
+    "start-frontend": "serve -s dist",
+    "start-backend": "node backend/time_server.js"
   }
 }
