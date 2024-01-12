@@ -20,7 +20,7 @@ function updateTimeFromNTP() {
 }
 
 // Function to get the current, accurate time
-function getCurrentTime() {
+function getPerfectTime() {
     const now = Date.now();
     const timeSinceLastSync = now - lastSyncTime;
     const currentTime = new Date(lastNTPTime.getTime() + timeSinceLastSync);
@@ -28,12 +28,12 @@ function getCurrentTime() {
 }
 
 app.get('/time', (req, res) => {
-    const currentTime = getCurrentTime();
+    const currentTime = getPerfectTime();
     res.json({ time: currentTime });
 });
 
 app.listen(port, () => {
-    console.log(`Server running on port ${port}`);
+    console.log(`Time server running on port ${port}`);
 });
 
 // Update time initially and then every 15 minutes
