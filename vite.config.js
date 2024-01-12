@@ -5,7 +5,7 @@ export default defineConfig({
     plugins: [
       copy({
         targets: [
-          { src: 'fonts/*', dest: 'dist/fonts' }
+          { src: 'src/assets/fonts/*', dest: 'dist/fonts' }
         ],
         hook: 'writeBundle'
       })
