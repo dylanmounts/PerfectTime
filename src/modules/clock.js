@@ -95,7 +95,7 @@ const secondHand = new THREE.Mesh(secondHandGeometry, secondHandMaterial);
 secondHand.position.z = SIZES.POST_HEIGHT - .001;
 
 //Functions
-function loadNumbers(scene) {
+function loadFonts(scene) {
     const loader = new FontLoader();
     loader.load(
         'fonts/droid/droid_sans_regular.typeface.json',
@@ -231,7 +231,7 @@ export function updateClock() {
 }
 
 export function addClock(scene) {
-    loadNumbers(scene);
+    loadFonts(scene);
     createIndicators(scene);
 
     scene.add(clockFace);

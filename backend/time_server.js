@@ -20,7 +20,7 @@ function updateTimeFromNTP() {
 }
 
 // Function to get the current, accurate time
-function getCurrentTime() {
+function getPerfectTime() {
     const now = Date.now();
     const timeSinceLastSync = now - lastSyncTime;
     const currentTime = new Date(lastNTPTime.getTime() + timeSinceLastSync);
@@ -28,7 +28,7 @@ function getCurrentTime() {
 }
 
 app.get('/time', (req, res) => {
-    const currentTime = getCurrentTime();
+    const currentTime = getPerfectTime();
     res.json({ time: currentTime });
 });
 
