@@ -33,7 +33,7 @@ app.get('/time', (req, res) => {
 });
 
 app.listen(port, () => {
-    console.log(`Server running on port ${port}`);
+    console.log(`Time server running on port ${port}`);
 });
 
 // Update time initially and then every 15 minutes
