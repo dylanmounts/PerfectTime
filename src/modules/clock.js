@@ -31,6 +31,11 @@ const SIZES = {
 
 const CLOCK_OUTER_RADIUS = SIZES.CLOCK_RADIUS + SIZES.BEZEL_THICKNESS;
 
+// Globals
+let initialTime;
+let systemTime;
+let timeOffset;
+
 // Shapes
 const hourHandShape = new THREE.Shape();
 hourHandShape.moveTo(0, -0.3);
@@ -179,8 +184,27 @@ function createIndicators(scene) {
     }
 }
 
+export async function fetchInitialTime() {
+    try {
+        const response = await fetch('http://localhost:3000/time');
+        const data = await response.json();
+        initialTime = new Date(data.time);
+        systemTime = new Date();
+        timeOffset = initialTime - systemTime;
+    } catch (error) {
+        console.error('Error fetching initial time:', error);
+        initialTime = new Date();
+        timeOffset = 0;
+    }
+}
+
+function getCurrentTime() {
+    const corrected_now = Date.now() + timeOffset;
+    return new Date(corrected_now);
+}
+
 export function updateClock() {
-    const date = new Date()
+    const date = getCurrentTime();
     const hours = date.getHours() % 12;
     const minutes = date.getMinutes();
     const seconds = date.getSeconds();
