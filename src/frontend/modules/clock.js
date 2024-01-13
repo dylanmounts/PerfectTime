@@ -3,8 +3,8 @@ import * as THREE from 'three';
 import { FontLoader } from 'three/addons/loaders/FontLoader.js';
 import { TextGeometry } from 'three/addons/geometries/TextGeometry.js';
 
-import { SEGMENTS, SIZES, CLOCK_OUTER_RADIUS, COMPLICATION_FRAME_HEIGHT, COMPLICATION_FRAME_WIDTH } from './constants.js';
-import { hourHandShape, minuteHandShape, secondHandShape } from './shapes.js';
+import { SEGMENTS, SIZES } from './constants.js';
+import { GEOMETRIES } from './geometries.js'; 
 import { MATERIALS } from './materials.js';
 
 // Globals
@@ -12,53 +12,42 @@ let initialTime;
 let systemTime;
 let timeOffset;
 
-// Geometries
-const clockFaceGeometry = new THREE.CircleGeometry(SIZES.CLOCK_RADIUS, SEGMENTS);
-const clockBezelGeometry = new THREE.RingGeometry(SIZES.CLOCK_RADIUS, CLOCK_OUTER_RADIUS, SEGMENTS);
-const complicationFrameHorizontalGeometry = new THREE.BoxGeometry(COMPLICATION_FRAME_WIDTH, SIZES.COMPLICATION_FRAME_THICKNESS, SIZES.DAY_DATE_BOX_DEPTH);
-const complicationFrameVerticalGeometry = new THREE.BoxGeometry(SIZES.COMPLICATION_FRAME_THICKNESS, COMPLICATION_FRAME_HEIGHT, SIZES.DAY_DATE_BOX_DEPTH);
-const postGeometry = new THREE.CylinderGeometry(SIZES.POST_RADIUS, SIZES.POST_RADIUS, SIZES.POST_HEIGHT, SEGMENTS / 8);
-const hourHandGeometry = new THREE.ShapeGeometry(hourHandShape());
-const minuteHandGeometry = new THREE.ShapeGeometry(minuteHandShape());
-const secondHandGeometry = new THREE.ShapeGeometry(secondHandShape());
-const dayDateBoxGeometry = new THREE.BoxGeometry(SIZES.DAY_DATE_BOX_WIDTH, SIZES.DAY_DATE_BOX_HEIGHT, SIZES.DAY_DATE_BOX_DEPTH);
-
 // Meshes
-const clockFace = new THREE.Mesh(clockFaceGeometry, MATERIALS.clockFace);
+const clockFace = new THREE.Mesh(GEOMETRIES.clockFace, MATERIALS.clockFace);
 clockFace.position.z = 0;
 
-const clockBezel = new THREE.Mesh(clockBezelGeometry, MATERIALS.clockBezel);
+const clockBezel = new THREE.Mesh(GEOMETRIES.clockBezel, MATERIALS.clockBezel);
 clockBezel.position.z = 0;
 
-const post = new THREE.Mesh(postGeometry, MATERIALS.post);
+const post = new THREE.Mesh(GEOMETRIES.post, MATERIALS.post);
 post.rotation.x = Math.PI / 2
 post.position.z = SIZES.POST_HEIGHT / 2;
 
-const hourHand = new THREE.Mesh(hourHandGeometry, MATERIALS.hourHand);
+const hourHand = new THREE.Mesh(GEOMETRIES.hourHand, MATERIALS.hourHand);
 hourHand.position.z = SIZES.POST_HEIGHT - .003;
 
-const minuteHand = new THREE.Mesh(minuteHandGeometry, MATERIALS.minuteHand);
+const minuteHand = new THREE.Mesh(GEOMETRIES.minuteHand, MATERIALS.minuteHand);
 minuteHand.position.z = SIZES.POST_HEIGHT - .002;
 
-const secondHand = new THREE.Mesh(secondHandGeometry, MATERIALS.secondHand);
+const secondHand = new THREE.Mesh(GEOMETRIES.secondHand, MATERIALS.secondHand);
 secondHand.position.z = SIZES.POST_HEIGHT - .001;
 
-const dayDateBox = new THREE.Mesh(dayDateBoxGeometry, MATERIALS.dayDateBox);
+const dayDateBox = new THREE.Mesh(GEOMETRIES.dayDateBox, MATERIALS.dayDateBox);
 const dayDateBoxAngle = (Math.PI / 6) * 3;
 dayDateBox.position.x = Math.sin(dayDateBoxAngle) * SIZES.CLOCK_RADIUS * 3/4;
 dayDateBox.position.y = Math.cos(dayDateBoxAngle) * SIZES.CLOCK_RADIUS * 3/4;
 dayDateBox.position.z = 0;
 
-const topFrame = new THREE.Mesh(complicationFrameHorizontalGeometry, MATERIALS.complicationFrame);
+const topFrame = new THREE.Mesh(GEOMETRIES.complicationFrameHorizontal, MATERIALS.complicationFrame);
 topFrame.position.set(dayDateBox.position.x, dayDateBox.position.y + SIZES.DAY_DATE_BOX_HEIGHT / 2 + SIZES.COMPLICATION_FRAME_THICKNESS / 2, 0);
 
-const bottomFrame = new THREE.Mesh(complicationFrameHorizontalGeometry, MATERIALS.complicationFrame);
+const bottomFrame = new THREE.Mesh(GEOMETRIES.complicationFrameHorizontal, MATERIALS.complicationFrame);
 bottomFrame.position.set(dayDateBox.position.x, dayDateBox.position.y - SIZES.DAY_DATE_BOX_HEIGHT/2 - SIZES.COMPLICATION_FRAME_THICKNESS / 2, 0);
 
-const leftFrame = new THREE.Mesh(complicationFrameVerticalGeometry, MATERIALS.complicationFrame);
+const leftFrame = new THREE.Mesh(GEOMETRIES.complicationFrameVertical, MATERIALS.complicationFrame);
 leftFrame.position.set(dayDateBox.position.x - SIZES.DAY_DATE_BOX_WIDTH / 2 - SIZES.COMPLICATION_FRAME_THICKNESS / 2, dayDateBox.position.y, 0);
 
-const rightFrame = new THREE.Mesh(complicationFrameVerticalGeometry, MATERIALS.complicationFrame);
+const rightFrame = new THREE.Mesh(GEOMETRIES.complicationFrameVertical, MATERIALS.complicationFrame);
 rightFrame.position.set(dayDateBox.position.x + SIZES.DAY_DATE_BOX_WIDTH / 2 + SIZES.COMPLICATION_FRAME_THICKNESS / 2, dayDateBox.position.y, 0);
 
 //Functions
