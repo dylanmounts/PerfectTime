@@ -4,33 +4,12 @@ import { FontLoader } from 'three/addons/loaders/FontLoader.js';
 import { TextGeometry } from 'three/addons/geometries/TextGeometry.js';
 
 import { SEGMENTS, COLORS, SIZES, CLOCK_OUTER_RADIUS, COMPLICATION_FRAME_HEIGHT, COMPLICATION_FRAME_WIDTH } from './constants.js';
+import { hourHandShape, minuteHandShape, secondHandShape } from './shapes.js';
 
 // Globals
 let initialTime;
 let systemTime;
 let timeOffset;
-
-// Shapes
-const hourHandShape = new THREE.Shape();
-hourHandShape.moveTo(0, -0.3);
-hourHandShape.lineTo(-0.15, 0);
-hourHandShape.lineTo(0, SIZES.CLOCK_RADIUS * 5/8);
-hourHandShape.lineTo(0.15, 0);
-hourHandShape.lineTo(0, -0.3);
-
-const minuteHandShape = new THREE.Shape();
-minuteHandShape.moveTo(0, -0.2);
-minuteHandShape.lineTo(-0.1, 0);
-minuteHandShape.lineTo(0, SIZES.CLOCK_RADIUS * 9/10);
-minuteHandShape.lineTo(0.1, 0);
-minuteHandShape.lineTo(0, -0.2);
-
-const secondHandShape = new THREE.Shape();
-secondHandShape.moveTo(0, -0.1);
-secondHandShape.lineTo(-0.05, 0);
-secondHandShape.lineTo(0, SIZES.CLOCK_RADIUS * 23/24);
-secondHandShape.lineTo(0.05, 0);
-secondHandShape.lineTo(0, -0.1);
 
 // Materials
 const clockFaceMaterial = new THREE.MeshPhongMaterial({ color: COLORS.CLOCK_FACE });
