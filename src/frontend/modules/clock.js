@@ -1,9 +1,8 @@
 import * as THREE from 'three';
-
-import { FontLoader } from 'three/addons/loaders/FontLoader.js';
 import { TextGeometry } from 'three/addons/geometries/TextGeometry.js';
 
 import { SEGMENTS, SIZES } from './constants.js';
+import { fontManager } from './font_manager.js';
 import { MATERIALS } from './materials.js';
 import { MESHES } from './meshes.js';
 
@@ -12,19 +11,9 @@ import { MESHES } from './meshes.js';
 let initialTime;
 let systemTime;
 let timeOffset;
+let lastHour = null;
 
 //Functions
-function loadFonts(scene) {
-    const loader = new FontLoader();
-    loader.load(
-        'fonts/droid/droid_sans_regular.typeface.json',
-        function (font) {
-            createNumbers(scene, font);
-            updateDayDateDisplay(scene, font);
-        }
-    );
-}
-
 function createNumbers(scene, font) {
     for (let i = 1; i <= 12; i++) {
         if (i === 3) {
@@ -39,18 +28,18 @@ function createNumbers(scene, font) {
             bevelEnabled: false
         });
         hourGeometry.center();
-        
+
         const hourMesh = new THREE.Mesh(hourGeometry, MATERIALS.hourNumber);
 
         const angle = (Math.PI / 6) * i;
-        const distanceFromCenter = SIZES.CLOCK_RADIUS * 5/6;  
+        const distanceFromCenter = SIZES.CLOCK_RADIUS * 5/6;
 
         hourMesh.position.x = Math.sin(angle) * distanceFromCenter;
         hourMesh.position.y = Math.cos(angle) * distanceFromCenter;
         hourMesh.position.z = 0;
-        
+
         scene.add(hourMesh);
-        
+
         // Minutes
         const minuteNumber = i * 5;
         const minuteGeometry = new TextGeometry(String(minuteNumber), {
@@ -63,13 +52,13 @@ function createNumbers(scene, font) {
         minuteGeometry.center();
 
         const minuteMesh = new THREE.Mesh(minuteGeometry, MATERIALS.minuteNumber);
-        
+
         const minuteDistanceFromCenter = SIZES.CLOCK_RADIUS * 2/3;
 
         minuteMesh.position.x = Math.sin(angle) * minuteDistanceFromCenter;
         minuteMesh.position.y = Math.cos(angle) * minuteDistanceFromCenter;
         minuteMesh.position.z = 0;
-        
+
         scene.add(minuteMesh);
     }
 }
@@ -163,35 +152,46 @@ function updateDayDateDisplay(scene, font) {
     scene.add(dayDateMesh);
 }
 
-export function updateClock() {
+export function updateClock(scene) {
     const date = getCurrentTime();
     const hours = date.getHours() % 12;
     const minutes = date.getMinutes();
     const seconds = date.getSeconds();
     const milliseconds = date.getMilliseconds();
 
-    const hourAngle = 
-        30 * hours + 
-        0.5 * minutes + 
-        (30 / 3600) * seconds + 
+    const hourAngle =
+        30 * hours +
+        0.5 * minutes +
+        (30 / 3600) * seconds +
         (30 / 3600000) * milliseconds;
 
-    const minuteAngle = 
-        6 * minutes + 
-        0.1 * seconds + 
+    const minuteAngle =
+        6 * minutes +
+        0.1 * seconds +
         (0.1 / 1000) * milliseconds;
 
-    const secondAngle = 
-        6 * seconds + 
+    const secondAngle =
+        6 * seconds +
         0.006 * milliseconds;
 
     MESHES.hourHand.rotation.z = -THREE.MathUtils.degToRad(hourAngle);
     MESHES.minuteHand.rotation.z = -THREE.MathUtils.degToRad(minuteAngle);
     MESHES.secondHand.rotation.z = -THREE.MathUtils.degToRad(secondAngle);
+
+    if (hours !== lastHour) {
+        const font = fontManager.getLoadedFont();
+        if (font) {
+            updateDayDateDisplay(scene, font);
+            lastHour = hours;
+        }
+    }
 }
 
 export function addClock(scene) {
-    loadFonts(scene);
+    fontManager.loadFont('fonts/droid/droid_sans_regular.typeface.json', (font) => {
+        createNumbers(scene, font);
+        updateDayDateDisplay(scene, font);
+    });
     createIndicators(scene);
 
     for (const mesh in MESHES) {

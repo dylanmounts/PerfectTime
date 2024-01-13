@@ -33,7 +33,7 @@ function onWindowResize() {
 }
 
 function animate() {
-    updateClock();
+    updateClock(scene);
 
     controls.update();
     requestAnimationFrame(animate);
