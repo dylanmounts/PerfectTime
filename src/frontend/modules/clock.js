@@ -3,23 +3,14 @@ import * as THREE from 'three';
 import { FontLoader } from 'three/addons/loaders/FontLoader.js';
 import { TextGeometry } from 'three/addons/geometries/TextGeometry.js';
 
-import { SEGMENTS, COLORS, SIZES, CLOCK_OUTER_RADIUS, COMPLICATION_FRAME_HEIGHT, COMPLICATION_FRAME_WIDTH } from './constants.js';
+import { SEGMENTS, SIZES, CLOCK_OUTER_RADIUS, COMPLICATION_FRAME_HEIGHT, COMPLICATION_FRAME_WIDTH } from './constants.js';
 import { hourHandShape, minuteHandShape, secondHandShape } from './shapes.js';
+import { MATERIALS } from './materials.js';
 
 // Globals
 let initialTime;
 let systemTime;
 let timeOffset;
-
-// Materials
-const clockFaceMaterial = new THREE.MeshPhongMaterial({ color: COLORS.CLOCK_FACE });
-const clockBezelMaterial = new THREE.MeshPhongMaterial({ color: COLORS.CLOCK_BEZEL });
-const complicationFrameMaterial = new THREE.MeshPhongMaterial({ color: COLORS.CLOCK_BEZEL });
-const postMaterial = new THREE.MeshPhongMaterial({ color: COLORS.POST });
-const hourHandMaterial = new THREE.MeshPhongMaterial({ color: COLORS.HOUR_HAND });
-const minuteHandMaterial = new THREE.MeshPhongMaterial({ color: COLORS.MINUTE_HAND });
-const secondHandMaterial = new THREE.MeshPhongMaterial({ color: COLORS.SECOND_HAND });
-const dayDateBoxMaterial = new THREE.MeshPhongMaterial({ color: COLORS.DAY_DATE_BOX });
 
 // Geometries
 const clockFaceGeometry = new THREE.CircleGeometry(SIZES.CLOCK_RADIUS, SEGMENTS);
@@ -27,47 +18,47 @@ const clockBezelGeometry = new THREE.RingGeometry(SIZES.CLOCK_RADIUS, CLOCK_OUTE
 const complicationFrameHorizontalGeometry = new THREE.BoxGeometry(COMPLICATION_FRAME_WIDTH, SIZES.COMPLICATION_FRAME_THICKNESS, SIZES.DAY_DATE_BOX_DEPTH);
 const complicationFrameVerticalGeometry = new THREE.BoxGeometry(SIZES.COMPLICATION_FRAME_THICKNESS, COMPLICATION_FRAME_HEIGHT, SIZES.DAY_DATE_BOX_DEPTH);
 const postGeometry = new THREE.CylinderGeometry(SIZES.POST_RADIUS, SIZES.POST_RADIUS, SIZES.POST_HEIGHT, SEGMENTS / 8);
-const hourHandGeometry = new THREE.ShapeGeometry(hourHandShape);
-const minuteHandGeometry = new THREE.ShapeGeometry(minuteHandShape);
-const secondHandGeometry = new THREE.ShapeGeometry(secondHandShape);
+const hourHandGeometry = new THREE.ShapeGeometry(hourHandShape());
+const minuteHandGeometry = new THREE.ShapeGeometry(minuteHandShape());
+const secondHandGeometry = new THREE.ShapeGeometry(secondHandShape());
 const dayDateBoxGeometry = new THREE.BoxGeometry(SIZES.DAY_DATE_BOX_WIDTH, SIZES.DAY_DATE_BOX_HEIGHT, SIZES.DAY_DATE_BOX_DEPTH);
 
 // Meshes
-const clockFace = new THREE.Mesh(clockFaceGeometry, clockFaceMaterial);
+const clockFace = new THREE.Mesh(clockFaceGeometry, MATERIALS.clockFace);
 clockFace.position.z = 0;
 
-const clockBezel = new THREE.Mesh(clockBezelGeometry, clockBezelMaterial);
+const clockBezel = new THREE.Mesh(clockBezelGeometry, MATERIALS.clockBezel);
 clockBezel.position.z = 0;
 
-const post = new THREE.Mesh(postGeometry, postMaterial);
+const post = new THREE.Mesh(postGeometry, MATERIALS.post);
 post.rotation.x = Math.PI / 2
 post.position.z = SIZES.POST_HEIGHT / 2;
 
-const hourHand = new THREE.Mesh(hourHandGeometry, hourHandMaterial);
+const hourHand = new THREE.Mesh(hourHandGeometry, MATERIALS.hourHand);
 hourHand.position.z = SIZES.POST_HEIGHT - .003;
 
-const minuteHand = new THREE.Mesh(minuteHandGeometry, minuteHandMaterial);
+const minuteHand = new THREE.Mesh(minuteHandGeometry, MATERIALS.minuteHand);
 minuteHand.position.z = SIZES.POST_HEIGHT - .002;
 
-const secondHand = new THREE.Mesh(secondHandGeometry, secondHandMaterial);
+const secondHand = new THREE.Mesh(secondHandGeometry, MATERIALS.secondHand);
 secondHand.position.z = SIZES.POST_HEIGHT - .001;
 
-const dayDateBox = new THREE.Mesh(dayDateBoxGeometry, dayDateBoxMaterial);
+const dayDateBox = new THREE.Mesh(dayDateBoxGeometry, MATERIALS.dayDateBox);
 const dayDateBoxAngle = (Math.PI / 6) * 3;
 dayDateBox.position.x = Math.sin(dayDateBoxAngle) * SIZES.CLOCK_RADIUS * 3/4;
 dayDateBox.position.y = Math.cos(dayDateBoxAngle) * SIZES.CLOCK_RADIUS * 3/4;
 dayDateBox.position.z = 0;
 
-const topFrame = new THREE.Mesh(complicationFrameHorizontalGeometry, complicationFrameMaterial);
+const topFrame = new THREE.Mesh(complicationFrameHorizontalGeometry, MATERIALS.complicationFrame);
 topFrame.position.set(dayDateBox.position.x, dayDateBox.position.y + SIZES.DAY_DATE_BOX_HEIGHT / 2 + SIZES.COMPLICATION_FRAME_THICKNESS / 2, 0);
 
-const bottomFrame = new THREE.Mesh(complicationFrameHorizontalGeometry, complicationFrameMaterial);
+const bottomFrame = new THREE.Mesh(complicationFrameHorizontalGeometry, MATERIALS.complicationFrame);
 bottomFrame.position.set(dayDateBox.position.x, dayDateBox.position.y - SIZES.DAY_DATE_BOX_HEIGHT/2 - SIZES.COMPLICATION_FRAME_THICKNESS / 2, 0);
 
-const leftFrame = new THREE.Mesh(complicationFrameVerticalGeometry, complicationFrameMaterial);
+const leftFrame = new THREE.Mesh(complicationFrameVerticalGeometry, MATERIALS.complicationFrame);
 leftFrame.position.set(dayDateBox.position.x - SIZES.DAY_DATE_BOX_WIDTH / 2 - SIZES.COMPLICATION_FRAME_THICKNESS / 2, dayDateBox.position.y, 0);
 
-const rightFrame = new THREE.Mesh(complicationFrameVerticalGeometry, complicationFrameMaterial);
+const rightFrame = new THREE.Mesh(complicationFrameVerticalGeometry, MATERIALS.complicationFrame);
 rightFrame.position.set(dayDateBox.position.x + SIZES.DAY_DATE_BOX_WIDTH / 2 + SIZES.COMPLICATION_FRAME_THICKNESS / 2, dayDateBox.position.y, 0);
 
 //Functions
@@ -97,8 +88,7 @@ function createNumbers(scene, font) {
         });
         hourGeometry.center();
         
-        const hourMaterial = new THREE.MeshPhongMaterial({ color: COLORS.HOUR_NUMBERS });
-        const hourMesh = new THREE.Mesh(hourGeometry, hourMaterial);
+        const hourMesh = new THREE.Mesh(hourGeometry, MATERIALS.hourNumber);
 
         const angle = (Math.PI / 6) * i;
         const distanceFromCenter = SIZES.CLOCK_RADIUS * 5/6;  
@@ -120,8 +110,7 @@ function createNumbers(scene, font) {
         });
         minuteGeometry.center();
 
-        const minuteMaterial = new THREE.MeshPhongMaterial({ color: COLORS.MINUTE_NUMBERS });
-        const minuteMesh = new THREE.Mesh(minuteGeometry, minuteMaterial);
+        const minuteMesh = new THREE.Mesh(minuteGeometry, MATERIALS.minuteNumber);
         
         const minuteDistanceFromCenter = SIZES.CLOCK_RADIUS * 2/3;
 
@@ -142,8 +131,6 @@ function createIndicators(scene) {
 
     const distanceFromCenter = SIZES.CLOCK_RADIUS * 23/24;
 
-    const indicatorMaterial = new THREE.MeshPhongMaterial({ color: COLORS.INDICATORS });
-
     for (let i = 0; i < 60; i++) {
         if (i === 15) {
             continue;
@@ -156,7 +143,7 @@ function createIndicators(scene) {
 
         const angle = (Math.PI / 30) * i;
 
-        const indicator = new THREE.Mesh(indicatorGeometry, indicatorMaterial);
+        const indicator = new THREE.Mesh(indicatorGeometry, MATERIALS.indicator);
         indicator.rotation.x = Math.PI / 2;
 
         indicator.position.x = Math.sin(angle) * distanceFromCenter;
@@ -205,9 +192,6 @@ function updateDayDateDisplay(scene, font) {
     });
     dayDateGeometry.center();
 
-    // Create material for day and date
-    const dayDateMaterial = new THREE.MeshPhongMaterial({ color: COLORS.HOUR_NUMBERS });
-
     // Remove previous day/date display if it exists
     if (scene.getObjectByName('dayDateDisplay')) {
         const prevDayDateDisplay = scene.getObjectByName('dayDateDisplay');
@@ -215,7 +199,7 @@ function updateDayDateDisplay(scene, font) {
     }
 
     // Create mesh for day and date
-    const dayDateMesh = new THREE.Mesh(dayDateGeometry, dayDateMaterial);
+    const dayDateMesh = new THREE.Mesh(dayDateGeometry, MATERIALS.dayDate);
     dayDateMesh.name = 'dayDateDisplay';
 
     // Position inside the existing Day/Date box
