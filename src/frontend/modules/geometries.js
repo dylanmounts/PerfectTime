@@ -3,6 +3,7 @@ import * as THREE from 'three';
 import { CLOCK_OUTER_RADIUS, COMPLICATION_FRAME_HEIGHT, COMPLICATION_FRAME_WIDTH, SEGMENTS, SIZES } from './constants.js';
 import { hourHandShape, minuteHandShape, secondHandShape } from './shapes.js';
 
+
 const clockFace = new THREE.CircleGeometry(SIZES.CLOCK_RADIUS, SEGMENTS);
 const clockBezel = new THREE.RingGeometry(SIZES.CLOCK_RADIUS, CLOCK_OUTER_RADIUS, SEGMENTS);
 const complicationFrameHorizontal = new THREE.BoxGeometry(COMPLICATION_FRAME_WIDTH, SIZES.COMPLICATION_FRAME_THICKNESS, SIZES.DAY_DATE_BOX_DEPTH);

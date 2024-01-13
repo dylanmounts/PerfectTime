@@ -3,7 +3,7 @@ import * as THREE from 'three';
 
 import { SIZES } from './constants.js';
 
-// Hour hand shape
+
 export const hourHandShape = () => {
     const shape = new THREE.Shape();
     shape.moveTo(0, -0.3);
@@ -14,7 +14,6 @@ export const hourHandShape = () => {
     return shape;
 };
 
-// Minute hand shape
 export const minuteHandShape = () => {
     const shape = new THREE.Shape();
     shape.moveTo(0, -0.2);
@@ -25,7 +24,6 @@ export const minuteHandShape = () => {
     return shape;
 };
 
-// Second hand shape
 export const secondHandShape = () => {
     const shape = new THREE.Shape();
     shape.moveTo(0, -0.1);

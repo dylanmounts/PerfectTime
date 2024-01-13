@@ -2,6 +2,7 @@ import * as THREE from 'three';
 
 import { COLORS } from './constants.js';
 
+
 const clockBezel = new THREE.MeshPhongMaterial({ color: COLORS.CLOCK_BEZEL });
 const clockFace = new THREE.MeshPhongMaterial({ color: COLORS.CLOCK_FACE });
 const complicationFrame = new THREE.MeshPhongMaterial({ color: COLORS.CLOCK_BEZEL });
