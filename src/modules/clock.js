@@ -21,9 +21,10 @@ const COLORS = {
 const SIZES = {
     BEZEL_THICKNESS: 0.2,
     CLOCK_RADIUS: 5.0,
+    COMPLICATION_FRAME_THICKNESS: 0.025,
     DAY_DATE_BOX_DEPTH: 0.05,
-    DAY_DATE_BOX_HEIGHT: 0.7,
-    DAY_DATE_BOX_WIDTH: 2.2,
+    DAY_DATE_BOX_HEIGHT: 0.65,
+    DAY_DATE_BOX_WIDTH: 2.1,
     INDICATOR_HEIGHT: 0.1,
     INDICATOR_RADIUS: 0.1,
     NUMBER_HEIGHT: 0.05,
@@ -33,6 +34,8 @@ const SIZES = {
 };
 
 const CLOCK_OUTER_RADIUS = SIZES.CLOCK_RADIUS + SIZES.BEZEL_THICKNESS;
+const COMPLICATION_FRAME_HEIGHT = SIZES.DAY_DATE_BOX_HEIGHT + 2 * SIZES.COMPLICATION_FRAME_THICKNESS;
+const COMPLICATION_FRAME_WIDTH = SIZES.DAY_DATE_BOX_WIDTH + 2 * SIZES.COMPLICATION_FRAME_THICKNESS;
 
 // Globals
 let initialTime;
@@ -64,6 +67,7 @@ secondHandShape.lineTo(0, -0.1);
 // Materials
 const clockFaceMaterial = new THREE.MeshPhongMaterial({ color: COLORS.CLOCK_FACE });
 const clockBezelMaterial = new THREE.MeshPhongMaterial({ color: COLORS.CLOCK_BEZEL });
+const complicationFrameMaterial = new THREE.MeshPhongMaterial({ color: COLORS.CLOCK_BEZEL });
 const postMaterial = new THREE.MeshPhongMaterial({ color: COLORS.POST });
 const hourHandMaterial = new THREE.MeshPhongMaterial({ color: COLORS.HOUR_HAND });
 const minuteHandMaterial = new THREE.MeshPhongMaterial({ color: COLORS.MINUTE_HAND });
@@ -73,6 +77,8 @@ const dayDateBoxMaterial = new THREE.MeshPhongMaterial({ color: COLORS.DAY_DATE_
 // Geometries
 const clockFaceGeometry = new THREE.CircleGeometry(SIZES.CLOCK_RADIUS, SEGMENTS);
 const clockBezelGeometry = new THREE.RingGeometry(SIZES.CLOCK_RADIUS, CLOCK_OUTER_RADIUS, SEGMENTS);
+const complicationFrameHorizontalGeometry = new THREE.BoxGeometry(COMPLICATION_FRAME_WIDTH, SIZES.COMPLICATION_FRAME_THICKNESS, SIZES.DAY_DATE_BOX_DEPTH);
+const complicationFrameVerticalGeometry = new THREE.BoxGeometry(SIZES.COMPLICATION_FRAME_THICKNESS, COMPLICATION_FRAME_HEIGHT, SIZES.DAY_DATE_BOX_DEPTH);
 const postGeometry = new THREE.CylinderGeometry(SIZES.POST_RADIUS, SIZES.POST_RADIUS, SIZES.POST_HEIGHT, SEGMENTS / 8);
 const hourHandGeometry = new THREE.ShapeGeometry(hourHandShape);
 const minuteHandGeometry = new THREE.ShapeGeometry(minuteHandShape);
@@ -99,11 +105,23 @@ minuteHand.position.z = SIZES.POST_HEIGHT - .002;
 const secondHand = new THREE.Mesh(secondHandGeometry, secondHandMaterial);
 secondHand.position.z = SIZES.POST_HEIGHT - .001;
 
-const dayDateBoxMesh = new THREE.Mesh(dayDateBoxGeometry, dayDateBoxMaterial);
+const dayDateBox = new THREE.Mesh(dayDateBoxGeometry, dayDateBoxMaterial);
 const dayDateBoxAngle = (Math.PI / 6) * 3;
-dayDateBoxMesh.position.x = Math.sin(dayDateBoxAngle) * SIZES.CLOCK_RADIUS * 3/4;
-dayDateBoxMesh.position.y = Math.cos(dayDateBoxAngle) * SIZES.CLOCK_RADIUS * 3/4;
-dayDateBoxMesh.position.z = 0;
+dayDateBox.position.x = Math.sin(dayDateBoxAngle) * SIZES.CLOCK_RADIUS * 3/4;
+dayDateBox.position.y = Math.cos(dayDateBoxAngle) * SIZES.CLOCK_RADIUS * 3/4;
+dayDateBox.position.z = 0;
+
+const topFrame = new THREE.Mesh(complicationFrameHorizontalGeometry, complicationFrameMaterial);
+topFrame.position.set(dayDateBox.position.x, dayDateBox.position.y + SIZES.DAY_DATE_BOX_HEIGHT / 2 + SIZES.COMPLICATION_FRAME_THICKNESS / 2, 0);
+
+const bottomFrame = new THREE.Mesh(complicationFrameHorizontalGeometry, complicationFrameMaterial);
+bottomFrame.position.set(dayDateBox.position.x, dayDateBox.position.y - SIZES.DAY_DATE_BOX_HEIGHT/2 - SIZES.COMPLICATION_FRAME_THICKNESS / 2, 0);
+
+const leftFrame = new THREE.Mesh(complicationFrameVerticalGeometry, complicationFrameMaterial);
+leftFrame.position.set(dayDateBox.position.x - SIZES.DAY_DATE_BOX_WIDTH / 2 - SIZES.COMPLICATION_FRAME_THICKNESS / 2, dayDateBox.position.y, 0);
+
+const rightFrame = new THREE.Mesh(complicationFrameVerticalGeometry, complicationFrameMaterial);
+rightFrame.position.set(dayDateBox.position.x + SIZES.DAY_DATE_BOX_WIDTH / 2 + SIZES.COMPLICATION_FRAME_THICKNESS / 2, dayDateBox.position.y, 0);
 
 //Functions
 function loadFonts(scene) {
@@ -254,9 +272,9 @@ function updateDayDateDisplay(scene, font) {
     dayDateMesh.name = 'dayDateDisplay';
 
     // Position inside the existing Day/Date box
-    dayDateMesh.position.x = dayDateBoxMesh.position.x;
-    dayDateMesh.position.y = dayDateBoxMesh.position.y;
-    dayDateMesh.position.z = dayDateBoxMesh.position.z + 0.01;
+    dayDateMesh.position.x = dayDateBox.position.x;
+    dayDateMesh.position.y = dayDateBox.position.y;
+    dayDateMesh.position.z = dayDateBox.position.z + 0.01;
 
     // Add to the scene
     scene.add(dayDateMesh);
@@ -295,7 +313,11 @@ export function addClock(scene) {
 
     scene.add(clockFace);
     scene.add(clockBezel);
-    scene.add(dayDateBoxMesh);
+    scene.add(dayDateBox);
+    scene.add(topFrame);
+    scene.add(bottomFrame);
+    scene.add(leftFrame);
+    scene.add(rightFrame);
     scene.add(hourHand);
     scene.add(minuteHand);
     scene.add(secondHand);
