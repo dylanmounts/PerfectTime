@@ -5,12 +5,10 @@ import { SEGMENTS, SIZES } from './constants.js';
 import { fontManager } from './font_manager.js';
 import { MATERIALS } from './materials.js';
 import { MESHES } from './meshes.js';
+import { timeManager } from './timeManager.js';
 
 
 // Globals
-let initialTime;
-let systemTime;
-let timeOffset;
 let lastHour = null;
 
 //Functions
@@ -95,28 +93,9 @@ function createIndicators(scene) {
     }
 }
 
-export async function fetchInitialTime() {
-    try {
-        const response = await fetch('http://localhost:3000/time');
-        const data = await response.json();
-        initialTime = new Date(data.time);
-        systemTime = new Date();
-        timeOffset = initialTime - systemTime;
-    } catch (error) {
-        console.error('Error fetching initial time:', error);
-        initialTime = new Date();
-        timeOffset = 0;
-    }
-}
-
-function getCurrentTime() {
-    const corrected_now = Date.now() + timeOffset;
-    return new Date(corrected_now);
-}
-
 function updateDayDateDisplay(scene, font) {
     // Get current date
-    const now = getCurrentTime();
+    const now = timeManager.getCurrentTime();
     const day = now.toLocaleString('en-US', { weekday: 'short' });
     const date = now.toLocaleString('en-US', { month: 'short', day: 'numeric' });
 
@@ -153,7 +132,7 @@ function updateDayDateDisplay(scene, font) {
 }
 
 export function updateClock(scene) {
-    const date = getCurrentTime();
+    const date = timeManager.getCurrentTime();
     const hours = date.getHours() % 12;
     const minutes = date.getMinutes();
     const seconds = date.getSeconds();
@@ -187,7 +166,7 @@ export function updateClock(scene) {
     }
 }
 
-export function addClock(scene) {
+export async function addClock(scene) {
     fontManager.loadFont('fonts/droid/droid_sans_regular.typeface.json', (font) => {
         createNumbers(scene, font);
         updateDayDateDisplay(scene, font);
