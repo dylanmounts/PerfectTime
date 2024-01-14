@@ -65,5 +65,5 @@ export function createMinuteMesh(minuteGeometry) {
 }
 
 export function createIndicatorMesh(indicatorGeometry) {
-    return new THREE.MESH(indicatorGeometry, MATERIALS.indicator)
+    return new THREE.Mesh(indicatorGeometry, MATERIALS.indicator)
 }

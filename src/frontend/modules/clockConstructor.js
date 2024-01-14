@@ -1,11 +1,8 @@
-import * as THREE from 'three';
-
 import { updateDayDateDisplay } from './clockUpdater.js';
 import { SIZES } from './constants.js';
 import { fontManager } from './font_manager.js';
 import { createHourGeometry, createMinuteGeometry, createIndicatorGeometry } from './geometries.js';
-import { MATERIALS } from './materials.js';
-import { createHourMesh, createMinuteMesh, MESHES } from './meshes.js';
+import { createHourMesh, createMinuteMesh, createIndicatorMesh, MESHES } from './meshes.js';
 
 
 function createNumbers(scene, font) {
