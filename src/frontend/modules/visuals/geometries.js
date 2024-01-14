@@ -22,6 +22,7 @@ export const GEOMETRIES = {
     complicationFrameHorizontal,
     complicationFrameVertical,
     dayDateBox,
+    digitalDisplayBox,
     hourHand,
     minuteHand,
     post,
