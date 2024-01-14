@@ -1,4 +1,4 @@
-import { monoFontManager } from '../managers/font_manager.js';
+import { monoFontManager } from '../managers/fontManager.js';
 import { createDayDateMesh, createDigitalDisplayMesh, MESHES } from '../visuals/meshes.js';
 import { timeManager } from '../managers/timeManager.js';
 import { createDayDateGeometry, createDigitalTimeGeometry } from '../visuals/geometries.js';
