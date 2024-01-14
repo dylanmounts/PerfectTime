@@ -1,9 +1,9 @@
 import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 
-import { addClock } from './modules/clockConstructor';
-import { updateClock } from './modules/clockUpdater';
-import { timeManager } from './modules/timeManager';
+import { addClock } from './modules/clock/clockConstructor';
+import { updateClock } from './modules/clock/clockUpdater';
+import { timeManager } from './modules/managers/timeManager';
 
 const scene = new THREE.Scene();
 const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);

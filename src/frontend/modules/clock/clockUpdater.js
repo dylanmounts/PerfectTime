@@ -1,7 +1,7 @@
-import { monoFontManager } from './font_manager.js';
-import { createDayDateMesh, MESHES } from './meshes.js';
-import { timeManager } from './timeManager.js';
-import { createDayDateGeometry } from './geometries.js';
+import { monoFontManager } from '../managers/font_manager.js';
+import { createDayDateMesh, MESHES } from '../visuals/meshes.js';
+import { timeManager } from '../managers/timeManager.js';
+import { createDayDateGeometry } from '../visuals/geometries.js';
 
 let lastHour = null;
 

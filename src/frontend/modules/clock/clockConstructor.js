@@ -1,8 +1,8 @@
 import { updateDayDateDisplay } from './clockUpdater.js';
-import { CLOCK_FONT, CLOCK_FONT_MONO, SIZES } from './constants.js';
-import { fontManager, monoFontManager } from './font_manager.js';
-import { createHourGeometry, createMinuteGeometry, createIndicatorGeometry } from './geometries.js';
-import { createHourMesh, createMinuteMesh, createIndicatorMesh, MESHES } from './meshes.js';
+import { CLOCK_FONT, CLOCK_FONT_MONO, SIZES } from '../constants.js';
+import { fontManager, monoFontManager } from '../managers/font_manager.js';
+import { createHourGeometry, createMinuteGeometry, createIndicatorGeometry } from '../visuals/geometries.js';
+import { createHourMesh, createMinuteMesh, createIndicatorMesh, MESHES } from '../visuals/meshes.js';
 
 
 function createNumbers(scene, font) {

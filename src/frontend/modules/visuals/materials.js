@@ -1,6 +1,6 @@
 import * as THREE from 'three';
 
-import { COLORS } from './constants.js';
+import { COLORS } from '../constants.js';
 
 
 const clockBezel = new THREE.MeshPhongMaterial({ color: COLORS.CLOCK_BEZEL });
