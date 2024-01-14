@@ -1,7 +1,7 @@
 import * as THREE from 'three';
 
 import { SIZES } from './constants.js';
-import { GEOMETRIES } from './geometries.js'; 
+import { GEOMETRIES, createDayDateGeometry } from './geometries.js'; 
 import { MATERIALS } from './materials.js';
 
 
@@ -54,6 +54,10 @@ export const MESHES = {
     bottomFrame,
     leftFrame,
     rightFrame,
+}
+
+export function createDayDateMesh(dayDateGeometry) {
+    return new THREE.Mesh(dayDateGeometry, MATERIALS.dayDate);
 }
 
 export function createHourMesh(hourGeometry) {
