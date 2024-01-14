@@ -46,3 +46,15 @@ export function createMinuteGeometry(minute, font) {
         bevelEnabled: false
     });
 }
+
+export function createIndicatorGeometry(isFiveMinuteMark) {
+    const regularIndicatorRadius = SIZES.INDICATOR_RADIUS * 1/2;
+    const largeIndicatorRadius = SIZES.INDICATOR_RADIUS;
+    const regularIndicatorHeight = SIZES.INDICATOR_HEIGHT * 2/3;
+    const largeIndicatorHeight = SIZES.INDICATOR_HEIGHT;
+
+    const indicatorRadius = isFiveMinuteMark ? largeIndicatorRadius : regularIndicatorRadius;
+    const indicatorHeight = isFiveMinuteMark ? largeIndicatorHeight : regularIndicatorHeight;
+
+    return new THREE.CylinderGeometry(indicatorRadius, indicatorRadius, indicatorHeight, SEGMENTS / 8);
+}
