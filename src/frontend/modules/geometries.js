@@ -1,4 +1,5 @@
 import * as THREE from 'three';
+import { TextGeometry } from 'three/addons/geometries/TextGeometry.js';
 
 import { CLOCK_OUTER_RADIUS, COMPLICATION_FRAME_HEIGHT, COMPLICATION_FRAME_WIDTH, SEGMENTS, SIZES } from './constants.js';
 import { hourHandShape, minuteHandShape, secondHandShape } from './shapes.js';
@@ -24,4 +25,36 @@ export const GEOMETRIES = {
     minuteHand,
     post,
     secondHand,
+}
+
+export function createHourGeometry(hour, font) {
+    return new TextGeometry(String(hour), {
+        font: font,
+        size: SIZES.NUMBER_SIZE,
+        height: SIZES.NUMBER_HEIGHT,
+        curveSegments: SEGMENTS / 8,
+        bevelEnabled: false
+    });
+}
+
+export function createMinuteGeometry(minute, font) {
+    return new TextGeometry(String(minute), {
+        font: font,
+        size: SIZES.NUMBER_SIZE / 2,
+        height: SIZES.NUMBER_HEIGHT / 2,
+        curveSegments: SEGMENTS / 8,
+        bevelEnabled: false
+    });
+}
+
+export function createIndicatorGeometry(isFiveMinuteMark) {
+    const regularIndicatorRadius = SIZES.INDICATOR_RADIUS * 1/2;
+    const largeIndicatorRadius = SIZES.INDICATOR_RADIUS;
+    const regularIndicatorHeight = SIZES.INDICATOR_HEIGHT * 2/3;
+    const largeIndicatorHeight = SIZES.INDICATOR_HEIGHT;
+
+    const indicatorRadius = isFiveMinuteMark ? largeIndicatorRadius : regularIndicatorRadius;
+    const indicatorHeight = isFiveMinuteMark ? largeIndicatorHeight : regularIndicatorHeight;
+
+    return new THREE.CylinderGeometry(indicatorRadius, indicatorRadius, indicatorHeight, SEGMENTS / 8);
 }

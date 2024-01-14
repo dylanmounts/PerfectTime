@@ -55,3 +55,15 @@ export const MESHES = {
     leftFrame,
     rightFrame,
 }
+
+export function createHourMesh(hourGeometry) {
+    return new THREE.Mesh(hourGeometry, MATERIALS.hourNumber);
+}
+
+export function createMinuteMesh(minuteGeometry) {
+    return new THREE.Mesh(minuteGeometry, MATERIALS.minuteNumber);
+}
+
+export function createIndicatorMesh(indicatorGeometry) {
+    return new THREE.Mesh(indicatorGeometry, MATERIALS.indicator)
+}
