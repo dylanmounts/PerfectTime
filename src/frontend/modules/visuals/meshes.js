@@ -31,17 +31,17 @@ post.position.z = SIZES.POST_HEIGHT / 2;
 const secondHand = new THREE.Mesh(GEOMETRIES.secondHand, MATERIALS.secondHand);
 secondHand.position.z = SIZES.POST_HEIGHT - .001;
 
-const topFrame = new THREE.Mesh(GEOMETRIES.complicationFrameHorizontal, MATERIALS.complicationFrame);
-topFrame.position.set(dayDateBox.position.x, dayDateBox.position.y + SIZES.DAY_DATE_BOX_HEIGHT / 2 + SIZES.COMPLICATION_FRAME_THICKNESS / 2, 0);
+const dayDateTopFrame = new THREE.Mesh(GEOMETRIES.complicationFrameHorizontal, MATERIALS.complicationFrame);
+dayDateTopFrame.position.set(dayDateBox.position.x, dayDateBox.position.y + SIZES.DAY_DATE_BOX_HEIGHT / 2 + SIZES.COMPLICATION_FRAME_THICKNESS / 2, 0);
 
-const bottomFrame = new THREE.Mesh(GEOMETRIES.complicationFrameHorizontal, MATERIALS.complicationFrame);
-bottomFrame.position.set(dayDateBox.position.x, dayDateBox.position.y - SIZES.DAY_DATE_BOX_HEIGHT/2 - SIZES.COMPLICATION_FRAME_THICKNESS / 2, 0);
+const dayDateBottomFrame = new THREE.Mesh(GEOMETRIES.complicationFrameHorizontal, MATERIALS.complicationFrame);
+dayDateBottomFrame.position.set(dayDateBox.position.x, dayDateBox.position.y - SIZES.DAY_DATE_BOX_HEIGHT/2 - SIZES.COMPLICATION_FRAME_THICKNESS / 2, 0);
 
-const leftFrame = new THREE.Mesh(GEOMETRIES.complicationFrameVertical, MATERIALS.complicationFrame);
-leftFrame.position.set(dayDateBox.position.x - SIZES.DAY_DATE_BOX_WIDTH / 2 - SIZES.COMPLICATION_FRAME_THICKNESS / 2, dayDateBox.position.y, 0);
+const dayDateLeftFrame = new THREE.Mesh(GEOMETRIES.complicationFrameVertical, MATERIALS.complicationFrame);
+dayDateLeftFrame.position.set(dayDateBox.position.x - SIZES.DAY_DATE_BOX_WIDTH / 2 - SIZES.COMPLICATION_FRAME_THICKNESS / 2, dayDateBox.position.y, 0);
 
-const rightFrame = new THREE.Mesh(GEOMETRIES.complicationFrameVertical, MATERIALS.complicationFrame);
-rightFrame.position.set(dayDateBox.position.x + SIZES.DAY_DATE_BOX_WIDTH / 2 + SIZES.COMPLICATION_FRAME_THICKNESS / 2, dayDateBox.position.y, 0);
+const dayDateRightFrame = new THREE.Mesh(GEOMETRIES.complicationFrameVertical, MATERIALS.complicationFrame);
+dayDateRightFrame.position.set(dayDateBox.position.x + SIZES.DAY_DATE_BOX_WIDTH / 2 + SIZES.COMPLICATION_FRAME_THICKNESS / 2, dayDateBox.position.y, 0);
 
 export const MESHES = {
     clockBezel,
@@ -51,10 +51,10 @@ export const MESHES = {
     minuteHand,
     post,
     secondHand,
-    topFrame,
-    bottomFrame,
-    leftFrame,
-    rightFrame,
+    dayDateTopFrame,
+    dayDateBottomFrame,
+    dayDateLeftFrame,
+    dayDateRightFrame,
 }
 
 export function createDayDateMesh(dayDateGeometry) {
