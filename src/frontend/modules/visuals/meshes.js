@@ -1,6 +1,6 @@
 import * as THREE from 'three';
 
-import { SIZES } from './constants.js';
+import { SIZES } from '../constants.js';
 import { GEOMETRIES, createDayDateGeometry } from './geometries.js'; 
 import { MATERIALS } from './materials.js';
 

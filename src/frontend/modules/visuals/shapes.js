@@ -1,7 +1,7 @@
 
 import * as THREE from 'three';
 
-import { SIZES } from './constants.js';
+import { SIZES } from '../constants.js';
 
 
 export const hourHandShape = () => {

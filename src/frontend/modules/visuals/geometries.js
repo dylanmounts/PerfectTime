@@ -1,7 +1,7 @@
 import * as THREE from 'three';
 import { TextGeometry } from 'three/addons/geometries/TextGeometry.js';
 
-import { CLOCK_OUTER_RADIUS, COMPLICATION_FRAME_HEIGHT, COMPLICATION_FRAME_WIDTH, SEGMENTS, SIZES } from './constants.js';
+import { CLOCK_OUTER_RADIUS, COMPLICATION_FRAME_HEIGHT, COMPLICATION_FRAME_WIDTH, SEGMENTS, SIZES } from '../constants.js';
 import { hourHandShape, minuteHandShape, secondHandShape } from './shapes.js';
 
 

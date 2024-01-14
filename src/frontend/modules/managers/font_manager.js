@@ -2,7 +2,7 @@ import * as THREE from 'three';
 import { FontLoader } from 'three/addons/loaders/FontLoader.js';
 import { TextGeometry } from 'three/addons/geometries/TextGeometry.js';
 
-import { SIZES, SEGMENTS } from './constants.js';
+import { SIZES, SEGMENTS } from '../constants.js';
 
 class FontManager {
     constructor() {
