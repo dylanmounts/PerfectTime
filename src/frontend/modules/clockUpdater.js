@@ -4,7 +4,7 @@ import { TextGeometry } from 'three/addons/geometries/TextGeometry.js';
 import { SEGMENTS } from './constants.js';
 import { monoFontManager } from './font_manager.js';
 import { MATERIALS } from './materials.js';
-import { MESHES } from './meshes.js';
+import { createDayDateMesh, MESHES } from './meshes.js';
 import { timeManager } from './timeManager.js';
 import { createDayDateGeometry } from './geometries.js';
 
@@ -72,7 +72,7 @@ export function updateDayDateDisplay(scene, font) {
     }
 
     // Create mesh for day and date
-    const dayDateMesh = new THREE.Mesh(dayDateGeometry, MATERIALS.dayDate);
+    const dayDateMesh = createDayDateMesh(dayDateGeometry);
     dayDateMesh.name = 'dayDateDisplay';
 
     // Position inside the existing Day/Date box
