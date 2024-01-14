@@ -1,14 +1,16 @@
 import * as THREE from 'three';
 import { TextGeometry } from 'three/addons/geometries/TextGeometry.js';
 
-import { CLOCK_OUTER_RADIUS, COMPLICATION_FRAME_HEIGHT, COMPLICATION_FRAME_WIDTH, SEGMENTS, SIZES } from '../constants.js';
+import { CLOCK_OUTER_RADIUS, DAY_DATE_FRAME_HEIGHT, DAY_DATE_FRAME_WIDTH, DIGITAL_DISPLAY_FRAME_HEIGHT, DIGITAL_DISPLAY_FRAME_WIDTH, SEGMENTS, SIZES } from '../constants.js';
 import { hourHandShape, minuteHandShape, secondHandShape } from './shapes.js';
 
 
 const clockFace = new THREE.CircleGeometry(SIZES.CLOCK_RADIUS, SEGMENTS);
 const clockBezel = new THREE.RingGeometry(SIZES.CLOCK_RADIUS, CLOCK_OUTER_RADIUS, SEGMENTS);
-const complicationFrameHorizontal = new THREE.BoxGeometry(COMPLICATION_FRAME_WIDTH, SIZES.COMPLICATION_FRAME_THICKNESS, SIZES.DAY_DATE_BOX_DEPTH);
-const complicationFrameVertical = new THREE.BoxGeometry(SIZES.COMPLICATION_FRAME_THICKNESS, COMPLICATION_FRAME_HEIGHT, SIZES.DAY_DATE_BOX_DEPTH);
+const dayDateFrameHorizontal = new THREE.BoxGeometry(DAY_DATE_FRAME_WIDTH, SIZES.COMPLICATION_FRAME_THICKNESS, SIZES.DAY_DATE_BOX_DEPTH);
+const dayDateFrameVertical = new THREE.BoxGeometry(SIZES.COMPLICATION_FRAME_THICKNESS, DAY_DATE_FRAME_HEIGHT, SIZES.DAY_DATE_BOX_DEPTH);
+const digitalDisplayFrameHorizontal = new THREE.BoxGeometry(DIGITAL_DISPLAY_FRAME_WIDTH, SIZES.COMPLICATION_FRAME_THICKNESS, SIZES.DAY_DATE_BOX_DEPTH);
+const digitalDisplayFrameVertical = new THREE.BoxGeometry(SIZES.COMPLICATION_FRAME_THICKNESS, DIGITAL_DISPLAY_FRAME_HEIGHT, SIZES.DAY_DATE_BOX_DEPTH);
 const dayDateBox = new THREE.BoxGeometry(SIZES.DAY_DATE_BOX_WIDTH, SIZES.DAY_DATE_BOX_HEIGHT, SIZES.DAY_DATE_BOX_DEPTH);
 const digitalDisplayBox = new THREE.BoxGeometry(SIZES.DIGITAL_DISPLAY_BOX_WIDTH, SIZES.DIGITAL_DISPLAY_BOX_HEIGHT, SIZES.DIGITAL_DISPLAY_BOX_DEPTH);
 const hourHand = new THREE.ShapeGeometry(hourHandShape());
@@ -19,8 +21,10 @@ const secondHand = new THREE.ShapeGeometry(secondHandShape());
 export const GEOMETRIES = {
     clockFace,
     clockBezel,
-    complicationFrameHorizontal,
-    complicationFrameVertical,
+    dayDateFrameHorizontal,
+    dayDateFrameVertical,
+    digitalDisplayFrameHorizontal,
+    digitalDisplayFrameVertical,
     dayDateBox,
     digitalDisplayBox,
     hourHand,

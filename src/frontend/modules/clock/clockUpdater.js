@@ -89,14 +89,19 @@ function updateDigitalDisplay(scene, font) {
     const digitalTimeStr = currentTime.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
 
     const digitalTimeGeometry = createDigitalTimeGeometry(digitalTimeStr, font);
-    dayDateGeometry.center()
+    digitalTimeGeometry.center()
     
     if (scene.getObjectByName('digitalDisplay')) {
         const prevDisplay = scene.getObjectByName('digitalDisplay');
         scene.remove(prevDisplay);
     }
 
-    const digitalDisplayMesh = createDigitalDisplayMesh(digitalTimeStr, font);
+    const digitalDisplayMesh = createDigitalDisplayMesh(digitalTimeGeometry);
     digitalDisplayMesh.name = 'digitalDisplay';
+
+    digitalDisplayMesh.position.x = Math.sin(0) * 5.0 * 1/3;
+    digitalDisplayMesh.position.y = Math.cos(0) * 5.0 * 1/3;
+    digitalDisplayMesh.position.z = 0 + 0.01;
+
     scene.add(digitalDisplayMesh);
 }
