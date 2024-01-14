@@ -5,7 +5,7 @@ import { SEGMENTS, SIZES } from './constants.js';
 import { fontManager } from './font_manager.js';
 import { createHourGeometry, createMinuteGeometry } from './geometries.js';
 import { MATERIALS } from './materials.js';
-import { MESHES } from './meshes.js';
+import { createHourMesh, createMinuteMesh, MESHES } from './meshes.js';
 
 
 function createNumbers(scene, font) {
@@ -13,14 +13,14 @@ function createNumbers(scene, font) {
         if (i === 3) {
             continue;
         }
+        const angle = (Math.PI / 6) * i;
+
+        // Hours
         const hourGeometry = createHourGeometry(i, font);
         hourGeometry.center();
 
-        const hourMesh = new THREE.Mesh(hourGeometry, MATERIALS.hourNumber);
-
-        const angle = (Math.PI / 6) * i;
+        const hourMesh = createHourMesh(hourGeometry)
         const distanceFromCenter = SIZES.CLOCK_RADIUS * 5/6;
-
         hourMesh.position.x = Math.sin(angle) * distanceFromCenter;
         hourMesh.position.y = Math.cos(angle) * distanceFromCenter;
         hourMesh.position.z = 0;
@@ -29,13 +29,12 @@ function createNumbers(scene, font) {
 
         // Minutes
         const minuteNumber = i * 5;
+
         const minuteGeometry = createMinuteGeometry(minuteNumber, font);
         minuteGeometry.center();
 
-        const minuteMesh = new THREE.Mesh(minuteGeometry, MATERIALS.minuteNumber);
-
+        const minuteMesh = createMinuteMesh(minuteGeometry)
         const minuteDistanceFromCenter = SIZES.CLOCK_RADIUS * 2/3;
-
         minuteMesh.position.x = Math.sin(angle) * minuteDistanceFromCenter;
         minuteMesh.position.y = Math.cos(angle) * minuteDistanceFromCenter;
         minuteMesh.position.z = 0;
