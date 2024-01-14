@@ -76,7 +76,7 @@ export function createIndicatorMesh(indicatorGeometry) {
 export function createDigitalDisplayMesh(text, font) {
     const geometry = new TextGeometry(text, {
         font: font,
-        size: 0.4,
+        size: 0.35,
         height: 0.05,
         curveSegments: SEGMENTS / 8,
         bevelEnabled: false
@@ -87,6 +87,9 @@ export function createDigitalDisplayMesh(text, font) {
     const digitalDisplayMesh = new THREE.Mesh(geometry, material);
 
     digitalDisplayMesh.position.set(0, SIZES.CLOCK_RADIUS * 0.8, 0);
+    digitalDisplayMesh.position.x = Math.sin(0) * SIZES.CLOCK_RADIUS * 1/3;
+    digitalDisplayMesh.position.y = Math.cos(0) * SIZES.CLOCK_RADIUS * 1/3;
+    digitalDisplayMesh.position.z = 0;
 
     return digitalDisplayMesh;
 }
