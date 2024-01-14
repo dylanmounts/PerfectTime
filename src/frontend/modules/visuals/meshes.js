@@ -1,7 +1,8 @@
 import * as THREE from 'three';
+import { TextGeometry } from 'three/addons/geometries/TextGeometry.js';
 
-import { SIZES } from '../constants.js';
-import { GEOMETRIES, createDayDateGeometry } from './geometries.js'; 
+import { SEGMENTS, SIZES } from '../constants.js';
+import { GEOMETRIES } from './geometries.js'; 
 import { MATERIALS } from './materials.js';
 
 
@@ -70,4 +71,22 @@ export function createMinuteMesh(minuteGeometry) {
 
 export function createIndicatorMesh(indicatorGeometry) {
     return new THREE.Mesh(indicatorGeometry, MATERIALS.indicator)
+}
+
+export function createDigitalDisplayMesh(text, font) {
+    const geometry = new TextGeometry(text, {
+        font: font,
+        size: 0.4,
+        height: 0.05,
+        curveSegments: SEGMENTS / 8,
+        bevelEnabled: false
+    });
+    geometry.center();
+
+    const material = MATERIALS.digitalDisplay;
+    const digitalDisplayMesh = new THREE.Mesh(geometry, material);
+
+    digitalDisplayMesh.position.set(0, SIZES.CLOCK_RADIUS * 0.8, 0);
+
+    return digitalDisplayMesh;
 }
