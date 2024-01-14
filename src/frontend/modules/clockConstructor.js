@@ -33,7 +33,7 @@ function createNumbers(scene, font) {
         const minuteGeometry = createMinuteGeometry(minuteNumber, font);
         minuteGeometry.center();
 
-        const minuteMesh = createMinuteMesh(minuteGeometry)
+        const minuteMesh = createMinuteMesh(minuteGeometry);
         const minuteDistanceFromCenter = SIZES.CLOCK_RADIUS * 2/3;
         minuteMesh.position.x = Math.sin(angle) * minuteDistanceFromCenter;
         minuteMesh.position.y = Math.cos(angle) * minuteDistanceFromCenter;
@@ -55,7 +55,7 @@ function createIndicators(scene) {
 
         const angle = (Math.PI / 30) * i;
 
-        const indicator = new THREE.Mesh(indicatorGeometry, MATERIALS.indicator);
+        const indicator = createIndicatorMesh(indicatorGeometry);
         indicator.rotation.x = Math.PI / 2;
 
         indicator.position.x = Math.sin(angle) * distanceFromCenter;

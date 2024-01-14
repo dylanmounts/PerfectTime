@@ -63,3 +63,7 @@ export function createHourMesh(hourGeometry) {
 export function createMinuteMesh(minuteGeometry) {
     return new THREE.Mesh(minuteGeometry, MATERIALS.minuteNumber);
 }
+
+export function createIndicatorMesh(indicatorGeometry) {
+    return new THREE.MESH(indicatorGeometry, MATERIALS.indicator)
+}
