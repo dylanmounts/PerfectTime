@@ -18,6 +18,11 @@ dayDateBox.position.x = Math.sin(dayDateBoxAngle) * SIZES.CLOCK_RADIUS * 3/4;
 dayDateBox.position.y = Math.cos(dayDateBoxAngle) * SIZES.CLOCK_RADIUS * 3/4;
 dayDateBox.position.z = 0;
 
+const digitalDisplayBox = new THREE.Mesh(GEOMETRIES.digitalDisplayBox, MATERIALS.digitalDisplayBox);
+dayDateBox.position.x = Math.sin(0) * SIZES.CLOCK_RADIUS * 1/3;
+dayDateBox.position.y = Math.cos(0) * SIZES.CLOCK_RADIUS * 1/3;
+digitalDisplayBox.position.z = 0;
+
 const hourHand = new THREE.Mesh(GEOMETRIES.hourHand, MATERIALS.hourHand);
 hourHand.position.z = SIZES.POST_HEIGHT - .003;
 

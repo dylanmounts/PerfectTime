@@ -1,7 +1,7 @@
 import { monoFontManager } from '../managers/font_manager.js';
 import { createDayDateMesh, createDigitalDisplayMesh, MESHES } from '../visuals/meshes.js';
 import { timeManager } from '../managers/timeManager.js';
-import { createDayDateGeometry } from '../visuals/geometries.js';
+import { createDayDateGeometry, createDigitalTimeGeometry } from '../visuals/geometries.js';
 
 let lastHour = null;
 let lastSecond = null;
@@ -87,6 +87,9 @@ export function updateDayDateDisplay(scene, font) {
 function updateDigitalDisplay(scene, font) {
     const currentTime = timeManager.getCurrentTime();
     const digitalTimeStr = currentTime.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+
+    const digitalTimeGeometry = createDigitalTimeGeometry(digitalTimeStr, font);
+    dayDateGeometry.center()
     
     if (scene.getObjectByName('digitalDisplay')) {
         const prevDisplay = scene.getObjectByName('digitalDisplay');
