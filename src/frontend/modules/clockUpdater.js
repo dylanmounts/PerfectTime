@@ -6,6 +6,7 @@ import { monoFontManager } from './font_manager.js';
 import { MATERIALS } from './materials.js';
 import { MESHES } from './meshes.js';
 import { timeManager } from './timeManager.js';
+import { createDayDateGeometry } from './geometries.js';
 
 let lastHour = null;
 
@@ -61,13 +62,7 @@ export function updateDayDateDisplay(scene, font) {
     const dayDateStr = `${day.toUpperCase()} ${date}`;
 
     // Create text geometry for day and date
-    const dayDateGeometry = new TextGeometry(dayDateStr, {
-        font: font,
-        size: 0.325,
-        height: 0.05,
-        curveSegments: SEGMENTS / 8,
-        bevelEnabled: false
-    });
+    const dayDateGeometry = createDayDateGeometry(dayDateStr, font);
     dayDateGeometry.center();
 
     // Remove previous day/date display if it exists

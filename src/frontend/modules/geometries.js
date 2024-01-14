@@ -27,6 +27,16 @@ export const GEOMETRIES = {
     secondHand,
 }
 
+export function createDayDateGeometry(dayDateStr, font) {
+    return new TextGeometry(String(dayDateStr), {
+        font: font,
+        size: 0.225,
+        height: 0.05,
+        curveSegments: SEGMENTS / 8,
+        bevelEnabled: false
+    });
+}
+
 export function createHourGeometry(hour, font) {
     return new TextGeometry(String(hour), {
         font: font,
