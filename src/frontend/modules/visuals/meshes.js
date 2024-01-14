@@ -1,7 +1,6 @@
 import * as THREE from 'three';
-import { TextGeometry } from 'three/addons/geometries/TextGeometry.js';
 
-import { SEGMENTS, SIZES } from '../constants.js';
+import { SIZES } from '../constants.js';
 import { GEOMETRIES } from './geometries.js'; 
 import { MATERIALS } from './materials.js';
 
