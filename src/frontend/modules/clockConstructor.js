@@ -1,5 +1,5 @@
 import { updateDayDateDisplay } from './clockUpdater.js';
-import { SIZES } from './constants.js';
+import { CLOCK_FONT, SIZES } from './constants.js';
 import { fontManager } from './font_manager.js';
 import { createHourGeometry, createMinuteGeometry, createIndicatorGeometry } from './geometries.js';
 import { createHourMesh, createMinuteMesh, createIndicatorMesh, MESHES } from './meshes.js';
@@ -64,7 +64,7 @@ function createIndicators(scene) {
 }
 
 export async function addClock(scene) {
-    fontManager.loadFont('fonts/droid/droid_sans_regular.typeface.json', (font) => {
+    fontManager.loadFont(CLOCK_FONT, (font) => {
         createNumbers(scene, font);
         updateDayDateDisplay(scene, font);
     });
