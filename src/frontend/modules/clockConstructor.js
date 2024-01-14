@@ -1,27 +1,19 @@
 import * as THREE from 'three';
-import { TextGeometry } from 'three/addons/geometries/TextGeometry.js';
 
 import { updateDayDateDisplay } from './clockUpdater.js';
 import { SEGMENTS, SIZES } from './constants.js';
 import { fontManager } from './font_manager.js';
+import { createHourGeometry, createMinuteGeometry } from './geometries.js';
 import { MATERIALS } from './materials.js';
 import { MESHES } from './meshes.js';
 
 
-//Functions
 function createNumbers(scene, font) {
     for (let i = 1; i <= 12; i++) {
         if (i === 3) {
             continue;
         }
-        // Hours
-        const hourGeometry = new TextGeometry(String(i), {
-            font: font,
-            size: SIZES.NUMBER_SIZE,
-            height: SIZES.NUMBER_HEIGHT,
-            curveSegments: SEGMENTS / 8,
-            bevelEnabled: false
-        });
+        const hourGeometry = createHourGeometry(i, font);
         hourGeometry.center();
 
         const hourMesh = new THREE.Mesh(hourGeometry, MATERIALS.hourNumber);
@@ -37,13 +29,7 @@ function createNumbers(scene, font) {
 
         // Minutes
         const minuteNumber = i * 5;
-        const minuteGeometry = new TextGeometry(String(minuteNumber), {
-            font: font,
-            size: SIZES.NUMBER_SIZE / 2,
-            height: SIZES.NUMBER_HEIGHT / 2,
-            curveSegments: SEGMENTS / 8,
-            bevelEnabled: false
-        });
+        const minuteGeometry = createMinuteGeometry(minuteNumber, font);
         minuteGeometry.center();
 
         const minuteMesh = new THREE.Mesh(minuteGeometry, MATERIALS.minuteNumber);
