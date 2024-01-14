@@ -1,9 +1,4 @@
-import * as THREE from 'three';
-import { TextGeometry } from 'three/addons/geometries/TextGeometry.js';
-
-import { SEGMENTS } from './constants.js';
 import { monoFontManager } from './font_manager.js';
-import { MATERIALS } from './materials.js';
 import { createDayDateMesh, MESHES } from './meshes.js';
 import { timeManager } from './timeManager.js';
 import { createDayDateGeometry } from './geometries.js';
