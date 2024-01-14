@@ -46,11 +46,11 @@ function createIndicators(scene) {
     for (let i = 0; i < 60; i++) {
         if (i === 15) {
             continue;
-        }
+        }        
+        const angle = (Math.PI / 30) * i;
+
         const isFiveMinuteMark = i % 5 === 0;
         const indicatorGeometry = createIndicatorGeometry(isFiveMinuteMark);
-
-        const angle = (Math.PI / 30) * i;
 
         const indicator = createIndicatorMesh(indicatorGeometry);
         indicator.rotation.x = Math.PI / 2;
