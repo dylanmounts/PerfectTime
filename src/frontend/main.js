@@ -1,7 +1,8 @@
 import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 
-import { addClock, updateClock } from './modules/clock';
+import { addClock } from './modules/clock';
+import { updateClock } from './modules/clockUpdater';
 import { timeManager } from './modules/timeManager';
 
 const scene = new THREE.Scene();

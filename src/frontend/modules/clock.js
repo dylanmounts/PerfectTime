@@ -1,15 +1,12 @@
 import * as THREE from 'three';
 import { TextGeometry } from 'three/addons/geometries/TextGeometry.js';
 
+import { updateDayDateDisplay } from './clockUpdater.js';
 import { SEGMENTS, SIZES } from './constants.js';
 import { fontManager } from './font_manager.js';
 import { MATERIALS } from './materials.js';
 import { MESHES } from './meshes.js';
-import { timeManager } from './timeManager.js';
 
-
-// Globals
-let lastHour = null;
 
 //Functions
 function createNumbers(scene, font) {
@@ -90,79 +87,6 @@ function createIndicators(scene) {
         indicator.position.z = 0;
 
         scene.add(indicator);
-    }
-}
-
-function updateDayDateDisplay(scene, font) {
-    // Get current date
-    const now = timeManager.getCurrentTime();
-    const day = now.toLocaleString('en-US', { weekday: 'short' });
-    const date = now.toLocaleString('en-US', { month: 'short', day: 'numeric' });
-
-    // Combine day and date
-    const dayDateStr = `${day.toUpperCase()} ${date}`;
-
-    // Create text geometry for day and date
-    const dayDateGeometry = new TextGeometry(dayDateStr, {
-        font: font,
-        size: 0.325,
-        height: 0.05,
-        curveSegments: SEGMENTS / 8,
-        bevelEnabled: false
-    });
-    dayDateGeometry.center();
-
-    // Remove previous day/date display if it exists
-    if (scene.getObjectByName('dayDateDisplay')) {
-        const prevDayDateDisplay = scene.getObjectByName('dayDateDisplay');
-        scene.remove(prevDayDateDisplay);
-    }
-
-    // Create mesh for day and date
-    const dayDateMesh = new THREE.Mesh(dayDateGeometry, MATERIALS.dayDate);
-    dayDateMesh.name = 'dayDateDisplay';
-
-    // Position inside the existing Day/Date box
-    dayDateMesh.position.x = MESHES.dayDateBox.position.x;
-    dayDateMesh.position.y = MESHES.dayDateBox.position.y;
-    dayDateMesh.position.z = MESHES.dayDateBox.position.z + 0.01;
-
-    // Add to the scene
-    scene.add(dayDateMesh);
-}
-
-export function updateClock(scene) {
-    const date = timeManager.getCurrentTime();
-    const hours = date.getHours() % 12;
-    const minutes = date.getMinutes();
-    const seconds = date.getSeconds();
-    const milliseconds = date.getMilliseconds();
-
-    const hourAngle =
-        30 * hours +
-        0.5 * minutes +
-        (30 / 3600) * seconds +
-        (30 / 3600000) * milliseconds;
-
-    const minuteAngle =
-        6 * minutes +
-        0.1 * seconds +
-        (0.1 / 1000) * milliseconds;
-
-    const secondAngle =
-        6 * seconds +
-        0.006 * milliseconds;
-
-    MESHES.hourHand.rotation.z = -THREE.MathUtils.degToRad(hourAngle);
-    MESHES.minuteHand.rotation.z = -THREE.MathUtils.degToRad(minuteAngle);
-    MESHES.secondHand.rotation.z = -THREE.MathUtils.degToRad(secondAngle);
-
-    if (hours !== lastHour) {
-        const font = fontManager.getLoadedFont();
-        if (font) {
-            updateDayDateDisplay(scene, font);
-            lastHour = hours;
-        }
     }
 }
 
