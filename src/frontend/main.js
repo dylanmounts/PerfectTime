@@ -1,7 +1,7 @@
 import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 
-import { addClock } from './modules/clock';
+import { addClock } from './modules/clockConstructor';
 import { updateClock } from './modules/clockUpdater';
 import { timeManager } from './modules/timeManager';
 
