@@ -46,3 +46,4 @@ class FontManager {
 }
 
 export const fontManager = new FontManager();
+export const monoFontManager = new FontManager();

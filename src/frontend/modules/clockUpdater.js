@@ -2,7 +2,7 @@ import * as THREE from 'three';
 import { TextGeometry } from 'three/addons/geometries/TextGeometry.js';
 
 import { SEGMENTS } from './constants.js';
-import { fontManager } from './font_manager.js';
+import { monoFontManager } from './font_manager.js';
 import { MATERIALS } from './materials.js';
 import { MESHES } from './meshes.js';
 import { timeManager } from './timeManager.js';
@@ -25,7 +25,7 @@ export function updateClock(scene) {
     MESHES.secondHand.rotation.z = -secondAngle;
 
     if (hours !== lastHour) {
-        const font = fontManager.getLoadedFont();
+        const font = monoFontManager.getLoadedFont();
         if (font) {
             updateDayDateDisplay(scene, font);
             lastHour = hours;
