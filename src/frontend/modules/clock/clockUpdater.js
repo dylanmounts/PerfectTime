@@ -1,9 +1,10 @@
 import { monoFontManager } from '../managers/font_manager.js';
-import { createDayDateMesh, MESHES } from '../visuals/meshes.js';
+import { createDayDateMesh, createDigitalDisplayMesh, MESHES } from '../visuals/meshes.js';
 import { timeManager } from '../managers/timeManager.js';
-import { createDayDateGeometry } from '../visuals/geometries.js';
+import { createDayDateGeometry, createDigitalTimeGeometry } from '../visuals/geometries.js';
 
 let lastHour = null;
+let lastSecond = null;
 
 export function updateClock(scene) {
     const date = timeManager.getCurrentTime();
@@ -20,10 +21,14 @@ export function updateClock(scene) {
     MESHES.minuteHand.rotation.z = -minuteAngle;
     MESHES.secondHand.rotation.z = -secondAngle;
 
-    if (hours !== lastHour) {
-        const font = monoFontManager.getLoadedFont();
-        if (font) {
-            updateDayDateDisplay(scene, font);
+    const monoFont = monoFontManager.getLoadedFont();
+    if (monoFont) {
+        if (seconds !== lastSecond) {
+            updateDigitalDisplay(scene, monoFont);
+            lastSecond == seconds;
+        }
+        if (hours !== lastHour) {
+            updateDayDateDisplay(scene, monoFont);
             lastHour = hours;
         }
     }
@@ -77,4 +82,26 @@ export function updateDayDateDisplay(scene, font) {
 
     // Add to the scene
     scene.add(dayDateMesh);
+}
+
+function updateDigitalDisplay(scene, font) {
+    const currentTime = timeManager.getCurrentTime();
+    const digitalTimeStr = currentTime.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+
+    const digitalTimeGeometry = createDigitalTimeGeometry(digitalTimeStr, font);
+    digitalTimeGeometry.center()
+    
+    if (scene.getObjectByName('digitalDisplay')) {
+        const prevDisplay = scene.getObjectByName('digitalDisplay');
+        scene.remove(prevDisplay);
+    }
+
+    const digitalDisplayMesh = createDigitalDisplayMesh(digitalTimeGeometry);
+    digitalDisplayMesh.name = 'digitalDisplay';
+
+    digitalDisplayMesh.position.x = Math.sin(0) * 5.0 * 1/3;
+    digitalDisplayMesh.position.y = Math.cos(0) * 5.0 * 1/3;
+    digitalDisplayMesh.position.z = 0 + 0.01;
+
+    scene.add(digitalDisplayMesh);
 }
