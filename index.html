@@ -16,25 +16,128 @@
     </div>
 
     <div class="toast-container position-fixed top-0 start-0 p-3">
-        <div id="infoMenu" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+        <div id="infoMenu" class="toast" role="alert" aria-live="assertive" aria-atomic="true" data-bs-autohide="false">
             <div class="toast-header">
-                <strong class="me-auto">Info</strong>
+                <strong class="me-auto">About</strong>
                 <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
             </div>
             <div class="toast-body">
-                TheTime.Watch is designed to show the perfect time every time.
+                <p><strong>TheTime.Watch</strong> is designed to show the perfect time every time.</p>
+                <center>
+                    <small>Available on <a href="https://github.com/dylanmounts/TheTime.Watch">GitHub</a></small>
+                </center>
             </div>
         </div>
     </div>
 
     <div class="toast-container position-fixed top-0 end-0 p-3">
-        <div id="optionsMenu" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+        <div id="optionsMenu" class="toast" role="alert" aria-live="assertive" aria-atomic="true" data-bs-autohide="false">
             <div class="toast-header">
                 <strong class="me-auto">Options</strong>
                 <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
             </div>
             <div class="toast-body">
-                Here's where the options are.
+                <form>
+                    <p class="table-header">Complications:</p>
+                    <table class="table">
+                        <tbody>
+                            <tr>
+                                <td>
+                                    <div class="form-check">
+                                        <input type="checkbox" class="form-check-input" id="digitalTimeOption" checked>
+                                        <label class="form-check-label" for="digitalTimeOption">Digital Time</label>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="form-check">
+                                        <input type="checkbox" class="form-check-input" id="dateOption" checked>
+                                        <label class="form-check-label" for="dateOption">Day/Date</label>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    <table>
+                    <p class="table-header">Numbers:</p>
+                    <table class="table">
+                        <tbody>
+                            <tr>
+                                <td>
+                                    <div class="form-check">
+                                        <input type="checkbox" class="form-check-input" id="hoursOption" checked>
+                                        <label class="form-check-label" for="minutesOption">Hours</label>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="form-check">
+                                        <input type="checkbox" class="form-check-input" id="minutesOption" checked>
+                                        <label class="form-check-label" for="minutesOption">Minutes</label>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <p class="table-header">Indicators:</p>
+                    <table class="table">
+                        <tbody>
+                            <tr>
+                                <td>
+                                    <div class="form-check">
+                                        <input type="checkbox" class="form-check-input" id="hourTicksOption" checked>
+                                        <label class="form-check-label" for="minuteTicksOption">Hour Ticks</label>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="form-check">
+                                        <input type="checkbox" class="form-check-input" id="minuteTicksOption" checked>
+                                        <label class="form-check-label" for="minuteTicksOption">Minute Ticks</label>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <p class="table-header">Hands:</p>
+                    <table class="table">
+                        <tbody>
+                            <tr>
+                                <td>
+                                    <div class="form-check">
+                                        <input type="checkbox" class="form-check-input" id="hourHandOption" checked>
+                                        <label class="form-check-label" for="hourHandOption">Hour Hand</label>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <div class="form-check">
+                                        <input type="checkbox" class="form-check-input" id="minuteHandOption" checked>
+                                        <label class="form-check-label" for="minuteHandOption">Minute Hand</label>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <div class="form-check">
+                                        <input type="checkbox" class="form-check-input" id="secondHandOption" checked>
+                                        <label class="form-check-label" for="secondHandOption">Second Hand</label>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <p class="table-header">Configuration:</p>
+                    <table class="table">
+                        <tbody>
+                            <tr>
+                                <td>
+                                    <div class="form-check">
+                                        <input type="checkbox" class="form-check-input" id="sweepingSecondsOption" checked>
+                                        <label class="form-check-label" for="sweepingSecondsOption">Sweeping Seconds</label>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </form>
             </div>
         </div>
     </div>
