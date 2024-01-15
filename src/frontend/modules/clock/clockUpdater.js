@@ -1,8 +1,11 @@
+import { DIGITAL_DISPLAY_PARTS } from '../constants.js';
 import { monoFontManager } from '../managers/fontManager.js';
 import { createDayDateMesh, createDigitalDisplayMesh, MESHES } from '../visuals/meshes.js';
 import { timeManager } from '../managers/timeManager.js';
 import { createDayDateGeometry, createDigitalTimeGeometry } from '../visuals/geometries.js';
 
+
+let digitalDisplayExists = true;
 let lastHour = null;
 let lastSecond = null;
 
@@ -84,6 +87,10 @@ export function updateDayDateDisplay(scene, font) {
     scene.add(dayDateMesh);
 }
 
+export function toggleDigitalDisplay(isChecked) {
+    digitalDisplayExists = isChecked;
+}
+
 function updateDigitalDisplay(scene, font) {
     const currentTime = timeManager.getCurrentTime();
     const digitalTimeStr = currentTime.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
@@ -94,6 +101,11 @@ function updateDigitalDisplay(scene, font) {
     if (scene.getObjectByName('digitalDisplay')) {
         const prevDisplay = scene.getObjectByName('digitalDisplay');
         scene.remove(prevDisplay);
+
+        for (const part of DIGITAL_DISPLAY_PARTS) {
+            const prevPart = scene.getObjectByName(part);
+            scene.remove(prevPart);
+        }
     }
 
     const digitalDisplayMesh = createDigitalDisplayMesh(digitalTimeGeometry);
@@ -103,5 +115,11 @@ function updateDigitalDisplay(scene, font) {
     digitalDisplayMesh.position.y = Math.cos(0) * 5.0 * 1/3;
     digitalDisplayMesh.position.z = 0 + 0.01;
 
-    scene.add(digitalDisplayMesh);
+    if (digitalDisplayExists) {
+        scene.add(digitalDisplayMesh);
+
+        for (const part of DIGITAL_DISPLAY_PARTS) {
+            scene.add(MESHES[part]);
+        }
+    }
 }
