@@ -1,6 +1,5 @@
 import { updateDayDateDisplay, updateDigitalDisplay } from './clockUpdater.js';
-import { CLOCK_FONT, CLOCK_FONT_MONO, SIZES } from '../constants.js';
-import { fontManager, monoFontManager } from '../managers/fontManager.js';
+import {  SIZES } from '../constants.js';
 import { createHourGeometry, createMinuteGeometry, createIndicatorGeometry } from '../visuals/geometries.js';
 import { createHourMesh, createMinuteMesh, createIndicatorMesh, MESHES } from '../visuals/meshes.js';
 
@@ -63,19 +62,13 @@ function createIndicators(scene) {
     }
 }
 
-export async function addClock(scene) {
+export async function addClock(scene, regularFont, monoFont) {
     createIndicators(scene);
-
-    fontManager.loadFont(CLOCK_FONT, (font) => {
-        createNumbers(scene, font);
-    });
-
-    monoFontManager.loadFont(CLOCK_FONT_MONO, (font) => {
-        updateDayDateDisplay(scene, font);
-        updateDigitalDisplay(scene, font);
-    });
+    createNumbers(scene, regularFont);
+    updateDayDateDisplay(scene, monoFont);
+    updateDigitalDisplay(scene, monoFont);
 
     for (const mesh in MESHES) {
-        scene.add(MESHES[mesh])
+        scene.add(MESHES[mesh]);
     }
 }

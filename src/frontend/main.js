@@ -6,6 +6,7 @@ import '../frontend/scss/styles.scss'
 import { addClock } from './modules/clock/clockConstructor';
 import { toggleDayDate, toggleDigitalDisplay, updateClock } from './modules/clock/clockUpdater';
 import { timeManager } from './modules/managers/timeManager';
+import { fontManager, monoFontManager } from './modules/managers/fontManager';
 
 
 // Bootstrap
@@ -42,6 +43,9 @@ const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerH
 const renderer = new THREE.WebGLRenderer({ antialias: true });
 const controls = new OrbitControls(camera, renderer.domElement);
 
+let regularFont = null;
+let monoFont = null;
+
 function setupScene() {
     window.addEventListener('resize', onWindowResize);
 
@@ -67,18 +71,24 @@ function onWindowResize() {
 }
 
 function animate() {
-    updateClock(scene);
+    updateClock(scene, monoFont);
 
     controls.update();
     requestAnimationFrame(animate);
     renderer.render(scene, camera);
 }
 
-timeManager.fetchInitialTime('http://localhost:3000/time').then(() => {
-    setupScene()
-    addClock(scene)
-    animate()
-});
+async function initializeScene() {
+    setupScene();
 
+    regularFont = await fontManager.getLoadedFont();
+    monoFont = await monoFontManager.getLoadedFont();
+    await timeManager.fetchInitialTime('http://localhost:3000/time');
+
+    addClock(scene, regularFont, monoFont);
+    animate();
+}
+
+initializeScene();
 handleCheckboxChange('dayDateOption', toggleDayDate);
 handleCheckboxChange('digitalTimeOption', toggleDigitalDisplay);

@@ -2,22 +2,24 @@ import * as THREE from 'three';
 import { FontLoader } from 'three/addons/loaders/FontLoader.js';
 import { TextGeometry } from 'three/addons/geometries/TextGeometry.js';
 
-import { SIZES, SEGMENTS } from '../constants.js';
+import { CLOCK_FONT, CLOCK_FONT_MONO, SIZES, SEGMENTS } from '../constants';
 
 class FontManager {
-    constructor() {
+    constructor(url) {
         this.font = null;
+        this.fontPromise = this.loadFont(url);
     }
 
-    loadFont(url, onLoadCallback) {
-        const loader = new FontLoader();
-        loader.load(url, (loadedFont) => {
-            this.font = loadedFont;
-            if (typeof onLoadCallback === 'function') {
-                onLoadCallback(loadedFont);
-            }
-        }, undefined, function (error) {
-            console.error('Error loading font:', error);
+    loadFont(url) {
+        return new Promise((resolve, reject) => {
+            const loader = new FontLoader();
+            loader.load(url, (loadedFont) => {
+                this.font = loadedFont;
+                resolve(loadedFont);
+            }, undefined, function (error) {
+                console.error('Error loading font:', error);
+                reject(error);
+            });
         });
     }
 
@@ -40,10 +42,11 @@ class FontManager {
         return new THREE.Mesh(geometry, options.material);
     }
 
-    getLoadedFont() {
+    async getLoadedFont() {
+        await this.fontPromise;
         return this.font;
     }
 }
 
-export const fontManager = new FontManager();
-export const monoFontManager = new FontManager();
+export const fontManager = new FontManager(CLOCK_FONT);
+export const monoFontManager = new FontManager(CLOCK_FONT_MONO);

@@ -1,5 +1,4 @@
 import { DAY_DATE_PARTS, DIGITAL_DISPLAY_PARTS } from '../constants.js';
-import { monoFontManager } from '../managers/fontManager.js';
 import { createDayDateMesh, createDigitalDisplayMesh, MESHES } from '../visuals/meshes.js';
 import { timeManager } from '../managers/timeManager.js';
 import { createDayDateGeometry, createDigitalTimeGeometry } from '../visuals/geometries.js';
@@ -8,7 +7,7 @@ import { createDayDateGeometry, createDigitalTimeGeometry } from '../visuals/geo
 let dayDateExists = true;
 let digitalDisplayExists = true;
 
-export function updateClock(scene) {
+export function updateClock(scene, monoFont) {
     const date = timeManager.getCurrentTime();
     const hours = date.getHours() % 12;
     const minutes = date.getMinutes();
@@ -23,11 +22,8 @@ export function updateClock(scene) {
     MESHES.minuteHand.rotation.z = -minuteAngle;
     MESHES.secondHand.rotation.z = -secondAngle;
 
-    const monoFont = monoFontManager.getLoadedFont();
-    if (monoFont) {
-        updateDigitalDisplay(scene, monoFont);
-        updateDayDateDisplay(scene, monoFont);
-    }
+    updateDigitalDisplay(scene, monoFont);
+    updateDayDateDisplay(scene, monoFont);
 }
 
 function calculateHourAngle(hours, minutes, seconds, milliseconds) {
