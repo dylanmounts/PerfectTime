@@ -1,4 +1,4 @@
-import { updateDayDateDisplay } from './clockUpdater.js';
+import { updateDayDateDisplay, updateDigitalDisplay } from './clockUpdater.js';
 import { CLOCK_FONT, CLOCK_FONT_MONO, SIZES } from '../constants.js';
 import { fontManager, monoFontManager } from '../managers/fontManager.js';
 import { createHourGeometry, createMinuteGeometry, createIndicatorGeometry } from '../visuals/geometries.js';
@@ -72,6 +72,7 @@ export async function addClock(scene) {
 
     monoFontManager.loadFont(CLOCK_FONT_MONO, (font) => {
         updateDayDateDisplay(scene, font);
+        updateDigitalDisplay(scene, font);
     });
 
     for (const mesh in MESHES) {

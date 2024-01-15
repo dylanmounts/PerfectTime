@@ -4,7 +4,7 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 
 import '../frontend/scss/styles.scss'
 import { addClock } from './modules/clock/clockConstructor';
-import { toggleDigitalDisplay, updateClock } from './modules/clock/clockUpdater';
+import { toggleDayDate, toggleDigitalDisplay, updateClock } from './modules/clock/clockUpdater';
 import { timeManager } from './modules/managers/timeManager';
 
 
@@ -80,4 +80,5 @@ timeManager.fetchInitialTime('http://localhost:3000/time').then(() => {
     animate()
 });
 
+handleCheckboxChange('dayDateOption', toggleDayDate);
 handleCheckboxChange('digitalTimeOption', toggleDigitalDisplay);

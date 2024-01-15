@@ -1,13 +1,12 @@
-import { DIGITAL_DISPLAY_PARTS } from '../constants.js';
+import { DAY_DATE_PARTS, DIGITAL_DISPLAY_PARTS } from '../constants.js';
 import { monoFontManager } from '../managers/fontManager.js';
 import { createDayDateMesh, createDigitalDisplayMesh, MESHES } from '../visuals/meshes.js';
 import { timeManager } from '../managers/timeManager.js';
 import { createDayDateGeometry, createDigitalTimeGeometry } from '../visuals/geometries.js';
 
 
+let dayDateExists = true;
 let digitalDisplayExists = true;
-let lastHour = null;
-let lastSecond = null;
 
 export function updateClock(scene) {
     const date = timeManager.getCurrentTime();
@@ -26,14 +25,8 @@ export function updateClock(scene) {
 
     const monoFont = monoFontManager.getLoadedFont();
     if (monoFont) {
-        if (seconds !== lastSecond) {
-            updateDigitalDisplay(scene, monoFont);
-            lastSecond == seconds;
-        }
-        if (hours !== lastHour) {
-            updateDayDateDisplay(scene, monoFont);
-            lastHour = hours;
-        }
+        updateDigitalDisplay(scene, monoFont);
+        updateDayDateDisplay(scene, monoFont);
     }
 }
 
@@ -72,6 +65,11 @@ export function updateDayDateDisplay(scene, font) {
     if (scene.getObjectByName('dayDateDisplay')) {
         const prevDayDateDisplay = scene.getObjectByName('dayDateDisplay');
         scene.remove(prevDayDateDisplay);
+
+        for (const part of DAY_DATE_PARTS) {
+            const prevPart = scene.getObjectByName(part);
+            scene.remove(prevPart);
+        }
     }
 
     // Create mesh for day and date
@@ -84,14 +82,20 @@ export function updateDayDateDisplay(scene, font) {
     dayDateMesh.position.z = MESHES.dayDateBox.position.z + 0.01;
 
     // Add to the scene
-    scene.add(dayDateMesh);
+    if (dayDateExists) {
+        scene.add(dayDateMesh);
+
+        for (const part of DAY_DATE_PARTS) {
+            scene.add(MESHES[part]);
+        }
+    }
 }
 
-export function toggleDigitalDisplay(isChecked) {
-    digitalDisplayExists = isChecked;
+export function toggleDayDate(isChecked) {
+    dayDateExists = isChecked;
 }
 
-function updateDigitalDisplay(scene, font) {
+export function updateDigitalDisplay(scene, font) {
     const currentTime = timeManager.getCurrentTime();
     const digitalTimeStr = currentTime.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
 
@@ -122,4 +126,8 @@ function updateDigitalDisplay(scene, font) {
             scene.add(MESHES[part]);
         }
     }
+}
+
+export function toggleDigitalDisplay(isChecked) {
+    digitalDisplayExists = isChecked;
 }
