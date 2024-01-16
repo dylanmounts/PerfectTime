@@ -13,6 +13,7 @@ let minuteIndicatorsExist = true;
 let minuteNumbersExist = true;
 let minuteHandExists = true;
 let secondHandExists = true;
+let sweepingSeconds = true;
 
 export function updateClock(scene, monoFont) {
     const date = timeManager.getCurrentTime();
@@ -23,7 +24,9 @@ export function updateClock(scene, monoFont) {
 
     const hourAngle = calculateHourAngle(hours, minutes, seconds, milliseconds);
     const minuteAngle = calculateMinuteAngle(minutes, seconds, milliseconds);
-    const secondAngle = calculateSecondAngle(seconds, milliseconds);
+    const secondAngle = sweepingSeconds 
+        ? calculateSweepingSecondAngle(seconds, milliseconds)
+        : calculateSecondAngle(seconds);
 
     MESHES.hourHand.rotation.z = -hourAngle;
     MESHES.minuteHand.rotation.z = -minuteAngle;
@@ -51,7 +54,11 @@ function calculateMinuteAngle(minutes, seconds, milliseconds) {
            (Math.PI / 1800000) * milliseconds;
 }
 
-function calculateSecondAngle(seconds, milliseconds) {
+function calculateSecondAngle(seconds) {
+    return (Math.PI / 30) * seconds;
+}
+
+function calculateSweepingSecondAngle(seconds, milliseconds) {
     return (Math.PI / 30) * seconds + 
            (Math.PI / 30000) * milliseconds;
 }
@@ -262,4 +269,8 @@ export function toggleMinuteHand(isChecked) {
 
 export function toggleSecondHand(isChecked) {
     secondHandExists = isChecked;
+}
+
+export function toggleSweepingSeconds(isChecked) {
+    sweepingSeconds = isChecked;
 }
