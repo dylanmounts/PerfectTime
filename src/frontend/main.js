@@ -4,8 +4,9 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 
 import '../frontend/scss/styles.scss'
 import { addClock } from './modules/clock/clockConstructor';
-import { updateClock } from './modules/clock/clockUpdater';
+import { toggleDayDate, toggleDigitalDisplay, toggleHourIndicators, toggleHourNumbers, toggleHourHand, toggleMinuteIndicators, toggleMinuteNumbers, toggleMinuteHand, toggleSecondHand, toggleSweepingSeconds, updateClock } from './modules/clock/clockUpdater';
 import { timeManager } from './modules/managers/timeManager';
+import { fontManager, monoFontManager } from './modules/managers/fontManager';
 
 
 // Bootstrap
@@ -27,11 +28,23 @@ if (infoTrigger) {
     })
 }
 
+function handleCheckboxChange(checkboxId, callback) {
+    const checkbox = document.getElementById(checkboxId);
+    if (checkbox) {
+        checkbox.addEventListener('change', () => {
+            callback(checkbox.checked);
+        });
+    }
+}
+
 // Three
 const scene = new THREE.Scene();
 const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
 const renderer = new THREE.WebGLRenderer({ antialias: true });
 const controls = new OrbitControls(camera, renderer.domElement);
+
+let regularFont = null;
+let monoFont = null;
 
 function setupScene() {
     window.addEventListener('resize', onWindowResize);
@@ -58,15 +71,32 @@ function onWindowResize() {
 }
 
 function animate() {
-    updateClock(scene);
+    updateClock(scene, monoFont);
 
     controls.update();
     requestAnimationFrame(animate);
     renderer.render(scene, camera);
 }
 
-timeManager.fetchInitialTime('http://localhost:3000/time').then(() => {
-    setupScene()
-    addClock(scene)
-    animate()
-});
+async function initializeScene() {
+    setupScene();
+
+    await timeManager.fetchInitialTime('http://localhost:3000/time');
+    regularFont = await fontManager.getLoadedFont();
+    monoFont = await monoFontManager.getLoadedFont();
+
+    addClock(scene, regularFont, monoFont);
+    animate();
+}
+
+initializeScene();
+handleCheckboxChange('dayDateOption', toggleDayDate);
+handleCheckboxChange('digitalTimeOption', toggleDigitalDisplay);
+handleCheckboxChange('hourIndicatorsOption', toggleHourIndicators);
+handleCheckboxChange('hoursOption', toggleHourNumbers);
+handleCheckboxChange('hourHandOption', toggleHourHand);
+handleCheckboxChange('minuteIndicatorsOption', toggleMinuteIndicators);
+handleCheckboxChange('minutesOption', toggleMinuteNumbers);
+handleCheckboxChange('minuteHandOption', toggleMinuteHand);
+handleCheckboxChange('secondHandOption', toggleSecondHand);
+handleCheckboxChange('sweepingSecondsOption', toggleSweepingSeconds);

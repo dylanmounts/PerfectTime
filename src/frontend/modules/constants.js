@@ -37,5 +37,22 @@ export const CLOCK_FONT_MONO = 'fonts/droid/droid_sans_mono_regular.typeface.jso
 export const CLOCK_OUTER_RADIUS = SIZES.CLOCK_RADIUS + SIZES.BEZEL_THICKNESS;
 export const DAY_DATE_FRAME_HEIGHT = SIZES.DAY_DATE_BOX_HEIGHT + 2 * SIZES.COMPLICATION_FRAME_THICKNESS;
 export const DAY_DATE_FRAME_WIDTH = SIZES.DAY_DATE_BOX_WIDTH + 2 * SIZES.COMPLICATION_FRAME_THICKNESS;
+export const DAY_DATE_PARTS = [
+    'dayDateBox',
+    'dayDateTopFrame',
+    'dayDateBottomFrame',
+    'dayDateLeftFrame',
+    'dayDateRightFrame',
+]
 export const DIGITAL_DISPLAY_FRAME_HEIGHT = SIZES.DIGITAL_DISPLAY_BOX_HEIGHT + 2 * SIZES.COMPLICATION_FRAME_THICKNESS;
 export const DIGITAL_DISPLAY_FRAME_WIDTH = SIZES.DIGITAL_DISPLAY_BOX_WIDTH + 2 * SIZES.COMPLICATION_FRAME_THICKNESS;
+export const DIGITAL_DISPLAY_PARTS = [
+    'digitalDisplayBox',
+    'digitalDisplayTopFrame',
+    'digitalDisplayBottomFrame',
+    'digitalDisplayLeftFrame',
+    'digitalDisplayRightFrame',
+]
+export const INDICATORS = {};
+export const HOUR_NUMBERS = {};
+export const MINUTE_NUMBERS = {};

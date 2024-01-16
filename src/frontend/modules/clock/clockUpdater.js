@@ -1,12 +1,21 @@
-import { monoFontManager } from '../managers/fontManager.js';
+import { DAY_DATE_PARTS, DIGITAL_DISPLAY_PARTS, HOUR_NUMBERS, INDICATORS, MINUTE_NUMBERS } from '../constants.js';
 import { createDayDateMesh, createDigitalDisplayMesh, MESHES } from '../visuals/meshes.js';
 import { timeManager } from '../managers/timeManager.js';
 import { createDayDateGeometry, createDigitalTimeGeometry } from '../visuals/geometries.js';
 
-let lastHour = null;
-let lastSecond = null;
 
-export function updateClock(scene) {
+let dayDateExists = true;
+let digitalDisplayExists = true;
+let hourIndicatorsExist = true;
+let hourNumbersExist = true;
+let hourHandExists = true;
+let minuteIndicatorsExist = true;
+let minuteNumbersExist = true;
+let minuteHandExists = true;
+let secondHandExists = true;
+let sweepingSeconds = true;
+
+export function updateClock(scene, monoFont) {
     const date = timeManager.getCurrentTime();
     const hours = date.getHours() % 12;
     const minutes = date.getMinutes();
@@ -15,23 +24,21 @@ export function updateClock(scene) {
 
     const hourAngle = calculateHourAngle(hours, minutes, seconds, milliseconds);
     const minuteAngle = calculateMinuteAngle(minutes, seconds, milliseconds);
-    const secondAngle = calculateSecondAngle(seconds, milliseconds);
+    const secondAngle = sweepingSeconds 
+        ? calculateSweepingSecondAngle(seconds, milliseconds)
+        : calculateSecondAngle(seconds);
 
     MESHES.hourHand.rotation.z = -hourAngle;
     MESHES.minuteHand.rotation.z = -minuteAngle;
     MESHES.secondHand.rotation.z = -secondAngle;
 
-    const monoFont = monoFontManager.getLoadedFont();
-    if (monoFont) {
-        if (seconds !== lastSecond) {
-            updateDigitalDisplay(scene, monoFont);
-            lastSecond == seconds;
-        }
-        if (hours !== lastHour) {
-            updateDayDateDisplay(scene, monoFont);
-            lastHour = hours;
-        }
-    }
+    updateDigitalDisplay(scene, monoFont);
+    updateDayDateDisplay(scene, monoFont);
+    updateIndicators(scene);
+    updateNumbers(scene);
+    updateHourHand(scene);
+    updateMinuteHand(scene);
+    updateSecondHand(scene);
 }
 
 function calculateHourAngle(hours, minutes, seconds, milliseconds) {
@@ -47,7 +54,11 @@ function calculateMinuteAngle(minutes, seconds, milliseconds) {
            (Math.PI / 1800000) * milliseconds;
 }
 
-function calculateSecondAngle(seconds, milliseconds) {
+function calculateSecondAngle(seconds) {
+    return (Math.PI / 30) * seconds;
+}
+
+function calculateSweepingSecondAngle(seconds, milliseconds) {
     return (Math.PI / 30) * seconds + 
            (Math.PI / 30000) * milliseconds;
 }
@@ -61,19 +72,26 @@ export function updateDayDateDisplay(scene, font) {
     // Combine day and date
     const dayDateStr = `${day.toUpperCase()} ${date}`;
 
+    // Remove previous day/date display if it exists
+    const prevDayDateDisplay = scene.getObjectByName('dayDateDisplay');
+    if (prevDayDateDisplay) {
+        prevDayDateDisplay.geometry.dispose();
+        prevDayDateDisplay.material.dispose();
+        scene.remove(prevDayDateDisplay);
+
+        for (const part of DAY_DATE_PARTS) {
+            const prevPart = scene.getObjectByName(part);
+            scene.remove(prevPart);
+        }
+    }
+
     // Create text geometry for day and date
     const dayDateGeometry = createDayDateGeometry(dayDateStr, font);
     dayDateGeometry.center();
 
-    // Remove previous day/date display if it exists
-    if (scene.getObjectByName('dayDateDisplay')) {
-        const prevDayDateDisplay = scene.getObjectByName('dayDateDisplay');
-        scene.remove(prevDayDateDisplay);
-    }
-
     // Create mesh for day and date
     const dayDateMesh = createDayDateMesh(dayDateGeometry);
-    dayDateMesh.name = 'dayDateDisplay';
+    dayDateMesh.name = 'dayDateDisplay'
 
     // Position inside the existing Day/Date box
     dayDateMesh.position.x = MESHES.dayDateBox.position.x;
@@ -81,20 +99,37 @@ export function updateDayDateDisplay(scene, font) {
     dayDateMesh.position.z = MESHES.dayDateBox.position.z + 0.01;
 
     // Add to the scene
-    scene.add(dayDateMesh);
+    if (dayDateExists) {
+        scene.add(dayDateMesh);
+
+        for (const part of DAY_DATE_PARTS) {
+            scene.add(MESHES[part]);
+        }
+    }
 }
 
-function updateDigitalDisplay(scene, font) {
+export function toggleDayDate(isChecked) {
+    dayDateExists = isChecked;
+}
+
+export function updateDigitalDisplay(scene, font) {
     const currentTime = timeManager.getCurrentTime();
     const digitalTimeStr = currentTime.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+    
+    const prevDigitalDisplay = scene.getObjectByName('digitalDisplay');
+    if (prevDigitalDisplay) {
+        prevDigitalDisplay.geometry.dispose();
+        prevDigitalDisplay.material.dispose();
+        scene.remove(prevDigitalDisplay);
+
+        for (const part of DIGITAL_DISPLAY_PARTS) {
+            const prevPart = scene.getObjectByName(part);
+            scene.remove(prevPart);
+        }
+    }
 
     const digitalTimeGeometry = createDigitalTimeGeometry(digitalTimeStr, font);
     digitalTimeGeometry.center()
-    
-    if (scene.getObjectByName('digitalDisplay')) {
-        const prevDisplay = scene.getObjectByName('digitalDisplay');
-        scene.remove(prevDisplay);
-    }
 
     const digitalDisplayMesh = createDigitalDisplayMesh(digitalTimeGeometry);
     digitalDisplayMesh.name = 'digitalDisplay';
@@ -103,5 +138,139 @@ function updateDigitalDisplay(scene, font) {
     digitalDisplayMesh.position.y = Math.cos(0) * 5.0 * 1/3;
     digitalDisplayMesh.position.z = 0 + 0.01;
 
-    scene.add(digitalDisplayMesh);
+    if (digitalDisplayExists) {
+        scene.add(digitalDisplayMesh);
+
+        for (const part of DIGITAL_DISPLAY_PARTS) {
+            scene.add(MESHES[part]);
+        }
+    }
+}
+
+export function toggleDigitalDisplay(isChecked) {
+    digitalDisplayExists = isChecked;
+}
+
+function updateIndicators(scene) {
+    for (let i = 0; i < 60; i++) {
+        const indicatorName = `indicator${i}`;
+        const indicator = scene.getObjectByName(indicatorName);
+
+        // Hours
+        if (hourIndicatorsExist && i % 5 === 0) {
+            if (i === 15) {
+                if (!dayDateExists && !indicator) {
+                    scene.add(INDICATORS[i]);
+                } else if (dayDateExists && indicator) {
+                    scene.remove(indicator);
+                }
+            } else {
+                scene.add(INDICATORS[i]);
+            }
+        } else if (!hourIndicatorsExist && i % 5 === 0 && indicator) {
+            scene.remove(indicator);
+        }
+
+        // Minutes
+        if (minuteIndicatorsExist && i % 5 != 0) {
+            if (!indicator) {
+                scene.add(INDICATORS[i]);
+            }
+        } else if (!minuteIndicatorsExist && i % 5 != 0) {
+            scene.remove(indicator);
+        }
+    }
+}
+
+export function toggleHourIndicators(isChecked) {
+    hourIndicatorsExist = isChecked;
+}
+
+export function toggleMinuteIndicators(isChecked) {
+    minuteIndicatorsExist = isChecked;
+}
+
+function updateNumbers(scene) {
+    for (let i = 1; i <= 12; i++) {
+        const hourName = `hour${i}`;
+        const minuteName = `minute${i * 5}`;
+
+        const hourNumber = scene.getObjectByName(hourName);
+        const minuteNumber = scene.getObjectByName(minuteName);
+
+        // Hours
+        if (hourNumbersExist) {
+            if (i === 3) {
+                if (!dayDateExists && !hourNumber) {
+                    scene.add(HOUR_NUMBERS[i]);
+                } else if (dayDateExists && hourNumber) {
+                    scene.remove(hourNumber);
+                }
+            } else {
+                scene.add(HOUR_NUMBERS[i]);
+            }
+        } else {
+            scene.remove(hourNumber);
+        }
+
+        // Minutes
+        if (minuteNumbersExist) {
+            if (!minuteNumber) {
+                scene.add(MINUTE_NUMBERS[i * 5]);
+            }
+        } else {
+            scene.remove(minuteNumber);
+        }
+    }
+}
+
+export function toggleHourNumbers(isChecked) {
+    hourNumbersExist = isChecked;
+}
+
+export function toggleMinuteNumbers(isChecked) {
+    minuteNumbersExist = isChecked;
+}
+
+export function updateHourHand(scene) {
+    const hourHand = scene.getObjectByName('hourHand');
+    if (hourHandExists && !hourHand) {
+        scene.add(MESHES.hourHand);
+    } else if (!hourHandExists && hourHand) {
+        scene.remove(hourHand);
+    }
+}
+
+export function updateMinuteHand(scene) {
+    const minuteHand = scene.getObjectByName('minuteHand');
+    if (minuteHandExists && !minuteHand) {
+        scene.add(MESHES.minuteHand);
+    } else if (!minuteHandExists && minuteHand) {
+        scene.remove(minuteHand);
+    }
+}
+
+export function updateSecondHand(scene) {
+    const secondHand = scene.getObjectByName('secondHand');
+    if (secondHandExists && !secondHand) {
+        scene.add(MESHES.secondHand);
+    } else if (!secondHandExists && secondHand) {
+        scene.remove(secondHand);
+    }
+}
+
+export function toggleHourHand(isChecked) {
+    hourHandExists = isChecked;
+}
+
+export function toggleMinuteHand(isChecked) {
+    minuteHandExists = isChecked;
+}
+
+export function toggleSecondHand(isChecked) {
+    secondHandExists = isChecked;
+}
+
+export function toggleSweepingSeconds(isChecked) {
+    sweepingSeconds = isChecked;
 }

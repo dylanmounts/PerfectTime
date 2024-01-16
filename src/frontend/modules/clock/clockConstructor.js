@@ -1,15 +1,11 @@
-import { updateDayDateDisplay } from './clockUpdater.js';
-import { CLOCK_FONT, CLOCK_FONT_MONO, SIZES } from '../constants.js';
-import { fontManager, monoFontManager } from '../managers/fontManager.js';
+import { updateDayDateDisplay, updateDigitalDisplay } from './clockUpdater.js';
+import { HOUR_NUMBERS, INDICATORS, MINUTE_NUMBERS, SIZES } from '../constants.js';
 import { createHourGeometry, createMinuteGeometry, createIndicatorGeometry } from '../visuals/geometries.js';
 import { createHourMesh, createMinuteMesh, createIndicatorMesh, MESHES } from '../visuals/meshes.js';
 
 
 function createNumbers(scene, font) {
     for (let i = 1; i <= 12; i++) {
-        if (i === 3) {
-            continue;
-        }
         const angle = (Math.PI / 6) * i;
 
         // Hours
@@ -21,7 +17,9 @@ function createNumbers(scene, font) {
         hourMesh.position.x = Math.sin(angle) * distanceFromCenter;
         hourMesh.position.y = Math.cos(angle) * distanceFromCenter;
         hourMesh.position.z = 0;
+        hourMesh.name = `hour${i}`;
 
+        HOUR_NUMBERS[i] = hourMesh;
         scene.add(hourMesh);
 
         // Minutes
@@ -35,7 +33,9 @@ function createNumbers(scene, font) {
         minuteMesh.position.x = Math.sin(angle) * minuteDistanceFromCenter;
         minuteMesh.position.y = Math.cos(angle) * minuteDistanceFromCenter;
         minuteMesh.position.z = 0;
+        minuteMesh.name = `minute${minuteNumber}`;
 
+        MINUTE_NUMBERS[minuteNumber] = minuteMesh;
         scene.add(minuteMesh);
     }
 }
@@ -43,10 +43,7 @@ function createNumbers(scene, font) {
 function createIndicators(scene) {
     const distanceFromCenter = SIZES.CLOCK_RADIUS * 23/24;
 
-    for (let i = 0; i < 60; i++) {
-        if (i === 15) {
-            continue;
-        }        
+    for (let i = 0; i < 60; i++) {  
         const angle = (Math.PI / 30) * i;
 
         const isFiveMinuteMark = i % 5 === 0;
@@ -58,23 +55,20 @@ function createIndicators(scene) {
         indicator.position.x = Math.sin(angle) * distanceFromCenter;
         indicator.position.y = Math.cos(angle) * distanceFromCenter;
         indicator.position.z = 0;
+        indicator.name = `indicator${i}`;
 
+        INDICATORS[i] = indicator;
         scene.add(indicator);
     }
 }
 
-export async function addClock(scene) {
+export async function addClock(scene, regularFont, monoFont) {
     createIndicators(scene);
-
-    fontManager.loadFont(CLOCK_FONT, (font) => {
-        createNumbers(scene, font);
-    });
-
-    monoFontManager.loadFont(CLOCK_FONT_MONO, (font) => {
-        updateDayDateDisplay(scene, font);
-    });
+    createNumbers(scene, regularFont);
+    updateDayDateDisplay(scene, monoFont);
+    updateDigitalDisplay(scene, monoFont);
 
     for (const mesh in MESHES) {
-        scene.add(MESHES[mesh])
+        scene.add(MESHES[mesh]);
     }
 }
