@@ -22,7 +22,7 @@ export function updateClock(scene, monoFont) {
     MESHES.minuteHand.rotation.z = -minuteAngle;
     MESHES.secondHand.rotation.z = -secondAngle;
 
-    // updateDigitalDisplay(scene, monoFont);
+    updateDigitalDisplay(scene, monoFont);
     updateDayDateDisplay(scene, monoFont);
 }
 
@@ -96,19 +96,21 @@ export function toggleDayDate(isChecked) {
 export function updateDigitalDisplay(scene, font) {
     const currentTime = timeManager.getCurrentTime();
     const digitalTimeStr = currentTime.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
-
-    const digitalTimeGeometry = createDigitalTimeGeometry(digitalTimeStr, font);
-    digitalTimeGeometry.center()
     
-    if (scene.getObjectByName('digitalDisplay')) {
-        const prevDisplay = scene.getObjectByName('digitalDisplay');
-        scene.remove(prevDisplay);
+    const prevDigitalDisplay = scene.getObjectByName('digitalDisplay');
+    if (prevDigitalDisplay) {
+        prevDigitalDisplay.geometry.dispose();
+        prevDigitalDisplay.material.dispose();
+        scene.remove(prevDigitalDisplay);
 
         for (const part of DIGITAL_DISPLAY_PARTS) {
             const prevPart = scene.getObjectByName(part);
             scene.remove(prevPart);
         }
     }
+
+    const digitalTimeGeometry = createDigitalTimeGeometry(digitalTimeStr, font);
+    digitalTimeGeometry.center()
 
     const digitalDisplayMesh = createDigitalDisplayMesh(digitalTimeGeometry);
     digitalDisplayMesh.name = 'digitalDisplay';
