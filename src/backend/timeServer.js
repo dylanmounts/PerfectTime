@@ -7,7 +7,7 @@ const port = 7133;
 let lastNTPTime = new Date(); // Time of the last successful NTP sync
 let lastSyncTime = Date.now(); // Timestamp when the last NTP sync occurred
 
-function () {
+function updateTimeFromNTP() {
     ntpClient.getNetworkTime("pool.ntp.org", 123, (err, date) => {
         if (err) {
             console.error("Error updating time from NTP:", err);
