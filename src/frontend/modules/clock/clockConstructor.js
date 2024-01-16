@@ -1,5 +1,5 @@
 import { updateDayDateDisplay, updateDigitalDisplay } from './clockUpdater.js';
-import {  SIZES } from '../constants.js';
+import { INDICATORS, SIZES } from '../constants.js';
 import { createHourGeometry, createMinuteGeometry, createIndicatorGeometry } from '../visuals/geometries.js';
 import { createHourMesh, createMinuteMesh, createIndicatorMesh, MESHES } from '../visuals/meshes.js';
 
@@ -20,6 +20,7 @@ function createNumbers(scene, font) {
         hourMesh.position.x = Math.sin(angle) * distanceFromCenter;
         hourMesh.position.y = Math.cos(angle) * distanceFromCenter;
         hourMesh.position.z = 0;
+        hourMesh.name = `hour${i}`;
 
         scene.add(hourMesh);
 
@@ -34,6 +35,7 @@ function createNumbers(scene, font) {
         minuteMesh.position.x = Math.sin(angle) * minuteDistanceFromCenter;
         minuteMesh.position.y = Math.cos(angle) * minuteDistanceFromCenter;
         minuteMesh.position.z = 0;
+        minuteMesh.name = `minute${i}`;
 
         scene.add(minuteMesh);
     }
@@ -42,10 +44,7 @@ function createNumbers(scene, font) {
 function createIndicators(scene) {
     const distanceFromCenter = SIZES.CLOCK_RADIUS * 23/24;
 
-    for (let i = 0; i < 60; i++) {
-        if (i === 15) {
-            continue;
-        }        
+    for (let i = 0; i < 60; i++) {  
         const angle = (Math.PI / 30) * i;
 
         const isFiveMinuteMark = i % 5 === 0;
@@ -57,7 +56,9 @@ function createIndicators(scene) {
         indicator.position.x = Math.sin(angle) * distanceFromCenter;
         indicator.position.y = Math.cos(angle) * distanceFromCenter;
         indicator.position.z = 0;
+        indicator.name = `indicator${i}`;
 
+        INDICATORS[i] = indicator;
         scene.add(indicator);
     }
 }

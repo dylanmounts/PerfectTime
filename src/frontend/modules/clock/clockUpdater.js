@@ -1,4 +1,4 @@
-import { DAY_DATE_PARTS, DIGITAL_DISPLAY_PARTS } from '../constants.js';
+import { DAY_DATE_PARTS, DIGITAL_DISPLAY_PARTS, INDICATORS } from '../constants.js';
 import { createDayDateMesh, createDigitalDisplayMesh, MESHES } from '../visuals/meshes.js';
 import { timeManager } from '../managers/timeManager.js';
 import { createDayDateGeometry, createDigitalTimeGeometry } from '../visuals/geometries.js';
@@ -6,6 +6,7 @@ import { createDayDateGeometry, createDigitalTimeGeometry } from '../visuals/geo
 
 let dayDateExists = true;
 let digitalDisplayExists = true;
+let indicatorsExist = true;
 
 export function updateClock(scene, monoFont) {
     const date = timeManager.getCurrentTime();
@@ -24,6 +25,7 @@ export function updateClock(scene, monoFont) {
 
     updateDigitalDisplay(scene, monoFont);
     updateDayDateDisplay(scene, monoFont);
+    updateIndicators(scene, indicatorsExist, dayDateExists);
 }
 
 function calculateHourAngle(hours, minutes, seconds, milliseconds) {
@@ -130,4 +132,26 @@ export function updateDigitalDisplay(scene, font) {
 
 export function toggleDigitalDisplay(isChecked) {
     digitalDisplayExists = isChecked;
+}
+
+function updateIndicators(scene, indicatorsExist, dayDateExists) {
+    for (let i = 0; i < 60; i++) {
+        const indicatorName = `indicator${i}`;
+        const indicator = scene.getObjectByName(indicatorName);
+
+        if (indicatorsExist) {
+            if (dayDateExists && i === 15) {
+                if (indicator) {
+                    scene.remove(indicator);
+                }
+                continue;
+            }
+
+            if (!indicator) {
+                scene.add(INDICATORS[i]);
+            }
+        } else {
+            scene.remove(indicator);
+        }
+    }
 }

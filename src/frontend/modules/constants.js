@@ -53,3 +53,4 @@ export const DIGITAL_DISPLAY_PARTS = [
     'digitalDisplayLeftFrame',
     'digitalDisplayRightFrame',
 ]
+export const INDICATORS = {};
