@@ -22,7 +22,7 @@ export function updateClock(scene, monoFont) {
     MESHES.minuteHand.rotation.z = -minuteAngle;
     MESHES.secondHand.rotation.z = -secondAngle;
 
-    updateDigitalDisplay(scene, monoFont);
+    // updateDigitalDisplay(scene, monoFont);
     updateDayDateDisplay(scene, monoFont);
 }
 
@@ -53,13 +53,11 @@ export function updateDayDateDisplay(scene, font) {
     // Combine day and date
     const dayDateStr = `${day.toUpperCase()} ${date}`;
 
-    // Create text geometry for day and date
-    const dayDateGeometry = createDayDateGeometry(dayDateStr, font);
-    dayDateGeometry.center();
-
     // Remove previous day/date display if it exists
-    if (scene.getObjectByName('dayDateDisplay')) {
-        const prevDayDateDisplay = scene.getObjectByName('dayDateDisplay');
+    const prevDayDateDisplay = scene.getObjectByName('dayDateDisplay');
+    if (prevDayDateDisplay) {
+        prevDayDateDisplay.geometry.dispose();
+        prevDayDateDisplay.material.dispose();
         scene.remove(prevDayDateDisplay);
 
         for (const part of DAY_DATE_PARTS) {
@@ -68,9 +66,13 @@ export function updateDayDateDisplay(scene, font) {
         }
     }
 
+    // Create text geometry for day and date
+    const dayDateGeometry = createDayDateGeometry(dayDateStr, font);
+    dayDateGeometry.center();
+
     // Create mesh for day and date
     const dayDateMesh = createDayDateMesh(dayDateGeometry);
-    dayDateMesh.name = 'dayDateDisplay';
+    dayDateMesh.name = 'dayDateDisplay'
 
     // Position inside the existing Day/Date box
     dayDateMesh.position.x = MESHES.dayDateBox.position.x;

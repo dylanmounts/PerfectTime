@@ -81,9 +81,9 @@ function animate() {
 async function initializeScene() {
     setupScene();
 
+    await timeManager.fetchInitialTime('http://localhost:3000/time');
     regularFont = await fontManager.getLoadedFont();
     monoFont = await monoFontManager.getLoadedFont();
-    await timeManager.fetchInitialTime('http://localhost:3000/time');
 
     addClock(scene, regularFont, monoFont);
     animate();
