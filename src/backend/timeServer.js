@@ -27,11 +27,6 @@ function getPerfectTime() {
     return currentTime;
 }
 
-app.get('/', (req, res) => {
-    const currentTime = getPerfectTime();
-    res.json({ time: currentTime });
-});
-
 app.listen(port, () => {
     console.log(`Time server running on port ${port}`);
 });

@@ -15,8 +15,6 @@
   },
   "scripts": {
     "build": "npx vite build",
-    "start": "concurrently \"npm run start-frontend\" \"npm run start-backend\"",
-    "start-frontend": "serve -s dist",
-    "start-backend": "node src/backend/timeServer.js"
+    "start": "node app.js"
   }
 }
