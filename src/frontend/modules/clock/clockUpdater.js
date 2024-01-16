@@ -6,7 +6,8 @@ import { createDayDateGeometry, createDigitalTimeGeometry } from '../visuals/geo
 
 let dayDateExists = true;
 let digitalDisplayExists = true;
-let indicatorsExist = true;
+let hourIndicatorsExist = true;
+let minuteIndicatorsExist = true;
 
 export function updateClock(scene, monoFont) {
     const date = timeManager.getCurrentTime();
@@ -25,7 +26,7 @@ export function updateClock(scene, monoFont) {
 
     updateDigitalDisplay(scene, monoFont);
     updateDayDateDisplay(scene, monoFont);
-    updateIndicators(scene, indicatorsExist, dayDateExists);
+    updateIndicators(scene);
 }
 
 function calculateHourAngle(hours, minutes, seconds, milliseconds) {
@@ -134,24 +135,41 @@ export function toggleDigitalDisplay(isChecked) {
     digitalDisplayExists = isChecked;
 }
 
-function updateIndicators(scene, indicatorsExist, dayDateExists) {
+function updateIndicators(scene) {
     for (let i = 0; i < 60; i++) {
         const indicatorName = `indicator${i}`;
         const indicator = scene.getObjectByName(indicatorName);
 
-        if (indicatorsExist) {
-            if (dayDateExists && i === 15) {
-                if (indicator) {
+        // Hours
+        if (hourIndicatorsExist && i % 5 === 0) {
+            if (i === 15) {
+                if (!dayDateExists && !indicator) {
+                    scene.add(INDICATORS[i]);
+                } else if (dayDateExists && indicator) {
                     scene.remove(indicator);
                 }
-                continue;
+            } else {
+                scene.add(INDICATORS[i]);
             }
+        } else if (!hourIndicatorsExist && i % 5 === 0 && indicator) {
+            scene.remove(indicator);
+        }
 
+        // Minutes
+        if (minuteIndicatorsExist && i % 5 != 0) {
             if (!indicator) {
                 scene.add(INDICATORS[i]);
             }
-        } else {
+        } else if (!minuteIndicatorsExist && i % 5 != 0) {
             scene.remove(indicator);
         }
     }
+}
+
+export function toggleHourIndicators(isChecked) {
+    hourIndicatorsExist = isChecked;
+}
+
+export function toggleMinuteIndicators(isChecked) {
+    minuteIndicatorsExist = isChecked;
 }
