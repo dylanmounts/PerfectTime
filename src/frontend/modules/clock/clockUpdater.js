@@ -39,6 +39,7 @@ export function updateClock(scene, monoFont) {
     updateHourHand(scene);
     updateMinuteHand(scene);
     updateSecondHand(scene);
+    updateTimeOffset(timeManager.timeOffset);
 }
 
 function calculateHourAngle(hours, minutes, seconds, milliseconds) {
@@ -273,4 +274,14 @@ export function toggleSecondHand(isChecked) {
 
 export function toggleSweepingSeconds(isChecked) {
     sweepingSeconds = isChecked;
+}
+
+export function updateTimeOffset(offset) {
+    const offsetNumberField = document.getElementById('timeOffsetNumber')
+    const offsetDirectionField = document.getElementById('timeOffsetDirection')
+
+    let offsetInSeconds = (offset / 1000).toFixed(1);
+
+    offsetNumberField.textContent = Math.abs(offsetInSeconds);
+    offsetDirectionField.textContent = offset > 0 ? "behind" : "ahead";
 }
