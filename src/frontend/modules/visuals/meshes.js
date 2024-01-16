@@ -13,9 +13,11 @@ clockFace.position.z = 0;
 
 const hourHand = new THREE.Mesh(GEOMETRIES.hourHand, MATERIALS.hourHand);
 hourHand.position.z = SIZES.POST_HEIGHT - .003;
+hourHand.name = 'hourHand';
 
 const minuteHand = new THREE.Mesh(GEOMETRIES.minuteHand, MATERIALS.minuteHand);
 minuteHand.position.z = SIZES.POST_HEIGHT - .002;
+minuteHand.name = 'minuteHand';
 
 const post = new THREE.Mesh(GEOMETRIES.post, MATERIALS.post);
 post.rotation.x = Math.PI / 2
@@ -23,6 +25,7 @@ post.position.z = SIZES.POST_HEIGHT / 2;
 
 const secondHand = new THREE.Mesh(GEOMETRIES.secondHand, MATERIALS.secondHand);
 secondHand.position.z = SIZES.POST_HEIGHT - .001;
+secondHand.name = 'secondHand';
 
 const dayDateBox = new THREE.Mesh(GEOMETRIES.dayDateBox, MATERIALS.dayDateBox);
 dayDateBox.name = 'dayDateBox';

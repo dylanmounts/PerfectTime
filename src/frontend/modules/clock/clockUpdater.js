@@ -8,8 +8,11 @@ let dayDateExists = true;
 let digitalDisplayExists = true;
 let hourIndicatorsExist = true;
 let hourNumbersExist = true;
+let hourHandExists = true;
 let minuteIndicatorsExist = true;
 let minuteNumbersExist = true;
+let minuteHandExists = true;
+let secondHandExists = true;
 
 export function updateClock(scene, monoFont) {
     const date = timeManager.getCurrentTime();
@@ -30,6 +33,9 @@ export function updateClock(scene, monoFont) {
     updateDayDateDisplay(scene, monoFont);
     updateIndicators(scene);
     updateNumbers(scene);
+    updateHourHand(scene);
+    updateMinuteHand(scene);
+    updateSecondHand(scene);
 }
 
 function calculateHourAngle(hours, minutes, seconds, milliseconds) {
@@ -217,4 +223,43 @@ export function toggleHourNumbers(isChecked) {
 
 export function toggleMinuteNumbers(isChecked) {
     minuteNumbersExist = isChecked;
+}
+
+export function updateHourHand(scene) {
+    const hourHand = scene.getObjectByName('hourHand');
+    if (hourHandExists && !hourHand) {
+        scene.add(MESHES.hourHand);
+    } else if (!hourHandExists && hourHand) {
+        scene.remove(hourHand);
+    }
+}
+
+export function updateMinuteHand(scene) {
+    const minuteHand = scene.getObjectByName('minuteHand');
+    if (minuteHandExists && !minuteHand) {
+        scene.add(MESHES.minuteHand);
+    } else if (!minuteHandExists && minuteHand) {
+        scene.remove(minuteHand);
+    }
+}
+
+export function updateSecondHand(scene) {
+    const secondHand = scene.getObjectByName('secondHand');
+    if (secondHandExists && !secondHand) {
+        scene.add(MESHES.secondHand);
+    } else if (!secondHandExists && secondHand) {
+        scene.remove(secondHand);
+    }
+}
+
+export function toggleHourHand(isChecked) {
+    hourHandExists = isChecked;
+}
+
+export function toggleMinuteHand(isChecked) {
+    minuteHandExists = isChecked;
+}
+
+export function toggleSecondHand(isChecked) {
+    secondHandExists = isChecked;
 }
