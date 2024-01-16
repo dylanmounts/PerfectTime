@@ -2,12 +2,12 @@ const express = require('express');
 const ntpClient = require('ntp-client');
 
 const app = express();
-const port = 3000;
+const port = 7133;
 
 let lastNTPTime = new Date(); // Time of the last successful NTP sync
 let lastSyncTime = Date.now(); // Timestamp when the last NTP sync occurred
 
-function updateTimeFromNTP() {
+function () {
     ntpClient.getNetworkTime("pool.ntp.org", 123, (err, date) => {
         if (err) {
             console.error("Error updating time from NTP:", err);
@@ -27,7 +27,7 @@ function getPerfectTime() {
     return currentTime;
 }
 
-app.get('/time', (req, res) => {
+app.get('/', (req, res) => {
     const currentTime = getPerfectTime();
     res.json({ time: currentTime });
 });

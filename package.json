@@ -17,6 +17,6 @@
     "build": "npx vite build",
     "start": "concurrently \"npm run start-frontend\" \"npm run start-backend\"",
     "start-frontend": "serve -s dist",
-    "start-backend": "node src/backend/time_server.js"
+    "start-backend": "node src/backend/timeServer.js"
   }
 }
