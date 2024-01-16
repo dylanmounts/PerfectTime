@@ -4,6 +4,7 @@ const timeServer = require('./src/backend/timeServer');
 
 const app = express();
 const port = process.env.PORT || 3000;
+const hostname = process.env.HOSTNAME || '127.0.0.1';
 
 app.use(express.static(path.join(__dirname, 'dist')));
 
@@ -16,6 +17,10 @@ app.get('*', (req, res) => {
     res.sendFile(path.join(__dirname, 'dist/index.html'));
 });
 
-app.listen(port, () => {
-    console.log(`App server running on port ${port}`);
+app.listen(port, hostname, () => {
+    console.log(`Server running at http://${hostname}:${port}/`);
 });
+
+// Update time from NTP initially and then every 15 minutes
+timeServer.updateTimeFromNTP();
+setInterval(timeServer.updateTimeFromNTP, 15 * 60 * 1000);

@@ -7,7 +7,7 @@ const port = 7133;
 let lastNTPTime = new Date(); // Time of the last successful NTP sync
 let lastSyncTime = Date.now(); // Timestamp when the last NTP sync occurred
 
-function updateTimeFromNTP() {
+export function updateTimeFromNTP() {
     ntpClient.getNetworkTime("pool.ntp.org", 123, (err, date) => {
         if (err) {
             console.error("Error updating time from NTP:", err);
@@ -20,17 +20,9 @@ function updateTimeFromNTP() {
 }
 
 // Function to get the current, accurate time
-function getPerfectTime() {
+export function getPerfectTime() {
     const now = Date.now();
     const timeSinceLastSync = now - lastSyncTime;
     const currentTime = new Date(lastNTPTime.getTime() + timeSinceLastSync);
     return currentTime;
 }
-
-app.listen(port, () => {
-    console.log(`Time server running on port ${port}`);
-});
-
-// Update time initially and then every 15 minutes
-updateTimeFromNTP();
-setInterval(updateTimeFromNTP, 15 * 60 * 1000); // 15 minutes in milliseconds
