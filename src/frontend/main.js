@@ -4,7 +4,7 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 
 import '../frontend/scss/styles.scss'
 import { addClock } from './modules/clock/clockConstructor';
-import { toggleDayDate, toggleDigitalDisplay, toggleHourIndicators, toggleMinuteIndicators, updateClock } from './modules/clock/clockUpdater';
+import { toggleDayDate, toggleDigitalDisplay, toggleHourIndicators, toggleHourNumbers, toggleMinuteIndicators, toggleMinuteNumbers, updateClock } from './modules/clock/clockUpdater';
 import { timeManager } from './modules/managers/timeManager';
 import { fontManager, monoFontManager } from './modules/managers/fontManager';
 
@@ -93,4 +93,6 @@ initializeScene();
 handleCheckboxChange('dayDateOption', toggleDayDate);
 handleCheckboxChange('digitalTimeOption', toggleDigitalDisplay);
 handleCheckboxChange('hourIndicatorsOption', toggleHourIndicators);
+handleCheckboxChange('hoursOption', toggleHourNumbers);
 handleCheckboxChange('minuteIndicatorsOption', toggleMinuteIndicators);
+handleCheckboxChange('minutesOption', toggleMinuteNumbers);

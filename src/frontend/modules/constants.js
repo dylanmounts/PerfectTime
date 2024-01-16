@@ -54,3 +54,5 @@ export const DIGITAL_DISPLAY_PARTS = [
     'digitalDisplayRightFrame',
 ]
 export const INDICATORS = {};
+export const HOUR_NUMBERS = {};
+export const MINUTE_NUMBERS = {};

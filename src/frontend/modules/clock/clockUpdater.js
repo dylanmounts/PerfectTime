@@ -1,4 +1,4 @@
-import { DAY_DATE_PARTS, DIGITAL_DISPLAY_PARTS, INDICATORS } from '../constants.js';
+import { DAY_DATE_PARTS, DIGITAL_DISPLAY_PARTS, HOUR_NUMBERS, INDICATORS, MINUTE_NUMBERS } from '../constants.js';
 import { createDayDateMesh, createDigitalDisplayMesh, MESHES } from '../visuals/meshes.js';
 import { timeManager } from '../managers/timeManager.js';
 import { createDayDateGeometry, createDigitalTimeGeometry } from '../visuals/geometries.js';
@@ -7,7 +7,9 @@ import { createDayDateGeometry, createDigitalTimeGeometry } from '../visuals/geo
 let dayDateExists = true;
 let digitalDisplayExists = true;
 let hourIndicatorsExist = true;
+let hourNumbersExist = true;
 let minuteIndicatorsExist = true;
+let minuteNumbersExist = true;
 
 export function updateClock(scene, monoFont) {
     const date = timeManager.getCurrentTime();
@@ -27,6 +29,7 @@ export function updateClock(scene, monoFont) {
     updateDigitalDisplay(scene, monoFont);
     updateDayDateDisplay(scene, monoFont);
     updateIndicators(scene);
+    updateNumbers(scene);
 }
 
 function calculateHourAngle(hours, minutes, seconds, milliseconds) {
@@ -172,4 +175,46 @@ export function toggleHourIndicators(isChecked) {
 
 export function toggleMinuteIndicators(isChecked) {
     minuteIndicatorsExist = isChecked;
+}
+
+function updateNumbers(scene) {
+    for (let i = 1; i <= 12; i++) {
+        const hourName = `hour${i}`;
+        const minuteName = `minute${i * 5}`;
+
+        const hourNumber = scene.getObjectByName(hourName);
+        const minuteNumber = scene.getObjectByName(minuteName);
+
+        // Hours
+        if (hourNumbersExist) {
+            if (i === 3) {
+                if (!dayDateExists && !hourNumber) {
+                    scene.add(HOUR_NUMBERS[i]);
+                } else if (dayDateExists && hourNumber) {
+                    scene.remove(hourNumber);
+                }
+            } else {
+                scene.add(HOUR_NUMBERS[i]);
+            }
+        } else {
+            scene.remove(hourNumber);
+        }
+
+        // Minutes
+        if (minuteNumbersExist) {
+            if (!minuteNumber) {
+                scene.add(MINUTE_NUMBERS[i * 5]);
+            }
+        } else {
+            scene.remove(minuteNumber);
+        }
+    }
+}
+
+export function toggleHourNumbers(isChecked) {
+    hourNumbersExist = isChecked;
+}
+
+export function toggleMinuteNumbers(isChecked) {
+    minuteNumbersExist = isChecked;
 }

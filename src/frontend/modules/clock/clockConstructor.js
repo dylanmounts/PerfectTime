@@ -1,14 +1,11 @@
 import { updateDayDateDisplay, updateDigitalDisplay } from './clockUpdater.js';
-import { INDICATORS, SIZES } from '../constants.js';
+import { HOUR_NUMBERS, INDICATORS, MINUTE_NUMBERS, SIZES } from '../constants.js';
 import { createHourGeometry, createMinuteGeometry, createIndicatorGeometry } from '../visuals/geometries.js';
 import { createHourMesh, createMinuteMesh, createIndicatorMesh, MESHES } from '../visuals/meshes.js';
 
 
 function createNumbers(scene, font) {
     for (let i = 1; i <= 12; i++) {
-        if (i === 3) {
-            continue;
-        }
         const angle = (Math.PI / 6) * i;
 
         // Hours
@@ -22,6 +19,7 @@ function createNumbers(scene, font) {
         hourMesh.position.z = 0;
         hourMesh.name = `hour${i}`;
 
+        HOUR_NUMBERS[i] = hourMesh;
         scene.add(hourMesh);
 
         // Minutes
@@ -35,8 +33,9 @@ function createNumbers(scene, font) {
         minuteMesh.position.x = Math.sin(angle) * minuteDistanceFromCenter;
         minuteMesh.position.y = Math.cos(angle) * minuteDistanceFromCenter;
         minuteMesh.position.z = 0;
-        minuteMesh.name = `minute${i}`;
+        minuteMesh.name = `minute${minuteNumber}`;
 
+        MINUTE_NUMBERS[minuteNumber] = minuteMesh;
         scene.add(minuteMesh);
     }
 }
