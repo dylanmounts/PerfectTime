@@ -6,7 +6,7 @@ export default {
   plugins: [
     copy({
       targets: [
-        { src: 'src/assets/fonts/*', dest: 'dist/fonts' }
+        { src: 'src/assets/*', dest: 'dist' },
       ],
       hook: 'writeBundle'
     })
