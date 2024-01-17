@@ -64,6 +64,12 @@ Key features:
 * [![Node.js][Node.js]][Node-url]
 * [![Bootstrap][Bootstrap.com]][Bootstrap-url]
 
+[Three.js]: https://img.shields.io/badge/Three.js-black?style=for-the-badge&logo=threedotjs&logoColor=white
+[Three-url]: https://threejs.org/
+[Node.js]: https://img.shields.io/badge/Node.js-43853D?style=for-the-badge&logo=nodedotjs&logoColor=white
+[Node-url]: https://nodejs.org/
+[Bootstrap.com]: https://img.shields.io/badge/Bootstrap-563D7C?style=for-the-badge&logo=bootstrap&logoColor=white
+[Bootstrap-url]: https://getbootstrap.com
 
 
 <!-- GETTING STARTED -->
