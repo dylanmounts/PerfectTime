@@ -1,7 +1,6 @@
 <a name="readme-top"></a>
 <!-- PROJECT SHIELDS -->
 [![LinkedIn][linkedin-shield]][linkedin-url]
-[![MIT License][license-shield]][license-url]
 
 
 
@@ -158,8 +157,6 @@ Project Link: [https://github.com/dylanmounts/PerfectTime](https://github.com/dy
 
 
 <!-- MARKDOWN LINKS & IMAGES -->
-[license-shield]: https://img.shields.io/github/license/dylanmounts/PerfectTime.svg?style=for-the-badge
-[license-url]: https://github.com/dylanmounts/PerfectTime/blob/master/LICENSE.txt
 [linkedin-shield]: https://img.shields.io/badge/-LinkedIn-black.svg?style=for-the-badge&logo=linkedin&colorB=555
 [linkedin-url]: https://linkedin.com/in/dylan-mounts
 [product-screenshot]: https://github.com/dylanmounts/PerfectTime/blob/main/src/assets/img/perfect-clock-thumb.png
