@@ -3,13 +3,17 @@ import * as THREE from 'three';
 import { COLORS } from '../constants.js';
 
 
+const loader = new THREE.TextureLoader();
+const clockFaceTexture = loader.load('img/matcap1.png');
+const complicationBoxTexture = loader.load('img/matcap2.png')
+
 const clockBezel = new THREE.MeshPhongMaterial({ color: COLORS.CLOCK_BEZEL });
-const clockFace = new THREE.MeshPhongMaterial({ color: COLORS.CLOCK_FACE });
+const clockFace = new THREE.MeshMatcapMaterial({ matcap: clockFaceTexture });
 const complicationFrame = new THREE.MeshPhongMaterial({ color: COLORS.CLOCK_BEZEL });
 const dayDate = new THREE.MeshPhongMaterial({ color: COLORS.HOUR_NUMBERS });
-const dayDateBox = new THREE.MeshPhongMaterial({ color: COLORS.DAY_DATE_BOX });
+const dayDateBox = new THREE.MeshMatcapMaterial({ matcap: complicationBoxTexture });
 const digitalDisplay = new THREE.MeshPhongMaterial({ color: COLORS.HOUR_NUMBERS });
-const digitalDisplayBox = new THREE.MeshPhongMaterial({ color: COLORS.DIGITAL_DISPLAY_BOX });
+const digitalDisplayBox = new THREE.MeshMatcapMaterial({ matcap: complicationBoxTexture });
 const hourHand = new THREE.MeshPhongMaterial({ color: COLORS.HOUR_HAND });
 const hourNumber = new THREE.MeshPhongMaterial({ color: COLORS.HOUR_NUMBERS });
 const indicator = new THREE.MeshPhongMaterial({ color: COLORS.INDICATORS });
