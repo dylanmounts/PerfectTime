@@ -17,12 +17,9 @@ let monoFont = null;
 function setupScene() {
     window.addEventListener('resize', onWindowResize);
 
-    const ambientLight = new THREE.AmbientLight(0xffffff, 1);
-    const pointLight = new THREE.PointLight(0xffffff, 100);
-    pointLight.position.set(0, 0, 7.5);
+    const ambientLight = new THREE.AmbientLight(0xffffff, 5);
 
     scene.add(ambientLight);
-    scene.add(pointLight);
 
     renderer.setSize(window.innerWidth, window.innerHeight);
     document.body.appendChild(renderer.domElement);
