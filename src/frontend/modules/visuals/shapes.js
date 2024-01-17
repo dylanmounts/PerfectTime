@@ -8,11 +8,7 @@ import * as THREE from 'three';
 import { SIZES } from '../constants.js';
 
 
-/**
- * Creates the shape for the hour hand of the clock.
- * 
- * @returns {THREE.Shape} The shape of the hour hand.
- */
+// Shape for the hour hand of the clock.
 export const hourHandShape = () => {
     const shape = new THREE.Shape();
     shape.moveTo(0, -0.3);
@@ -23,11 +19,7 @@ export const hourHandShape = () => {
     return shape;
 };
 
-/**
- * Creates the shape for the minute hand of the clock.
- * 
- * @returns {THREE.Shape} The shape of the minute hand.
- */
+// Shape for the minute hand of the clock.
 export const minuteHandShape = () => {
     const shape = new THREE.Shape();
     shape.moveTo(0, -0.2);
@@ -38,11 +30,7 @@ export const minuteHandShape = () => {
     return shape;
 };
 
-/**
- * Creates the shape for the second hand of the clock.
- * 
- * @returns {THREE.Shape} The shape of the second hand.
- */
+// Shape for the second hand of the clock.
 export const secondHandShape = () => {
     const shape = new THREE.Shape();
     shape.moveTo(0, -0.1);
