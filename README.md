@@ -103,7 +103,9 @@ To get a local copy up and running, follow these simple steps.
    ```sh
    npm start
    ```
-5. Access the app in your web browser. By default, it will be available at http://127.0.0.1:3000. This can be changed by setting the PORT and HOSTNAME environment variables.
+5. Access the app in your web browser.
+   1. By default, it will be available at http://127.0.0.1:3000.
+   2. This can be changed by setting the `PORT` and `HOSTNAME` environment variables.
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
