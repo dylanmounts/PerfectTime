@@ -39,7 +39,6 @@ export function updateClock(scene, monoFont) {
     updateHourHand(scene);
     updateMinuteHand(scene);
     updateSecondHand(scene);
-    updateTimeOffset(timeManager.timeOffset);
 }
 
 function calculateHourAngle(hours, minutes, seconds, milliseconds) {
