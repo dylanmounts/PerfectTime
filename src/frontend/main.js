@@ -23,7 +23,7 @@ import { Toast } from 'bootstrap';
 
 import '../frontend/scss/styles.scss'
 import { initializeScene, onWindowResize } from './modules/managers/sceneManager';
-import { toggleDayDate, toggleDigitalDisplay, toggleHourIndicators, toggleHourNumbers, toggleHourHand, toggleMinuteIndicators, toggleMinuteNumbers, toggleMinuteHand, toggleSecondHand, toggleSweepingSeconds } from './modules/clock/clockUpdater';
+import * as ClockUpdater from './modules/clock/clockUpdater';
 
 
 // Bootstrap components
@@ -62,16 +62,16 @@ function handleCheckboxChange(checkboxId, callback) {
 }
 
 // Create the event listeners
-handleCheckboxChange('dayDateOption', toggleDayDate);
-handleCheckboxChange('digitalTimeOption', toggleDigitalDisplay);
-handleCheckboxChange('hourIndicatorsOption', toggleHourIndicators);
-handleCheckboxChange('hoursOption', toggleHourNumbers);
-handleCheckboxChange('hourHandOption', toggleHourHand);
-handleCheckboxChange('minuteIndicatorsOption', toggleMinuteIndicators);
-handleCheckboxChange('minutesOption', toggleMinuteNumbers);
-handleCheckboxChange('minuteHandOption', toggleMinuteHand);
-handleCheckboxChange('secondHandOption', toggleSecondHand);
-handleCheckboxChange('sweepingSecondsOption', toggleSweepingSeconds);
+handleCheckboxChange('dayDateOption', ClockUpdater.toggleDayDate);
+handleCheckboxChange('digitalTimeOption', ClockUpdater.toggleDigitalDisplay);
+handleCheckboxChange('hourIndicatorsOption', ClockUpdater.toggleHourIndicators);
+handleCheckboxChange('hoursOption', ClockUpdater.toggleHourNumbers);
+handleCheckboxChange('hourHandOption', ClockUpdater.toggleHourHand);
+handleCheckboxChange('minuteIndicatorsOption', ClockUpdater.toggleMinuteIndicators);
+handleCheckboxChange('minutesOption', ClockUpdater.toggleMinuteNumbers);
+handleCheckboxChange('minuteHandOption', ClockUpdater.toggleMinuteHand);
+handleCheckboxChange('secondHandOption', ClockUpdater.toggleSecondHand);
+handleCheckboxChange('sweepingSecondsOption', ClockUpdater.toggleSweepingSeconds);
 window.addEventListener('resize', onWindowResize);
 
 // Tick tock run the clock
