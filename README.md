@@ -4,14 +4,15 @@
 [![MIT License][license-shield]][license-url]
 
 
+
 <!-- PROJECT LOGO -->
 <br />
 <div align="center">
-  <a href="https://github.com/dylanmounts/PerfectTime.org">
+  <a href="https://github.com/dylanmounts/PerfectTime">
     <img src="images/logo.png" alt="Logo" width="80" height="80">
   </a>
 
-  <h3 align="center">PerfectTime.org</h3>
+  <h3 align="center">PerfectTime</h3>
 
   <p align="center">
     An overengineered analog clock designed to show the perfect time every time.
@@ -19,6 +20,8 @@
     <a href="https://PerfectTime.org"><strong>https://PerfectTime.org</strong></a>
   </p>
 </div>
+
+
 
 <!-- TABLE OF CONTENTS -->
 <details>
@@ -39,12 +42,14 @@
   </ol>
 </details>
 
+
+
 <!-- ABOUT THE PROJECT -->
 ## About The Project
 
-[![PerfectTime.org Screen Shot][product-screenshot]](https://PerfectTime.org)
+[![PerfectTime Screen Shot][product-screenshot]](https://PerfectTime.org)
 
-PerfectTime.org is a highly accurate, overengineered analog clock built using modern web technologies. The clock is rendered with Three.js and designed to synchronize with the NTP pool, ensuring it displays the most accurate time possible.
+PerfectTime is a highly accurate, overengineered analog clock built using modern web technologies. The clock is rendered with Three.js and designed to synchronize with the NTP pool, ensuring it displays the most accurate time possible.
 
 Key features:
 * 3D analog clock rendering using Three.js.
@@ -68,38 +73,32 @@ To get a local copy up and running, follow these simple steps.
 
 ### Prerequisites
 
-This is an example of how to list things you need to use the software and how to install them.
-* npm
-  ```sh
-  npm install npm@latest -g
-  ```
+* [Node.js](https://nodejs.org/en/download)
+  - I developed this with Node.js v20.10.0. Other versions may also work but have not been thoroughly tested.
 
 ### Installation
 
-1. Get a free API Key at [https://example.com](https://example.com)
-2. Clone the repo
+1. Clone the repo
    ```sh
-   git clone https://github.com/github_username/repo_name.git
+   git clone https://github.com/dylanmounts/PerfectTime.git
    ```
+2. Navigate to the repo directory
+    ```sh
+    cd PerfectTime
+    ```
 3. Install NPM packages
    ```sh
    npm install
    ```
-4. Enter your API in `config.js`
-   ```js
-   const API_KEY = 'ENTER YOUR API';
+4. Build the app
+   ```sh
+   npm run build
    ```
-
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
-
-
-
-<!-- USAGE EXAMPLES -->
-## Usage
-
-Use this space to show useful examples of how a project can be used. Additional screenshots, code examples and demos work well in this space. You may also link to more resources.
-
-_For more examples, please refer to the [Documentation](https://example.com)_
+4. Start the app
+   ```sh
+   npm start
+   ```
+5. Access the app in your web browser. By default, it will be available at http://127.0.0.1:3000. This can be changed by setting the PORT and HOSTNAME environment variables.
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -137,7 +136,7 @@ Distributed under the MIT License. See `LICENSE.txt` for more information.
 
 Dylan Mounts - dmounts@gmail.com
 
-Project Link: [https://github.com/dylanmounts/PerfectTime.org](https://github.com/dylanmounts/PerfectTime.org)
+Project Link: [https://github.com/dylanmounts/PerfectTime](https://github.com/dylanmounts/PerfectTime)
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
@@ -146,18 +145,16 @@ Project Link: [https://github.com/dylanmounts/PerfectTime.org](https://github.co
 <!-- ACKNOWLEDGMENTS -->
 ## Acknowledgments
 
-* []()
-* []()
-* []()
+* [othneildrew's Best-README-Template](https://github.com/othneildrew/Best-README-Template.git) for this README template.
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 
 
 <!-- MARKDOWN LINKS & IMAGES -->
-[license-shield]: https://img.shields.io/github/license/github_username/repo_name.svg?style=for-the-badge
-[license-url]: https://github.com/github_username/repo_name/blob/master/LICENSE.txt
+[license-shield]: https://img.shields.io/github/license/dylanmounts/repo_name.svg?style=for-the-badge
+[license-url]: https://github.com/dylanmounts/repo_name/blob/master/LICENSE.txt
 [linkedin-shield]: https://img.shields.io/badge/-LinkedIn-black.svg?style=for-the-badge&logo=linkedin&colorB=555
 [linkedin-url]: https://linkedin.com/in/dylan-mounts
-[product-logo]: 
-[product-screenshot]: 
+[product-logo]: https://github.com/dylanmounts/PerfectTime/blob/main/src/assets/img/favicon-75x75.png
+[product-screenshot]: https://github.com/dylanmounts/PerfectTime/blob/main/src/assets/img/perfect-clock-thumb.png
