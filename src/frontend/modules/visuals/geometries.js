@@ -1,3 +1,8 @@
+/**
+ * geometries.js - Defines various 3D geometries for the perfect clock.
+ *
+ */
+
 import * as THREE from 'three';
 import { TextGeometry } from 'three/addons/geometries/TextGeometry.js';
 
@@ -5,6 +10,7 @@ import * as CONSTANTS from '../constants.js';
 import { hourHandShape, minuteHandShape, secondHandShape } from './shapes.js';
 
 
+// Static clock parts
 const clockFace = new THREE.CircleGeometry(CONSTANTS.SIZES.CLOCK_RADIUS, CONSTANTS.SEGMENTS);
 const clockBezel = new THREE.RingGeometry(CONSTANTS.SIZES.CLOCK_RADIUS, CONSTANTS.CLOCK_OUTER_RADIUS, CONSTANTS.SEGMENTS);
 const dayDateFrameHorizontal = new THREE.BoxGeometry(CONSTANTS.DAY_DATE_FRAME_WIDTH, CONSTANTS.SIZES.COMPLICATION_FRAME_THICKNESS, CONSTANTS.SIZES.DAY_DATE_BOX_DEPTH);
@@ -33,6 +39,7 @@ export const GEOMETRIES = {
     secondHand,
 }
 
+// Text geometry for the day/date display
 export function createDayDateGeometry(dayDateStr, font) {
     return new TextGeometry(String(dayDateStr), {
         font: font,
@@ -43,6 +50,7 @@ export function createDayDateGeometry(dayDateStr, font) {
     });
 }
 
+// Text geometry for the digital time display
 export function createDigitalTimeGeometry(dayDateStr, font) {
     return new TextGeometry(String(dayDateStr), {
         font: font,
@@ -53,6 +61,7 @@ export function createDigitalTimeGeometry(dayDateStr, font) {
     });
 }
 
+// Text geometries for each hour number
 export function createHourGeometry(hour, font) {
     return new TextGeometry(String(hour), {
         font: font,
@@ -63,6 +72,7 @@ export function createHourGeometry(hour, font) {
     });
 }
 
+// Text geometries for each minute number
 export function createMinuteGeometry(minute, font) {
     return new TextGeometry(String(minute), {
         font: font,
@@ -73,6 +83,7 @@ export function createMinuteGeometry(minute, font) {
     });
 }
 
+// Geometries for each indicator (tick mark)
 export function createIndicatorGeometry(isFiveMinuteMark) {
     const regularIndicatorRadius = CONSTANTS.SIZES.INDICATOR_RADIUS * 1/2;
     const largeIndicatorRadius = CONSTANTS.SIZES.INDICATOR_RADIUS;
