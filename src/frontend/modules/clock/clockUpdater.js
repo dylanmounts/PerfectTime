@@ -1,9 +1,21 @@
+/**
+ * clockUpdater.js - Updates and manages the perfect clock's dynamic elements.
+ *
+ * This module contains functions to update the clock's hands, indicators, numbers,
+ * and digital displays based on the current time.
+ * 
+ * TODO: Refactor module to reduce complexity and improve maintainability. There's
+ *       just too much going on here. Probably ought to break out each clock element
+ *       into its own updater or controller.
+ */
+
 import { DAY_DATE_PARTS, DIGITAL_DISPLAY_PARTS, HOUR_NUMBERS, INDICATORS, MINUTE_NUMBERS } from '../constants.js';
 import { createDayDateMesh, createDigitalDisplayMesh, MESHES } from '../visuals/meshes.js';
 import { timeManager } from '../managers/timeManager.js';
 import { createDayDateGeometry, createDigitalTimeGeometry } from '../visuals/geometries.js';
 
 
+// State variables for the visibility of clock components.
 let dayDateExists = true;
 let digitalDisplayExists = true;
 let hourIndicatorsExist = true;
@@ -15,6 +27,13 @@ let minuteHandExists = true;
 let secondHandExists = true;
 let sweepingSeconds = true;
 
+/**
+ * Main function to update the clock based on the current time retrieved from the
+ * backend time server.
+ * 
+ * @param {Object} scene - The Three.js scene object.
+ * @param {Object} monoFont - The font used for monospaced elements.
+ */
 export function updateClock(scene, monoFont) {
     const date = timeManager.getCurrentTime();
     const hours = date.getHours() % 12;
@@ -41,6 +60,7 @@ export function updateClock(scene, monoFont) {
     updateSecondHand(scene);
 }
 
+// Helper functions for calculating clock hand angles
 function calculateHourAngle(hours, minutes, seconds, milliseconds) {
     return (Math.PI / 6) * hours + 
            (Math.PI / 360) * minutes + 
@@ -63,6 +83,12 @@ function calculateSweepingSecondAngle(seconds, milliseconds) {
            (Math.PI / 30000) * milliseconds;
 }
 
+/**
+ * Updates the day/date display on the perfect clock.
+ * 
+ * @param {Object} scene - The Three.js scene object.
+ * @param {Object} font - The font used for the day-date display.
+ */
 export function updateDayDateDisplay(scene, font) {
     // Get current date
     const now = timeManager.getCurrentTime();
@@ -112,10 +138,18 @@ export function toggleDayDate(isChecked) {
     dayDateExists = isChecked;
 }
 
+/**
+ * Updates the digital time display on the perfect clock.
+ * 
+ * @param {Object} scene - The Three.js scene object.
+ * @param {Object} font - The font used for the day-date display.
+ */
 export function updateDigitalDisplay(scene, font) {
+    // Get current date
     const currentTime = timeManager.getCurrentTime();
     const digitalTimeStr = currentTime.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
     
+    // Remove previous digital time display if it exists
     const prevDigitalDisplay = scene.getObjectByName('digitalDisplay');
     if (prevDigitalDisplay) {
         prevDigitalDisplay.geometry.dispose();
@@ -128,16 +162,20 @@ export function updateDigitalDisplay(scene, font) {
         }
     }
 
+    // Create text geometry for digital time
     const digitalTimeGeometry = createDigitalTimeGeometry(digitalTimeStr, font);
     digitalTimeGeometry.center()
 
+    // Create mesh for digital time
     const digitalDisplayMesh = createDigitalDisplayMesh(digitalTimeGeometry);
     digitalDisplayMesh.name = 'digitalDisplay';
 
+    // Position inside the existing digital time box
     digitalDisplayMesh.position.x = Math.sin(0) * 5.0 * 1/3;
     digitalDisplayMesh.position.y = Math.cos(0) * 5.0 * 1/3;
     digitalDisplayMesh.position.z = 0 + 0.01;
 
+    // Add to the scene
     if (digitalDisplayExists) {
         scene.add(digitalDisplayMesh);
 
@@ -151,6 +189,12 @@ export function toggleDigitalDisplay(isChecked) {
     digitalDisplayExists = isChecked;
 }
 
+/**
+ * Updates the indicators display on the perfect clock.
+ * 
+ * @param {Object} scene - The Three.js scene object.
+ * @param {Object} font - The font used for the day-date display.
+ */
 function updateIndicators(scene) {
     for (let i = 0; i < 60; i++) {
         const indicatorName = `indicator${i}`;
@@ -190,6 +234,15 @@ export function toggleMinuteIndicators(isChecked) {
     minuteIndicatorsExist = isChecked;
 }
 
+/**
+ * Updates the numbers on the perfect clock.
+ * 
+ * Due to the design choice of having the day/date window cover the 
+ * 3 o'clock position, the logic here is particularly complex.
+ * 
+ * @param {Object} scene - The Three.js scene object.
+ * @param {Object} font - The font used for the day-date display.
+ */
 function updateNumbers(scene) {
     for (let i = 1; i <= 12; i++) {
         const hourName = `hour${i}`;
@@ -232,6 +285,7 @@ export function toggleMinuteNumbers(isChecked) {
     minuteNumbersExist = isChecked;
 }
 
+// Adds or removes the hour hand from the scene based user configurations
 export function updateHourHand(scene) {
     const hourHand = scene.getObjectByName('hourHand');
     if (hourHandExists && !hourHand) {
@@ -241,6 +295,7 @@ export function updateHourHand(scene) {
     }
 }
 
+// Adds or removes the minute hand from the scene based user configurations
 export function updateMinuteHand(scene) {
     const minuteHand = scene.getObjectByName('minuteHand');
     if (minuteHandExists && !minuteHand) {
@@ -250,6 +305,7 @@ export function updateMinuteHand(scene) {
     }
 }
 
+// Adds or removes the second hand from the scene based user configurations
 export function updateSecondHand(scene) {
     const secondHand = scene.getObjectByName('secondHand');
     if (secondHandExists && !secondHand) {
@@ -275,6 +331,7 @@ export function toggleSweepingSeconds(isChecked) {
     sweepingSeconds = isChecked;
 }
 
+// Populates the field reporting how ahead/behind the user's device's clock is
 export function updateTimeOffset(offset) {
     const offsetNumberField = document.getElementById('timeOffsetNumber')
     const offsetDirectionField = document.getElementById('timeOffsetDirection')

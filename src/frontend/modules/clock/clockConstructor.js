@@ -1,3 +1,11 @@
+/**
+ * clockConstructor.js - Constructs the clock elements for the perfect clock.
+ *
+ * This module builds the initial clock, assembling the various Three.js parts into the places
+ * they're supposed to go.
+ */
+
+
 import { updateDayDateDisplay, updateDigitalDisplay, updateTimeOffset } from './clockUpdater.js';
 import { HOUR_NUMBERS, INDICATORS, MINUTE_NUMBERS, SIZES } from '../constants.js';
 import { timeManager } from '../managers/timeManager.js';
@@ -5,6 +13,12 @@ import { createHourGeometry, createMinuteGeometry, createIndicatorGeometry } fro
 import { createHourMesh, createMinuteMesh, createIndicatorMesh, MESHES } from '../visuals/meshes.js';
 
 
+/**
+ * Creates and places hour and minute numbers in the scene.
+ * 
+ * @param {Object} scene - The Three.js scene object.
+ * @param {Object} font - The font used for the numbers.
+ */
 function createNumbers(scene, font) {
     for (let i = 1; i <= 12; i++) {
         const angle = (Math.PI / 6) * i;
@@ -41,6 +55,11 @@ function createNumbers(scene, font) {
     }
 }
 
+/**
+ * Creates and places clock indicators (tick marks) in the scene.
+ * 
+ * @param {Object} scene - The Three.js scene object.
+ */
 function createIndicators(scene) {
     const distanceFromCenter = SIZES.CLOCK_RADIUS * 23/24;
 
@@ -63,6 +82,13 @@ function createIndicators(scene) {
     }
 }
 
+/**
+ * Adds the complete clock to the scene, including indicators, numbers, and other displays.
+ * 
+ * @param {Object} scene - The Three.js scene object.
+ * @param {Object} regularFont - The regular font for the clock numbers.
+ * @param {Object} monoFont - The monospace font for the digital display and date.
+ */
 export async function addClock(scene, regularFont, monoFont) {
     createIndicators(scene);
     createNumbers(scene, regularFont);

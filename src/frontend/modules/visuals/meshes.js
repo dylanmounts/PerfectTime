@@ -1,3 +1,8 @@
+
+/**
+ * meshes.js - Defines meshes for the perfect clock.
+ */
+
 import * as THREE from 'three';
 
 import { SIZES } from '../constants.js';
@@ -5,6 +10,7 @@ import { GEOMETRIES } from './geometries.js';
 import { MATERIALS } from './materials.js';
 
 
+// Static clock parts
 const clockBezel = new THREE.Mesh(GEOMETRIES.clockBezel, MATERIALS.clockBezel);
 clockBezel.position.z = 0;
 
@@ -91,22 +97,27 @@ export const MESHES = {
     digitalDisplayRightFrame,
 }
 
+// Mesh used to show the day/date
 export function createDayDateMesh(dayDateGeometry) {
     return new THREE.Mesh(dayDateGeometry, MATERIALS.dayDate);
 }
 
+// Mesh used to show the digital time
 export function createDigitalDisplayMesh(digitalDisplayGeometry) {
     return new THREE.Mesh(digitalDisplayGeometry, MATERIALS.digitalDisplay);
 }
 
+// Mesh used for each hour number
 export function createHourMesh(hourGeometry) {
     return new THREE.Mesh(hourGeometry, MATERIALS.hourNumber);
 }
 
+// Mesh used for each minute number
 export function createMinuteMesh(minuteGeometry) {
     return new THREE.Mesh(minuteGeometry, MATERIALS.minuteNumber);
 }
 
+// Mesh used for each indactor (tick mark)
 export function createIndicatorMesh(indicatorGeometry) {
     return new THREE.Mesh(indicatorGeometry, MATERIALS.indicator)
 }

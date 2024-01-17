@@ -1,9 +1,14 @@
 
+/**
+ * shapes.js - Defines shapes for the perfect clock.
+ */
+
 import * as THREE from 'three';
 
 import { SIZES } from '../constants.js';
 
 
+// Shape for the hour hand of the clock.
 export const hourHandShape = () => {
     const shape = new THREE.Shape();
     shape.moveTo(0, -0.3);
@@ -14,6 +19,7 @@ export const hourHandShape = () => {
     return shape;
 };
 
+// Shape for the minute hand of the clock.
 export const minuteHandShape = () => {
     const shape = new THREE.Shape();
     shape.moveTo(0, -0.2);
@@ -24,6 +30,7 @@ export const minuteHandShape = () => {
     return shape;
 };
 
+// Shape for the second hand of the clock.
 export const secondHandShape = () => {
     const shape = new THREE.Shape();
     shape.moveTo(0, -0.1);

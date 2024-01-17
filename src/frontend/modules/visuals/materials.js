@@ -1,3 +1,9 @@
+/**
+ * materials.js - Defines various materials for the perfect clock.
+ *
+ */
+
+
 import * as THREE from 'three';
 
 import { COLORS } from '../constants.js';

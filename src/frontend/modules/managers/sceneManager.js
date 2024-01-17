@@ -1,3 +1,10 @@
+/**
+ * sceneManager.js - Manages the Three.js scene housing the perfect clock.
+ * 
+ * This module is responsible setting up and running the clock's scene. Camera, rendering, and
+ * lighting should all go through here. The scene manager also kicks off the animation loop.
+ */
+
 import * as THREE from 'three';
 
 import { MESHES } from '../visuals/meshes';
@@ -14,6 +21,9 @@ const renderer = new THREE.WebGLRenderer({ antialias: true });
 let regularFont = null;
 let monoFont = null;
 
+/**
+ * Initializes and sets up the scene with lighting and renderer.
+ */
 function setupScene() {
     window.addEventListener('resize', onWindowResize);
 
@@ -25,29 +35,27 @@ function setupScene() {
     document.body.appendChild(renderer.domElement);
 }
 
+/**
+ * Updates the camera's position so that the clock takes up the full screen.
+ */
 function updateCamera() {
     const boundingBox = new THREE.Box3().setFromObject(MESHES.clockBezel);
     const center = boundingBox.getCenter(new THREE.Vector3());
     const size = boundingBox.getSize(new THREE.Vector3());
 
-    // Calculate the distance the camera should be from the clock
+    // Calculations for camera position
     const maxDim = Math.max(size.x, size.y, size.z);
     const fov = camera.fov * (Math.PI / 180);
     let cameraZ = Math.abs(maxDim / 1.15 * Math.tan(fov / 2));
+    if (camera.aspect < 1) cameraZ = cameraZ / camera.aspect;
 
-    // Adjust for aspect ratio
-    const aspect = camera.aspect;
-    if (aspect < 1) {
-        cameraZ = cameraZ / aspect;
-    }
-
-    // Set camera position
     camera.position.set(center.x, center.y, center.z + cameraZ);
-
-    // Look at the center of the clock
     camera.lookAt(center);
 }
 
+/**
+ * Handles window resize events to keep the clock centered and full screen.
+ */
 export function onWindowResize() {
     camera.aspect = window.innerWidth / window.innerHeight;
     camera.updateProjectionMatrix();
@@ -55,6 +63,9 @@ export function onWindowResize() {
     updateCamera();
 }
 
+/**
+ * Primary animation loop. Keeps the clock running.
+ */
 function animate() {
     updateClock(scene, monoFont);
 
@@ -62,6 +73,9 @@ function animate() {
     renderer.render(scene, camera);
 }
 
+/**
+ * Initializes the entire scene and its elements.
+ */
 export async function initializeScene() {
     setupScene();
 
