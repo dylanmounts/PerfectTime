@@ -1,21 +1,21 @@
 import * as THREE from 'three';
 import { TextGeometry } from 'three/addons/geometries/TextGeometry.js';
 
-import { CLOCK_OUTER_RADIUS, DAY_DATE_FRAME_HEIGHT, DAY_DATE_FRAME_WIDTH, DIGITAL_DISPLAY_FRAME_HEIGHT, DIGITAL_DISPLAY_FRAME_WIDTH, SEGMENTS, SIZES } from '../constants.js';
+import * as CONSTANTS from '../constants.js';
 import { hourHandShape, minuteHandShape, secondHandShape } from './shapes.js';
 
 
-const clockFace = new THREE.CircleGeometry(SIZES.CLOCK_RADIUS, SEGMENTS);
-const clockBezel = new THREE.RingGeometry(SIZES.CLOCK_RADIUS, CLOCK_OUTER_RADIUS, SEGMENTS);
-const dayDateFrameHorizontal = new THREE.BoxGeometry(DAY_DATE_FRAME_WIDTH, SIZES.COMPLICATION_FRAME_THICKNESS, SIZES.DAY_DATE_BOX_DEPTH);
-const dayDateFrameVertical = new THREE.BoxGeometry(SIZES.COMPLICATION_FRAME_THICKNESS, DAY_DATE_FRAME_HEIGHT, SIZES.DAY_DATE_BOX_DEPTH);
-const digitalDisplayFrameHorizontal = new THREE.BoxGeometry(DIGITAL_DISPLAY_FRAME_WIDTH, SIZES.COMPLICATION_FRAME_THICKNESS, SIZES.DAY_DATE_BOX_DEPTH);
-const digitalDisplayFrameVertical = new THREE.BoxGeometry(SIZES.COMPLICATION_FRAME_THICKNESS, DIGITAL_DISPLAY_FRAME_HEIGHT, SIZES.DAY_DATE_BOX_DEPTH);
-const dayDateBox = new THREE.BoxGeometry(SIZES.DAY_DATE_BOX_WIDTH, SIZES.DAY_DATE_BOX_HEIGHT, SIZES.DAY_DATE_BOX_DEPTH);
-const digitalDisplayBox = new THREE.BoxGeometry(SIZES.DIGITAL_DISPLAY_BOX_WIDTH, SIZES.DIGITAL_DISPLAY_BOX_HEIGHT, SIZES.DIGITAL_DISPLAY_BOX_DEPTH);
+const clockFace = new THREE.CircleGeometry(CONSTANTS.SIZES.CLOCK_RADIUS, CONSTANTS.SEGMENTS);
+const clockBezel = new THREE.RingGeometry(CONSTANTS.SIZES.CLOCK_RADIUS, CONSTANTS.CLOCK_OUTER_RADIUS, CONSTANTS.SEGMENTS);
+const dayDateFrameHorizontal = new THREE.BoxGeometry(CONSTANTS.DAY_DATE_FRAME_WIDTH, CONSTANTS.SIZES.COMPLICATION_FRAME_THICKNESS, CONSTANTS.SIZES.DAY_DATE_BOX_DEPTH);
+const dayDateFrameVertical = new THREE.BoxGeometry(CONSTANTS.SIZES.COMPLICATION_FRAME_THICKNESS, CONSTANTS.DAY_DATE_FRAME_HEIGHT, CONSTANTS.SIZES.DAY_DATE_BOX_DEPTH);
+const digitalDisplayFrameHorizontal = new THREE.BoxGeometry(CONSTANTS.DIGITAL_DISPLAY_FRAME_WIDTH, CONSTANTS.SIZES.COMPLICATION_FRAME_THICKNESS, CONSTANTS.SIZES.DAY_DATE_BOX_DEPTH);
+const digitalDisplayFrameVertical = new THREE.BoxGeometry(CONSTANTS.SIZES.COMPLICATION_FRAME_THICKNESS, CONSTANTS.DIGITAL_DISPLAY_FRAME_HEIGHT, CONSTANTS.SIZES.DAY_DATE_BOX_DEPTH);
+const dayDateBox = new THREE.BoxGeometry(CONSTANTS.SIZES.DAY_DATE_BOX_WIDTH, CONSTANTS.SIZES.DAY_DATE_BOX_HEIGHT, CONSTANTS.SIZES.DAY_DATE_BOX_DEPTH);
+const digitalDisplayBox = new THREE.BoxGeometry(CONSTANTS.SIZES.DIGITAL_DISPLAY_BOX_WIDTH, CONSTANTS.SIZES.DIGITAL_DISPLAY_BOX_HEIGHT, CONSTANTS.SIZES.DIGITAL_DISPLAY_BOX_DEPTH);
 const hourHand = new THREE.ShapeGeometry(hourHandShape());
 const minuteHand = new THREE.ShapeGeometry(minuteHandShape());
-const post = new THREE.CylinderGeometry(SIZES.POST_RADIUS, SIZES.POST_RADIUS, SIZES.POST_HEIGHT, SEGMENTS / 8);
+const post = new THREE.CylinderGeometry(CONSTANTS.SIZES.POST_RADIUS, CONSTANTS.SIZES.POST_RADIUS, CONSTANTS.SIZES.POST_HEIGHT, CONSTANTS.SEGMENTS / 8);
 const secondHand = new THREE.ShapeGeometry(secondHandShape());
 
 export const GEOMETRIES = {
@@ -38,7 +38,7 @@ export function createDayDateGeometry(dayDateStr, font) {
         font: font,
         size: 0.225,
         height: 0.05,
-        curveSegments: SEGMENTS / 8,
+        curveSegments: CONSTANTS.SEGMENTS / 8,
         bevelEnabled: false
     });
 }
@@ -48,7 +48,7 @@ export function createDigitalTimeGeometry(dayDateStr, font) {
         font: font,
         size: 0.35,
         height: 0.05,
-        curveSegments: SEGMENTS / 8,
+        curveSegments: CONSTANTS.SEGMENTS / 8,
         bevelEnabled: false
     });
 }
@@ -56,9 +56,9 @@ export function createDigitalTimeGeometry(dayDateStr, font) {
 export function createHourGeometry(hour, font) {
     return new TextGeometry(String(hour), {
         font: font,
-        size: SIZES.NUMBER_SIZE,
-        height: SIZES.NUMBER_HEIGHT,
-        curveSegments: SEGMENTS / 8,
+        size: CONSTANTS.SIZES.NUMBER_SIZE,
+        height: CONSTANTS.SIZES.NUMBER_HEIGHT,
+        curveSegments: CONSTANTS.SEGMENTS / 8,
         bevelEnabled: false
     });
 }
@@ -66,21 +66,21 @@ export function createHourGeometry(hour, font) {
 export function createMinuteGeometry(minute, font) {
     return new TextGeometry(String(minute), {
         font: font,
-        size: SIZES.NUMBER_SIZE / 2,
-        height: SIZES.NUMBER_HEIGHT / 2,
-        curveSegments: SEGMENTS / 8,
+        size: CONSTANTS.SIZES.NUMBER_SIZE / 2,
+        height: CONSTANTS.SIZES.NUMBER_HEIGHT / 2,
+        curveSegments: CONSTANTS.SEGMENTS / 8,
         bevelEnabled: false
     });
 }
 
 export function createIndicatorGeometry(isFiveMinuteMark) {
-    const regularIndicatorRadius = SIZES.INDICATOR_RADIUS * 1/2;
-    const largeIndicatorRadius = SIZES.INDICATOR_RADIUS;
-    const regularIndicatorHeight = SIZES.INDICATOR_HEIGHT * 2/3;
-    const largeIndicatorHeight = SIZES.INDICATOR_HEIGHT;
+    const regularIndicatorRadius = CONSTANTS.SIZES.INDICATOR_RADIUS * 1/2;
+    const largeIndicatorRadius = CONSTANTS.SIZES.INDICATOR_RADIUS;
+    const regularIndicatorHeight = CONSTANTS.SIZES.INDICATOR_HEIGHT * 2/3;
+    const largeIndicatorHeight = CONSTANTS.SIZES.INDICATOR_HEIGHT;
 
     const indicatorRadius = isFiveMinuteMark ? largeIndicatorRadius : regularIndicatorRadius;
     const indicatorHeight = isFiveMinuteMark ? largeIndicatorHeight : regularIndicatorHeight;
 
-    return new THREE.CylinderGeometry(indicatorRadius, indicatorRadius, indicatorHeight, SEGMENTS / 8);
+    return new THREE.CylinderGeometry(indicatorRadius, indicatorRadius, indicatorHeight, CONSTANTS.SEGMENTS / 8);
 }
