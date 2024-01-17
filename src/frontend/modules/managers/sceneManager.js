@@ -65,7 +65,7 @@ function animate() {
 export async function initializeScene() {
     setupScene();
 
-    await timeManager.fetchInitialTime('https://perfecttime.org/api/time');
+    await timeManager.fetchPerfectTime();
     regularFont = await fontManager.getLoadedFont();
     monoFont = await monoFontManager.getLoadedFont();
 

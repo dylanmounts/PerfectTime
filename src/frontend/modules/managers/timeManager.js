@@ -1,26 +1,27 @@
 class TimeManager {
     constructor() {
-        this.initialTime = null;
+        this.perfectTimeEndpoint = 'https://perfecttime.org/api/time'
+        this.perfectTime = null;
         this.userTime = null;
         this.timeOffset = null;
     }
 
-    async fetchInitialTime(url) {
+    async fetchPerfectTime() {
         try {
-            const response = await fetch(url);
+            const response = await fetch(this.perfectTimeEndpoint);
             const data = await response.json();
-            this.initialTime = new Date(data.time);
+            this.perfectTime = new Date(data.time);
             this.userTime = new Date();
-            this.timeOffset = this.initialTime - this.userTime;
+            this.timeOffset = this.perfectTime - this.userTime;
         } catch (error) {
-            console.error('Error fetching initial time:', error);
-            this.initialTime = new Date();
+            console.error('Error fetching perfect time:', error);
+            this.perfectTime = new Date();
             this.timeOffset = 0;
         }
     }
 
     getCurrentTime() {
-        if (!this.initialTime) {
+        if (!this.perfectTime) {
             return new Date();
         }
         const corrected_now = Date.now() + this.timeOffset;
