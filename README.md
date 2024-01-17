@@ -9,7 +9,7 @@
 <br />
 <div align="center">
   <a href="https://github.com/dylanmounts/PerfectTime">
-    <img src="images/logo.png" alt="Logo" width="80" height="80">
+    <img src="https://github.com/dylanmounts/PerfectTime/blob/main/src/assets/img/favicon-75x75.png" alt="Logo" width="75" height="75">
   </a>
 
   <h3 align="center">PerfectTime</h3>
@@ -152,9 +152,8 @@ Project Link: [https://github.com/dylanmounts/PerfectTime](https://github.com/dy
 
 
 <!-- MARKDOWN LINKS & IMAGES -->
-[license-shield]: https://img.shields.io/github/license/dylanmounts/repo_name.svg?style=for-the-badge
-[license-url]: https://github.com/dylanmounts/repo_name/blob/master/LICENSE.txt
+[license-shield]: https://img.shields.io/github/license/dylanmounts/PerfectTime.svg?style=for-the-badge
+[license-url]: https://github.com/dylanmounts/PerfectTime/blob/master/LICENSE.txt
 [linkedin-shield]: https://img.shields.io/badge/-LinkedIn-black.svg?style=for-the-badge&logo=linkedin&colorB=555
 [linkedin-url]: https://linkedin.com/in/dylan-mounts
-[product-logo]: https://github.com/dylanmounts/PerfectTime/blob/main/src/assets/img/favicon-75x75.png
 [product-screenshot]: https://github.com/dylanmounts/PerfectTime/blob/main/src/assets/img/perfect-clock-thumb.png
