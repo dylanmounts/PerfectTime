@@ -1,4 +1,12 @@
 {
+  "name": "perfecttime.org",
+  "version": "1.0.0",
+  "description": "An overengineered analog clock designed to show the perfect time every time.",
+  "repository": "https://github.com/dylanmounts/PerfectTime.org",
+  "homepage": "https://github.com/dylanmounts/PerfectTime.org#readme",
+  "displayName": "PerfectTime.org",
+  "author": "Dylan Mounts",
+  "license": "MIT",
   "dependencies": {
     "cors": "^2.8.5",
     "@popperjs/core": "^2.11.8",
