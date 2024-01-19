@@ -7,11 +7,12 @@
 
 import * as THREE from 'three';
 
-import { MESHES } from '../visuals/meshes';
+import { PERFECT_TIME_SYNC_SECONDS } from '../constants';
 import { fontManager, monoFontManager } from './fontManager';
 import { timeManager } from './timeManager';
 import { addClock } from '../clock/clockConstructor';
 import { updateClock } from '../clock/clockUpdater';
+import { MESHES } from '../visuals/meshes';
 
 
 const scene = new THREE.Scene();
@@ -79,7 +80,10 @@ function animate() {
 export async function initializeScene() {
     setupScene();
 
-    await timeManager.fetchPerfectTime();
+    setInterval(() => {
+        timeManager.fetchPerfectTime();
+    }, PERFECT_TIME_SYNC_SECONDS * 1000);
+
     regularFont = await fontManager.getLoadedFont();
     monoFont = await monoFontManager.getLoadedFont();
 
