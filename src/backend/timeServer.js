@@ -36,7 +36,7 @@ function updateTimeFromNTP() {
  * @returns {Date} The current time adjusted for any lag since the last NTP sync.
  */
 function getPerfectTime() {
-    const timeSinceLastSync = Date.now(); - lastSyncTime;
+    const timeSinceLastSync = Date.now() - lastSyncTime;
     return new Date(lastNTPTime.getTime() + timeSinceLastSync);
 }
 
