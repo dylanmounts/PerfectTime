@@ -43,8 +43,8 @@ export const GEOMETRIES = {
 export function createDayDateGeometry(dayDateStr, font) {
     return new TextGeometry(String(dayDateStr), {
         font: font,
-        size: 0.225,
-        height: 0.05,
+        size: CONSTANTS.SIZES.DAY_DATE_SIZE,
+        height: CONSTANTS.SIZES.COMPLICATION_NUMBER_HEIGHT,
         curveSegments: CONSTANTS.SEGMENTS / 8,
         bevelEnabled: false
     });
@@ -54,8 +54,8 @@ export function createDayDateGeometry(dayDateStr, font) {
 export function createDigitalTimeGeometry(dayDateStr, font) {
     return new TextGeometry(String(dayDateStr), {
         font: font,
-        size: 0.35,
-        height: 0.05,
+        size: CONSTANTS.SIZES.DIGITAL_TIME_SIZE,
+        height: CONSTANTS.SIZES.COMPLICATION_NUMBER_HEIGHT,
         curveSegments: CONSTANTS.SEGMENTS / 8,
         bevelEnabled: false
     });
