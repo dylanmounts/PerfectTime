@@ -27,6 +27,8 @@ let minuteHandExists = true;
 let secondHandExists = true;
 let sweepingSeconds = true;
 
+let currentTime;
+
 /**
  * Main function to update the clock based on the current time retrieved from the
  * backend time server.
@@ -35,11 +37,16 @@ let sweepingSeconds = true;
  * @param {Object} monoFont - The font used for monospaced elements.
  */
 export function updateClock(scene, monoFont) {
-    const date = timeManager.getCurrentTime();
-    const hours = date.getHours() % 12;
-    const minutes = date.getMinutes();
-    const seconds = date.getSeconds();
-    const milliseconds = date.getMilliseconds();
+    currentTime = timeManager.getCurrentTime();
+
+    if (!currentTime) {
+        return;
+    }
+
+    const hours = currentTime.getHours() % 12;
+    const minutes = currentTime.getMinutes();
+    const seconds = currentTime.getSeconds();
+    const milliseconds = currentTime.getMilliseconds();
 
     const hourAngle = calculateHourAngle(hours, minutes, seconds, milliseconds);
     const minuteAngle = calculateMinuteAngle(minutes, seconds, milliseconds);
@@ -91,10 +98,13 @@ function calculateSweepingSecondAngle(seconds, milliseconds) {
  * @param {Object} font - The font used for the day-date display.
  */
 export function updateDayDateDisplay(scene, font) {
+    if (!currentTime) {
+        return;
+    }
+
     // Get current date
-    const now = timeManager.getCurrentTime();
-    const day = now.toLocaleString('en-US', { weekday: 'short' });
-    const date = now.toLocaleString('en-US', { month: 'short', day: 'numeric' });
+    const day = currentTime.toLocaleString('en-US', { weekday: 'short' });
+    const date = currentTime.toLocaleString('en-US', { month: 'short', day: 'numeric' });
 
     // Combine day and date
     const dayDateStr = `${day.toUpperCase()} ${date}`;
@@ -146,8 +156,11 @@ export function toggleDayDate(isChecked) {
  * @param {Object} font - The font used for the day-date display.
  */
 export function updateDigitalDisplay(scene, font) {
+    if (!currentTime) {
+        return;
+    }
+
     // Get current date
-    const currentTime = timeManager.getCurrentTime();
     const digitalTimeStr = currentTime.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
     
     // Remove previous digital time display if it exists
