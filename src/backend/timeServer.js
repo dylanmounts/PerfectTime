@@ -15,12 +15,14 @@ let lastSyncTime = Date.now();
  */
 function updateTimeFromNTP() {
     ntpClient.getNetworkTime("pool.ntp.org", 123, (err, date) => {
+        const now = Date.now();
+        lastSyncTime = now;
         if (err) {
             console.error("Error updating time from NTP:", err);
+            lastNTPTime = now;
             return;
         }
         lastNTPTime = date;
-        lastSyncTime = Date.now();
         console.log("Time updated from NTP:", lastNTPTime);
     });
 }
@@ -34,8 +36,7 @@ function updateTimeFromNTP() {
  * @returns {Date} The current time adjusted for any lag since the last NTP sync.
  */
 function getPerfectTime() {
-    const now = Date.now();
-    const timeSinceLastSync = now - lastSyncTime;
+    const timeSinceLastSync = Date.now(); - lastSyncTime;
     return new Date(lastNTPTime.getTime() + timeSinceLastSync);
 }
 
