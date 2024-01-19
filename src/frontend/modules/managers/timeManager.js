@@ -7,12 +7,11 @@
  */
 
 
+import { TIME_ENDPOINT } from "../constants";
+
 class TimeManager {
     constructor() {
-        this.perfectTimeEndpoint = 'https://perfecttime.org/api/time'
-        this.perfectTime = null;
-        this.userTime = null;
-        this.timeOffset = null;
+        this.timeOffset = 0;
     }
 
     /**
@@ -23,30 +22,28 @@ class TimeManager {
      */
     async fetchPerfectTime() {
         try {
-            const response = await fetch(this.perfectTimeEndpoint);
+            const startTime = new Date();
+            const response = await fetch(TIME_ENDPOINT);
+            const endTime = new Date();
+    
             const data = await response.json();
-            this.perfectTime = new Date(data.time);
-            this.userTime = new Date();
-            this.timeOffset = this.perfectTime - this.userTime;
+            const perfectTime = new Date(data.time);
+    
+            const latency = endTime - startTime;
+    
+            this.timeOffset = perfectTime - new Date() + latency;
         } catch (error) {
             console.error('Error fetching perfect time:', error);
-            this.perfectTime = new Date();
             this.timeOffset = 0;
         }
     }
 
     /**
-     * Calculates and returns the current corrected time.
-     *
-     * This method returns the current time perfected by the time offset. If something went
-     * wrong and the offset isn't available it returns the local system time.
+     * Calculates and returns the current corrected time perfected by the current offset.
      *
      * @returns {Date} The current corrected time.
      */
     getCurrentTime() {
-        if (!this.perfectTime) {
-            return new Date();
-        }
         const corrected_now = Date.now() + this.timeOffset;
         return new Date(corrected_now);
     }

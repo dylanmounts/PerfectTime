@@ -6,9 +6,8 @@
  */
 
 
-import { updateDayDateDisplay, updateDigitalDisplay, updateTimeOffset } from './clockUpdater.js';
+import { updateDayDateDisplay, updateDigitalDisplay } from './clockUpdater.js';
 import { HOUR_NUMBERS, INDICATORS, MINUTE_NUMBERS, SIZES } from '../constants.js';
-import { timeManager } from '../managers/timeManager.js';
 import { createHourGeometry, createMinuteGeometry, createIndicatorGeometry } from '../visuals/geometries.js';
 import { createHourMesh, createMinuteMesh, createIndicatorMesh, MESHES } from '../visuals/meshes.js';
 
@@ -94,7 +93,6 @@ export async function addClock(scene, regularFont, monoFont) {
     createNumbers(scene, regularFont);
     updateDayDateDisplay(scene, monoFont);
     updateDigitalDisplay(scene, monoFont);
-    updateTimeOffset(timeManager.timeOffset);
 
     for (const mesh in MESHES) {
         scene.add(MESHES[mesh]);

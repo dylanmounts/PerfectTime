@@ -51,6 +51,7 @@ export function updateClock(scene, monoFont) {
     MESHES.minuteHand.rotation.z = -minuteAngle;
     MESHES.secondHand.rotation.z = -secondAngle;
 
+    updateTimeOffset(timeManager.timeOffset);
     updateDigitalDisplay(scene, monoFont);
     updateDayDateDisplay(scene, monoFont);
     updateIndicators(scene);
