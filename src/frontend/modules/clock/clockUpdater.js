@@ -321,30 +321,39 @@ export function toggleMinuteNumbers(isChecked) {
 // Adds or removes the hour hand from the scene based user configurations
 export function updateHourHand(scene) {
     const hourHand = scene.getObjectByName('hourHand');
+    const outerHourHand = scene.getObjectByName('outerHourHand');
     if (hourHandExists && !hourHand) {
         scene.add(MESHES.hourHand);
+        scene.add(MESHES.outerHourHand);
     } else if (!hourHandExists && hourHand) {
         scene.remove(hourHand);
+        scene.remove(outerHourHand);
     }
 }
 
 // Adds or removes the minute hand from the scene based user configurations
 export function updateMinuteHand(scene) {
     const minuteHand = scene.getObjectByName('minuteHand');
+    const outerMinuteHand = scene.getObjectByName('outerMinuteHand');
     if (minuteHandExists && !minuteHand) {
         scene.add(MESHES.minuteHand);
+        scene.add(MESHES.outerMinuteHand);
     } else if (!minuteHandExists && minuteHand) {
         scene.remove(minuteHand);
+        scene.remove(outerMinuteHand);
     }
 }
 
 // Adds or removes the second hand from the scene based user configurations
 export function updateSecondHand(scene) {
     const secondHand = scene.getObjectByName('secondHand');
+    const outerSecondHand = scene.getObjectByName('outerSecondHand');
     if (secondHandExists && !secondHand) {
         scene.add(MESHES.secondHand);
+        scene.add(MESHES.outerSecondHand);
     } else if (!secondHandExists && secondHand) {
         scene.remove(secondHand);
+        scene.remove(outerSecondHand);
     }
 }
 
