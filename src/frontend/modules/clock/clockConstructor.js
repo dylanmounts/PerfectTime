@@ -60,6 +60,8 @@ function createIndicators(scene) {
         const angle = (Math.PI / 30) * i;
 
         const isFiveMinuteMark = i % 5 === 0;
+
+        // Indicators
         const indicatorGeometry = createIndicatorGeometry(isFiveMinuteMark, SIZES.INDICATOR_SCALE);
 
         const indicator = createIndicatorMesh(indicatorGeometry);
@@ -69,6 +71,7 @@ function createIndicators(scene) {
         INDICATORS[i] = indicator;
         scene.add(indicator);
 
+        // Indicator borders
         const outerIndicatorGeometry = createIndicatorGeometry(isFiveMinuteMark);
 
         const outerIndicator = createOuterIndicatorMesh(outerIndicatorGeometry);
