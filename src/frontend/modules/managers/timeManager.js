@@ -11,6 +11,7 @@ import { TIME_ENDPOINT } from "../constants";
 
 class TimeManager {
     constructor() {
+        this.perfectTime = null;
         this.timeOffset = null;
         this.fetchPerfectTime();
     }
@@ -25,12 +26,12 @@ class TimeManager {
             const response = await fetch(TIME_ENDPOINT);
             const endTime = new Date().getTime();
             const roundTripTime = endTime - startTime;
-    
             const data = await response.json();
-            const perfectTime = new Date(data.time).getTime() + roundTripTime / 2;
+
+            this.perfectTime = new Date(data.time).getTime() + roundTripTime / 2;
             const deviceTime = startTime + roundTripTime / 2;
 
-            this.timeOffset = perfectTime - deviceTime;
+            this.timeOffset = this.perfectTime - deviceTime;
         } catch (error) {
             console.error('Error fetching perfect time:', error);
             this.timeOffset = 0;
@@ -47,8 +48,7 @@ class TimeManager {
             return new Date();
         }
 
-        const deviceTime = new Date().getTime();
-        return new Date(deviceTime + this.timeOffset);
+        return new Date(Date.now() + this.timeOffset);
     }
 }
 

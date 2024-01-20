@@ -58,7 +58,7 @@ export function updateClock(scene, monoFont) {
     MESHES.minuteHand.rotation.z = -minuteAngle;
     MESHES.secondHand.rotation.z = -secondAngle;
 
-    updateTimeOffset(timeManager.timeOffset);
+    updateTimeOffset();
     updateDigitalDisplay(scene, monoFont);
     updateDayDateDisplay(scene, monoFont);
     updateIndicators(scene);
@@ -346,7 +346,8 @@ export function toggleSweepingSeconds(isChecked) {
 }
 
 // Populates the field reporting how ahead/behind the user's device's clock is
-export function updateTimeOffset(offset) {
+export function updateTimeOffset() {
+    let offset = timeManager.timeOffset
     const offsetNumberField = document.getElementById('timeOffsetNumber')
     const offsetDirectionField = document.getElementById('timeOffsetDirection')
 
