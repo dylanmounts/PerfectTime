@@ -19,6 +19,7 @@ const digitalDisplayBox = new THREE.MeshPhongMaterial({ color: COLORS.DIGITAL_DI
 const hourHand = new THREE.MeshPhongMaterial({ color: COLORS.HOUR_HAND });
 const outerHourHand = new THREE.MeshPhongMaterial({ color: COLORS.OUTER_HOUR_HAND });
 const hourNumber = new THREE.MeshPhongMaterial({ color: COLORS.HOUR_NUMBERS });
+const outerHourNumber = new THREE.MeshPhongMaterial({ color: COLORS.CLOCK_BEZEL });
 const indicator = new THREE.MeshPhongMaterial({ color: COLORS.INDICATORS });
 const minuteHand = new THREE.MeshPhongMaterial({ color: COLORS.MINUTE_HAND });
 const outerMinuteHand = new THREE.MeshPhongMaterial({ color: COLORS.OUTER_MINUTE_HAND });
@@ -38,6 +39,7 @@ export const MATERIALS = {
     hourHand,
     outerHourHand,
     hourNumber,
+    outerHourNumber,
     indicator,
     minuteHand,
     minuteNumber,
