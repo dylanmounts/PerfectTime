@@ -27,7 +27,9 @@ let minuteHandExists = true;
 let secondHandExists = true;
 let sweepingSeconds = true;
 
-let currentTime;
+// State variables for tracking the perfect time.
+let currentTime = null;
+let lastTime = null;
 
 /**
  * Main function to update the clock based on the current time retrieved from the
@@ -42,6 +44,12 @@ export function updateClock(scene, monoFont) {
     if (!currentTime) {
         return;
     }
+
+    if ((!lastTime) || (Math.abs(currentTime - lastTime) > 1000)) {
+        timeManager.fetchPerfectTime()
+    }
+
+    lastTime = currentTime;
 
     const hours = currentTime.getHours() % 12;
     const minutes = currentTime.getMinutes();
@@ -58,7 +66,7 @@ export function updateClock(scene, monoFont) {
     MESHES.minuteHand.rotation.z = -minuteAngle;
     MESHES.secondHand.rotation.z = -secondAngle;
 
-    updateTimeOffset(timeManager.timeOffset);
+    updateTimeOffset();
     updateDigitalDisplay(scene, monoFont);
     updateDayDateDisplay(scene, monoFont);
     updateIndicators(scene);
@@ -346,7 +354,8 @@ export function toggleSweepingSeconds(isChecked) {
 }
 
 // Populates the field reporting how ahead/behind the user's device's clock is
-export function updateTimeOffset(offset) {
+export function updateTimeOffset() {
+    let offset = timeManager.timeOffset
     const offsetNumberField = document.getElementById('timeOffsetNumber')
     const offsetDirectionField = document.getElementById('timeOffsetDirection')
 
