@@ -132,7 +132,12 @@ export function createMinuteMesh(minuteGeometry) {
     return new THREE.Mesh(minuteGeometry, MATERIALS.minuteNumber);
 }
 
-// Mesh used for each indactor (tick mark)
+// Mesh used for each indicator (tick mark)
 export function createIndicatorMesh(indicatorGeometry) {
     return new THREE.Mesh(indicatorGeometry, MATERIALS.indicator)
+}
+
+// Mesh used for each indicator border
+export function createOuterIndicatorMesh(outerIndicatorGeometry) {
+    return new THREE.Mesh(outerIndicatorGeometry, MATERIALS.outerIndicator)
 }

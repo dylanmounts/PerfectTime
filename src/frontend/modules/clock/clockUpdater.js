@@ -9,7 +9,7 @@
  *       into its own updater or controller.
  */
 
-import { DAY_DATE_PARTS, DIGITAL_DISPLAY_PARTS, HOUR_NUMBERS, INDICATORS, MINUTE_NUMBERS } from '../constants.js';
+import { DAY_DATE_PARTS, DIGITAL_DISPLAY_PARTS, HOUR_NUMBERS, INDICATORS, OUTER_INDICATORS, MINUTE_NUMBERS } from '../constants.js';
 import { createDayDateMesh, createDigitalDisplayMesh, MESHES } from '../visuals/meshes.js';
 import { timeManager } from '../managers/timeManager.js';
 import { createDayDateGeometry, createDigitalTimeGeometry } from '../visuals/geometries.js';
@@ -223,30 +223,38 @@ export function toggleDigitalDisplay(isChecked) {
 function updateIndicators(scene) {
     for (let i = 0; i < 60; i++) {
         const indicatorName = `indicator${i}`;
+        const outerIndicatorName = `outerIndicator${i}`;
         const indicator = scene.getObjectByName(indicatorName);
+        const outerIndicator = scene.getObjectByName(outerIndicatorName);
 
         // Hours
         if (hourIndicatorsExist && i % 5 === 0) {
             if (i === 15) {
                 if (!dayDateExists && !indicator) {
                     scene.add(INDICATORS[i]);
+                    scene.add(OUTER_INDICATORS[i]);
                 } else if (dayDateExists && indicator) {
                     scene.remove(indicator);
+                    scene.remove(outerIndicator);
                 }
             } else {
                 scene.add(INDICATORS[i]);
+                scene.add(OUTER_INDICATORS[i]);
             }
         } else if (!hourIndicatorsExist && i % 5 === 0 && indicator) {
             scene.remove(indicator);
+            scene.remove(outerIndicator);
         }
 
         // Minutes
         if (minuteIndicatorsExist && i % 5 != 0) {
             if (!indicator) {
                 scene.add(INDICATORS[i]);
+                scene.add(OUTER_INDICATORS[i]);
             }
         } else if (!minuteIndicatorsExist && i % 5 != 0) {
             scene.remove(indicator);
+            scene.remove(outerIndicator);
         }
     }
 }

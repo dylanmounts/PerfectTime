@@ -7,9 +7,9 @@
 
 
 import { updateDayDateDisplay, updateDigitalDisplay } from './clockUpdater.js';
-import { HOUR_NUMBERS, INDICATORS, MINUTE_NUMBERS, SIZES } from '../constants.js';
+import { HOUR_NUMBERS, INDICATORS, MINUTE_NUMBERS, OUTER_INDICATORS, SIZES } from '../constants.js';
 import { createHourGeometry, createMinuteGeometry, createIndicatorGeometry } from '../visuals/geometries.js';
-import { createHourMesh, createMinuteMesh, createIndicatorMesh, MESHES } from '../visuals/meshes.js';
+import { createHourMesh, createMinuteMesh, createIndicatorMesh, MESHES, createOuterIndicatorMesh } from '../visuals/meshes.js';
 
 
 /**
@@ -28,11 +28,8 @@ function createNumbers(scene, font) {
 
         const hourMesh = createHourMesh(hourGeometry)
         const distanceFromCenter = SIZES.CLOCK_RADIUS * 5/6;
-        hourMesh.position.x = Math.sin(angle) * distanceFromCenter;
-        hourMesh.position.y = Math.cos(angle) * distanceFromCenter;
-        hourMesh.position.z = 0;
-        hourMesh.name = `hour${i}`;
 
+        configureMesh(hourMesh, `hour${i}`, angle, distanceFromCenter)
         HOUR_NUMBERS[i] = hourMesh;
         scene.add(hourMesh);
 
@@ -44,11 +41,8 @@ function createNumbers(scene, font) {
 
         const minuteMesh = createMinuteMesh(minuteGeometry);
         const minuteDistanceFromCenter = SIZES.CLOCK_RADIUS * 2/3;
-        minuteMesh.position.x = Math.sin(angle) * minuteDistanceFromCenter;
-        minuteMesh.position.y = Math.cos(angle) * minuteDistanceFromCenter;
-        minuteMesh.position.z = 0;
-        minuteMesh.name = `minute${minuteNumber}`;
 
+        configureMesh(minuteMesh, `minute${minuteNumber}`, angle, minuteDistanceFromCenter);
         MINUTE_NUMBERS[minuteNumber] = minuteMesh;
         scene.add(minuteMesh);
     }
@@ -66,19 +60,39 @@ function createIndicators(scene) {
         const angle = (Math.PI / 30) * i;
 
         const isFiveMinuteMark = i % 5 === 0;
-        const indicatorGeometry = createIndicatorGeometry(isFiveMinuteMark);
+        const indicatorGeometry = createIndicatorGeometry(isFiveMinuteMark, 0.66);
 
         const indicator = createIndicatorMesh(indicatorGeometry);
+        configureMesh(indicator, `indicator${i}`, angle, distanceFromCenter)
         indicator.rotation.x = Math.PI / 2;
-
-        indicator.position.x = Math.sin(angle) * distanceFromCenter;
-        indicator.position.y = Math.cos(angle) * distanceFromCenter;
-        indicator.position.z = 0;
-        indicator.name = `indicator${i}`;
 
         INDICATORS[i] = indicator;
         scene.add(indicator);
+
+        const outerIndicatorGeometry = createIndicatorGeometry(isFiveMinuteMark);
+
+        const outerIndicator = createOuterIndicatorMesh(outerIndicatorGeometry);
+        configureMesh(outerIndicator, `outerIndicator${i}`, angle, distanceFromCenter)
+        outerIndicator.rotation.x = Math.PI / 2;
+
+        OUTER_INDICATORS[i] = outerIndicator;
+        scene.add(outerIndicator);
     }
+}
+
+/**
+ * Configures the position and name of a mesh object in the scene.
+ *
+ * @param {THREE.Mesh} mesh - The mesh object to configure.
+ * @param {string} meshName - The name to assign to the mesh.
+ * @param {number} meshAngle - The angle used to calculate the mesh's x and y positions.
+ * @param {number} centerDistance - The distance from the center of the scene to the mesh.
+ */
+function configureMesh(mesh, meshName, meshAngle, centerDistance) {
+    mesh.position.x = Math.sin(meshAngle) * centerDistance;
+    mesh.position.y = Math.cos(meshAngle) * centerDistance;
+    mesh.position.z = 0;
+    mesh.name = meshName;
 }
 
 /**

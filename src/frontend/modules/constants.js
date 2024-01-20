@@ -10,6 +10,7 @@ export const COLORS = {
     OUTER_HOUR_HAND: 0x1D2125,
     HOUR_NUMBERS: 0xB6C2CF,
     INDICATORS: 0x9FADBC,
+    OUTER_INDICATOR: 0x1D2125,
     MINUTE_HAND: 0x8C9BAB,
     OUTER_MINUTE_HAND: 0x1D2125,
     MINUTE_NUMBERS: 0x8C9BAB,
@@ -31,8 +32,8 @@ export const SIZES = {
     DIGITAL_DISPLAY_BOX_DEPTH: 0.05,
     DIGITAL_DISPLAY_BOX_HEIGHT: 0.65,
     DIGITAL_DISPLAY_BOX_WIDTH: 3.5,
-    INDICATOR_HEIGHT: 0.1,
-    INDICATOR_RADIUS: 0.1,
+    INDICATOR_HEIGHT: 0.05,
+    INDICATOR_RADIUS: 0.115,
     NUMBER_HEIGHT: 0.05,
     NUMBER_SIZE: 0.5,
     POST_HEIGHT: 0.1,
@@ -64,6 +65,7 @@ export const DIGITAL_DISPLAY_PARTS = [
     'digitalDisplayRightFrame',
 ]
 export const INDICATORS = {};
+export const OUTER_INDICATORS = {};
 export const HOUR_NUMBERS = {};
 export const MINUTE_NUMBERS = {};
 export const TIME_ENDPOINT = 'https://PerfectTime.org/api/time';
