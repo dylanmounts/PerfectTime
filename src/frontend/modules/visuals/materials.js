@@ -11,7 +11,7 @@ import { COLORS } from '../constants.js';
 
 const clockBezel = new THREE.MeshPhongMaterial({ color: COLORS.CLOCK_BEZEL });
 const clockFace = new THREE.MeshPhongMaterial({ color: COLORS.CLOCK_FACE });
-const complicationFrame = new THREE.MeshPhongMaterial({ color: COLORS.CLOCK_BEZEL });
+const complicationFrame = new THREE.MeshPhongMaterial({ color: COLORS.COMPLICATION_FRAME });
 const dayDate = new THREE.MeshPhongMaterial({ color: COLORS.COMPLICATION_NUMBERS });
 const dayDateBox = new THREE.MeshPhongMaterial({ color: COLORS.DAY_DATE_BOX });
 const digitalDisplay = new THREE.MeshPhongMaterial({ color: COLORS.COMPLICATION_NUMBERS });
