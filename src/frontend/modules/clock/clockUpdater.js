@@ -63,8 +63,11 @@ export function updateClock(scene, monoFont) {
         : calculateSecondAngle(seconds);
 
     MESHES.hourHand.rotation.z = -hourAngle;
+    MESHES.outerHourHand.rotation.z = -hourAngle;
     MESHES.minuteHand.rotation.z = -minuteAngle;
+    MESHES.outerMinuteHand.rotation.z = -minuteAngle;
     MESHES.secondHand.rotation.z = -secondAngle;
+    MESHES.outerSecondHand.rotation.z = -secondAngle;
 
     updateTimeOffset();
     updateDigitalDisplay(scene, monoFont);

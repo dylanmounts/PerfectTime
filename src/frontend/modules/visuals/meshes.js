@@ -18,12 +18,20 @@ const clockFace = new THREE.Mesh(GEOMETRIES.clockFace, MATERIALS.clockFace);
 clockFace.position.z = 0;
 
 const hourHand = new THREE.Mesh(GEOMETRIES.hourHand, MATERIALS.hourHand);
-hourHand.position.z = SIZES.POST_HEIGHT - .003;
+hourHand.position.z = SIZES.POST_HEIGHT - .005;
 hourHand.name = 'hourHand';
 
+const outerHourHand = new THREE.Mesh(GEOMETRIES.outerHourHand, MATERIALS.outerHourHand);
+outerHourHand.position.z = SIZES.POST_HEIGHT - .006;
+outerHourHand.name = 'outerHourHand';
+
 const minuteHand = new THREE.Mesh(GEOMETRIES.minuteHand, MATERIALS.minuteHand);
-minuteHand.position.z = SIZES.POST_HEIGHT - .002;
+minuteHand.position.z = SIZES.POST_HEIGHT - .003;
 minuteHand.name = 'minuteHand';
+
+const outerMinuteHand = new THREE.Mesh(GEOMETRIES.outerMinuteHand, MATERIALS.outerMinuteHand);
+outerMinuteHand.position.z = SIZES.POST_HEIGHT - .004;
+outerMinuteHand.name = 'outerMinuteHand';
 
 const post = new THREE.Mesh(GEOMETRIES.post, MATERIALS.post);
 post.rotation.x = Math.PI / 2
@@ -32,6 +40,10 @@ post.position.z = SIZES.POST_HEIGHT / 2;
 const secondHand = new THREE.Mesh(GEOMETRIES.secondHand, MATERIALS.secondHand);
 secondHand.position.z = SIZES.POST_HEIGHT - .001;
 secondHand.name = 'secondHand';
+
+const outerSecondHand = new THREE.Mesh(GEOMETRIES.outerSecondHand, MATERIALS.outerSecondHand);
+outerSecondHand.position.z = SIZES.POST_HEIGHT - .002;
+outerSecondHand.name = 'outerSecondHand';
 
 const dayDateBox = new THREE.Mesh(GEOMETRIES.dayDateBox, MATERIALS.dayDateBox);
 dayDateBox.name = 'dayDateBox';
@@ -84,9 +96,12 @@ export const MESHES = {
     dayDateBox,
     digitalDisplayBox,
     hourHand,
+    outerHourHand,
     minuteHand,
+    outerMinuteHand,
     post,
     secondHand,
+    outerSecondHand,
     dayDateTopFrame,
     dayDateBottomFrame,
     dayDateLeftFrame,
