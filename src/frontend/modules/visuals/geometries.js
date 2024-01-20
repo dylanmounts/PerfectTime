@@ -7,7 +7,7 @@ import * as THREE from 'three';
 import { TextGeometry } from 'three/addons/geometries/TextGeometry.js';
 
 import * as CONSTANTS from '../constants.js';
-import { hourHandShape, minuteHandShape, secondHandShape } from './shapes.js';
+import * as SHAPES from './shapes.js';
 
 
 // Static clock parts
@@ -19,10 +19,13 @@ const digitalDisplayFrameHorizontal = new THREE.BoxGeometry(CONSTANTS.DIGITAL_DI
 const digitalDisplayFrameVertical = new THREE.BoxGeometry(CONSTANTS.SIZES.COMPLICATION_FRAME_THICKNESS, CONSTANTS.DIGITAL_DISPLAY_FRAME_HEIGHT, CONSTANTS.SIZES.DAY_DATE_BOX_DEPTH);
 const dayDateBox = new THREE.BoxGeometry(CONSTANTS.SIZES.DAY_DATE_BOX_WIDTH, CONSTANTS.SIZES.DAY_DATE_BOX_HEIGHT, CONSTANTS.SIZES.DAY_DATE_BOX_DEPTH);
 const digitalDisplayBox = new THREE.BoxGeometry(CONSTANTS.SIZES.DIGITAL_DISPLAY_BOX_WIDTH, CONSTANTS.SIZES.DIGITAL_DISPLAY_BOX_HEIGHT, CONSTANTS.SIZES.DIGITAL_DISPLAY_BOX_DEPTH);
-const hourHand = new THREE.ShapeGeometry(hourHandShape());
-const minuteHand = new THREE.ShapeGeometry(minuteHandShape());
+const hourHand = new THREE.ShapeGeometry(SHAPES.hourHandShape(CONSTANTS.SIZES.HOUR_HAND_SCALE));
+const outerHourHand = new THREE.ShapeGeometry(SHAPES.hourHandShape());
+const minuteHand = new THREE.ShapeGeometry(SHAPES.minuteHandShape(CONSTANTS.SIZES.MINUTE_HAND_SCALE));
+const outerMinuteHand = new THREE.ShapeGeometry(SHAPES.minuteHandShape());
 const post = new THREE.CylinderGeometry(CONSTANTS.SIZES.POST_RADIUS, CONSTANTS.SIZES.POST_RADIUS, CONSTANTS.SIZES.POST_HEIGHT, CONSTANTS.SEGMENTS / 8);
-const secondHand = new THREE.ShapeGeometry(secondHandShape());
+const secondHand = new THREE.ShapeGeometry(SHAPES.secondHandShape(CONSTANTS.SIZES.SECOND_HAND_SCALE));
+const outerSecondHand = new THREE.ShapeGeometry(SHAPES.secondHandShape());
 
 export const GEOMETRIES = {
     clockFace,
@@ -34,9 +37,12 @@ export const GEOMETRIES = {
     dayDateBox,
     digitalDisplayBox,
     hourHand,
+    outerHourHand,
     minuteHand,
+    outerMinuteHand,
     post,
     secondHand,
+    outerSecondHand,
 }
 
 // Text geometry for the day/date display

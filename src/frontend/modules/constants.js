@@ -7,12 +7,15 @@ export const COLORS = {
     DAY_DATE_BOX: 0x596773,
     DIGITAL_DISPLAY_BOX: 0x596773,
     HOUR_HAND: 0xB6C2CF,
+    OUTER_HOUR_HAND: 0x1D2125,
     HOUR_NUMBERS: 0xB6C2CF,
     INDICATORS: 0x9FADBC,
     MINUTE_HAND: 0x8C9BAB,
+    OUTER_MINUTE_HAND: 0x1D2125,
     MINUTE_NUMBERS: 0x8C9BAB,
     POST: 0x000000,
     SECOND_HAND: 0x800000,
+    OUTER_SECOND_HAND: 0x1D2125,
 };
 
 export const SIZES = {
@@ -33,7 +36,10 @@ export const SIZES = {
     NUMBER_HEIGHT: 0.05,
     NUMBER_SIZE: 0.5,
     POST_HEIGHT: 0.1,
-    POST_RADIUS: 0.015
+    POST_RADIUS: 0.015,
+    HOUR_HAND_SCALE: 0.75,
+    MINUTE_HAND_SCALE: 0.75,
+    SECOND_HAND_SCALE: 0.66,
 };
 
 export const CLOCK_FONT = 'fonts/droid/droid_sans_regular.typeface.json';
