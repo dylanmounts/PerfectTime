@@ -27,7 +27,9 @@ let minuteHandExists = true;
 let secondHandExists = true;
 let sweepingSeconds = true;
 
-let currentTime;
+// State variables for tracking the perfect time.
+let currentTime = null;
+let lastTime = null;
 
 /**
  * Main function to update the clock based on the current time retrieved from the
@@ -42,6 +44,12 @@ export function updateClock(scene, monoFont) {
     if (!currentTime) {
         return;
     }
+
+    if ((!lastTime) || (Math.abs(currentTime - lastTime) > 1000)) {
+        timeManager.fetchPerfectTime()
+    }
+
+    lastTime = currentTime;
 
     const hours = currentTime.getHours() % 12;
     const minutes = currentTime.getMinutes();
