@@ -41,6 +41,7 @@ export const SIZES = {
     HOUR_HAND_SCALE: 0.75,
     MINUTE_HAND_SCALE: 0.75,
     SECOND_HAND_SCALE: 0.66,
+    INDICATOR_SCALE: 0.8,
 };
 
 export const CLOCK_FONT = 'fonts/droid/droid_sans_regular.typeface.json';
