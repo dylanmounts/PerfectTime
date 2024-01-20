@@ -152,6 +152,7 @@ Project Link: [https://github.com/dylanmounts/PerfectTime](https://github.com/dy
 <!-- ACKNOWLEDGMENTS -->
 ## Acknowledgments
 
+* [Atlassian Design System](https://atlassian.design/foundations/color-new/color-palette-new) for the clock's color palette.
 * [othneildrew's Best-README-Template](https://github.com/othneildrew/Best-README-Template.git) for this README template.
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
