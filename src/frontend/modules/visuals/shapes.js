@@ -13,9 +13,9 @@ export const hourHandShape = (scale = 1) => {
     const lengthScale = scale != 1 ? scale * 1.25 : scale;
     const shape = new THREE.Shape();
     shape.moveTo(0, -0.3 * scale);
-    shape.lineTo(-0.2 * scale, 0);
+    shape.lineTo(-0.175 * scale, 0);
     shape.lineTo(0, SIZES.CLOCK_RADIUS * 5/8 * lengthScale);
-    shape.lineTo(0.2 * scale, 0);
+    shape.lineTo(0.175 * scale, 0);
     shape.lineTo(0, -0.3 * scale);
     return shape;
 };
