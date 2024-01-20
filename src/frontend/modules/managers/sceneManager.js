@@ -26,10 +26,7 @@ let monoFont = null;
  * Initializes and sets up the scene with lighting and renderer.
  */
 function setupScene() {
-    window.addEventListener('resize', onWindowResize);
-
     const ambientLight = new THREE.AmbientLight(0xffffff, 5);
-
     scene.add(ambientLight);
 
     renderer.setSize(window.innerWidth, window.innerHeight);
