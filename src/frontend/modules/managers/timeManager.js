@@ -22,9 +22,9 @@ class TimeManager {
      */
     async fetchPerfectTime() {
         try {
-            const startTime = new Date().getTime();
+            const startTime = Date.now();
             const response = await fetch(TIME_ENDPOINT);
-            const endTime = new Date().getTime();
+            const endTime = Date.now();
             const roundTripTime = endTime - startTime;
             const data = await response.json();
 
@@ -48,7 +48,8 @@ class TimeManager {
             return new Date();
         }
 
-        return new Date(Date.now() + this.timeOffset);
+        const currentTime = new Date(Date.now() + this.timeOffset);
+        return currentTime;
     }
 }
 
