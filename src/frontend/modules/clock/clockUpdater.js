@@ -45,7 +45,7 @@ export function updateClock(scene, monoFont) {
         return;
     }
 
-    if ((!lastTime) || (Math.abs(currentTime - lastTime) > 1000)) {
+    if (Math.abs(currentTime - lastTime) > 1000) {
         timeManager.fetchPerfectTime()
     }
 
