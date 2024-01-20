@@ -92,7 +92,7 @@ export function createMinuteGeometry(minute, font) {
 // Geometries for each indicator (tick mark)
 export function createIndicatorGeometry(isFiveMinuteMark, scale = 1) {
     const heightScale = scale === 1 ? 0.0025 : 0;
-    const regularIndicatorRadius = CONSTANTS.SIZES.INDICATOR_RADIUS * 1/2 * scale;
+    const regularIndicatorRadius = CONSTANTS.SIZES.INDICATOR_RADIUS * 9/16 * scale;
     const largeIndicatorRadius = CONSTANTS.SIZES.INDICATOR_RADIUS * scale;
     const regularIndicatorHeight = CONSTANTS.SIZES.INDICATOR_HEIGHT - heightScale;
     const largeIndicatorHeight = CONSTANTS.SIZES.INDICATOR_HEIGHT - heightScale;
