@@ -20,6 +20,7 @@ const hourHand = new THREE.MeshPhongMaterial({ color: COLORS.HOUR_HAND });
 const outerHourHand = new THREE.MeshPhongMaterial({ color: COLORS.OUTER_HOUR_HAND });
 const hourNumber = new THREE.MeshPhongMaterial({ color: COLORS.HOUR_NUMBERS });
 const indicator = new THREE.MeshPhongMaterial({ color: COLORS.INDICATORS });
+const outerIndicator = new THREE.MeshPhongMaterial({ color: COLORS.OUTER_INDICATOR });
 const minuteHand = new THREE.MeshPhongMaterial({ color: COLORS.MINUTE_HAND });
 const outerMinuteHand = new THREE.MeshPhongMaterial({ color: COLORS.OUTER_MINUTE_HAND });
 const minuteNumber = new THREE.MeshPhongMaterial({ color: COLORS.MINUTE_NUMBERS });
@@ -39,6 +40,7 @@ export const MATERIALS = {
     outerHourHand,
     hourNumber,
     indicator,
+    outerIndicator,
     minuteHand,
     minuteNumber,
     outerMinuteHand,
