@@ -6,9 +6,10 @@
  */
 
 import * as THREE from 'three';
+import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 
 import { PERFECT_TIME_SYNC_SECONDS } from '../constants';
-import { fontManager, monoFontManager } from './fontManager';
+import { fontManager, boldFontManager, monoFontManager } from './fontManager';
 import { timeManager } from './timeManager';
 import { addClock } from '../clock/clockConstructor';
 import { updateClock } from '../clock/clockUpdater';
@@ -18,14 +19,19 @@ import { MESHES } from '../visuals/meshes';
 const scene = new THREE.Scene();
 const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
 const renderer = new THREE.WebGLRenderer({ antialias: true });
+const controls = new OrbitControls(camera, renderer.domElement);
 
 let regularFont = null;
+let boldFont = null;
 let monoFont = null;
 
 /**
  * Initializes and sets up the scene with lighting and renderer.
  */
 function setupScene() {
+    controls.enableDamping = true;
+    controls.dampingFactor = 0.05;
+
     const ambientLight = new THREE.AmbientLight(0xffffff, 5);
     scene.add(ambientLight);
 
@@ -67,6 +73,7 @@ export function onWindowResize() {
 function animate() {
     updateClock(scene, monoFont);
 
+    controls.update();
     requestAnimationFrame(animate);
     renderer.render(scene, camera);
 }
@@ -82,9 +89,10 @@ export async function initializeScene() {
     }, PERFECT_TIME_SYNC_SECONDS * 1000);
 
     regularFont = await fontManager.getLoadedFont();
+    boldFont = await boldFontManager.getLoadedFont();
     monoFont = await monoFontManager.getLoadedFont();
 
-    addClock(scene, regularFont, monoFont);
+    addClock(scene, regularFont, boldFont, monoFont);
     updateCamera();
     animate();
 }

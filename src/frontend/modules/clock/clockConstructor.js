@@ -7,31 +7,54 @@
 
 
 import { updateDayDateDisplay, updateDigitalDisplay } from './clockUpdater.js';
-import { HOUR_NUMBERS, INDICATORS, MINUTE_NUMBERS, OUTER_INDICATORS, SIZES } from '../constants.js';
+import { HOUR_NUMBERS, INDICATORS, MINUTE_NUMBERS, OUTER_HOUR_NUMBERS, OUTER_INDICATORS, SIZES } from '../constants.js';
 import { createHourGeometry, createMinuteGeometry, createIndicatorGeometry } from '../visuals/geometries.js';
-import { createHourMesh, createMinuteMesh, createIndicatorMesh, MESHES, createOuterIndicatorMesh } from '../visuals/meshes.js';
+import { createHourMesh, createMinuteMesh, createIndicatorMesh, MESHES, createOuterHourMesh, createOuterIndicatorMesh } from '../visuals/meshes.js';
 
+
+/**
+ * Configures the position and name of a mesh object in the scene.
+ *
+ * @param {THREE.Mesh} mesh - The mesh object to configure.
+ * @param {string} meshName - The name to assign to the mesh.
+ * @param {number} meshAngle - The angle used to calculate the mesh's x and y positions.
+ * @param {number} centerDistance - The distance from the center of the scene to the mesh.
+ */
+function configureMesh(mesh, meshName, meshAngle, centerDistance) {
+    mesh.position.x = Math.sin(meshAngle) * centerDistance;
+    mesh.position.y = Math.cos(meshAngle) * centerDistance;
+    mesh.position.z = 0;
+    mesh.name = meshName;
+}
 
 /**
  * Creates and places hour and minute numbers in the scene.
  * 
  * @param {Object} scene - The Three.js scene object.
  * @param {Object} font - The font used for the numbers.
+ * @param {Object} boldFont - The bold font used for the number borders.
  */
-function createNumbers(scene, font) {
+function createNumbers(scene, font, boldFont) {
     for (let i = 1; i <= 12; i++) {
         const angle = (Math.PI / 6) * i;
 
         // Hours
         const hourGeometry = createHourGeometry(i, font);
         hourGeometry.center();
-
         const hourMesh = createHourMesh(hourGeometry)
         const distanceFromCenter = SIZES.CLOCK_RADIUS * 5/6;
 
         configureMesh(hourMesh, `hour${i}`, angle, distanceFromCenter)
         HOUR_NUMBERS[i] = hourMesh;
         scene.add(hourMesh);
+
+        const outerHourGeometry = createHourGeometry(i, boldFont, 1.025);
+        outerHourGeometry.center();
+        const outerHourMesh = createOuterHourMesh(outerHourGeometry)
+
+        configureMesh(outerHourMesh, `outerHour${i}`, angle, distanceFromCenter)
+        OUTER_HOUR_NUMBERS[i] = outerHourMesh;
+        scene.add(outerHourMesh);
 
         // Minutes
         const minuteNumber = i * 5;
@@ -84,30 +107,16 @@ function createIndicators(scene) {
 }
 
 /**
- * Configures the position and name of a mesh object in the scene.
- *
- * @param {THREE.Mesh} mesh - The mesh object to configure.
- * @param {string} meshName - The name to assign to the mesh.
- * @param {number} meshAngle - The angle used to calculate the mesh's x and y positions.
- * @param {number} centerDistance - The distance from the center of the scene to the mesh.
- */
-function configureMesh(mesh, meshName, meshAngle, centerDistance) {
-    mesh.position.x = Math.sin(meshAngle) * centerDistance;
-    mesh.position.y = Math.cos(meshAngle) * centerDistance;
-    mesh.position.z = 0;
-    mesh.name = meshName;
-}
-
-/**
  * Adds the complete clock to the scene, including indicators, numbers, and other displays.
  * 
  * @param {Object} scene - The Three.js scene object.
  * @param {Object} regularFont - The regular font for the clock numbers.
+ * @param {Object} boldFont - The bold font for the clock number borders.
  * @param {Object} monoFont - The monospace font for the digital display and date.
  */
-export async function addClock(scene, regularFont, monoFont) {
+export async function addClock(scene, regularFont, boldFont, monoFont) {
     createIndicators(scene);
-    createNumbers(scene, regularFont);
+    createNumbers(scene, regularFont, boldFont);
     updateDayDateDisplay(scene, monoFont);
     updateDigitalDisplay(scene, monoFont);
 

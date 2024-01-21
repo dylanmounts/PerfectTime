@@ -9,7 +9,7 @@
  *       into its own updater or controller.
  */
 
-import { DAY_DATE_PARTS, DIGITAL_DISPLAY_PARTS, HOUR_NUMBERS, INDICATORS, OUTER_INDICATORS, MINUTE_NUMBERS } from '../constants.js';
+import { DAY_DATE_PARTS, DIGITAL_DISPLAY_PARTS, HOUR_NUMBERS, OUTER_HOUR_NUMBERS, INDICATORS, OUTER_INDICATORS, MINUTE_NUMBERS } from '../constants.js';
 import { createDayDateMesh, createDigitalDisplayMesh, MESHES } from '../visuals/meshes.js';
 import { timeManager } from '../managers/timeManager.js';
 import { createDayDateGeometry, createDigitalTimeGeometry } from '../visuals/geometries.js';
@@ -279,9 +279,11 @@ export function toggleMinuteIndicators(isChecked) {
 function updateNumbers(scene) {
     for (let i = 1; i <= 12; i++) {
         const hourName = `hour${i}`;
+        const outerHourName = `outerHour${i}`
         const minuteName = `minute${i * 5}`;
 
         const hourNumber = scene.getObjectByName(hourName);
+        const outerHourNumber = scene.getObjectByName(outerHourName);
         const minuteNumber = scene.getObjectByName(minuteName);
 
         // Hours
@@ -289,14 +291,18 @@ function updateNumbers(scene) {
             if (i === 3) {
                 if (!dayDateExists && !hourNumber) {
                     scene.add(HOUR_NUMBERS[i]);
+                    scene.add(OUTER_HOUR_NUMBERS[i]);
                 } else if (dayDateExists && hourNumber) {
                     scene.remove(hourNumber);
+                    scene.remove(outerHourNumber);
                 }
             } else {
                 scene.add(HOUR_NUMBERS[i]);
+                scene.add(OUTER_HOUR_NUMBERS[i]);
             }
         } else {
             scene.remove(hourNumber);
+            scene.remove(outerHourNumber);
         }
 
         // Minutes
