@@ -4,7 +4,7 @@ const timeServer = require('./src/backend/timeServer');
 const cors = require('cors');
 
 const app = express();
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 8100;
 const hostname = process.env.HOSTNAME || '127.0.0.1';
 
 app.use(cors());
