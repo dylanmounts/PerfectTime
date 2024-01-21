@@ -68,26 +68,27 @@ export function createDigitalTimeGeometry(dayDateStr, font) {
 }
 
 // Text geometries for each hour number
-export function createHourGeometry(hour, font) {
+export function createHourGeometry(hour, font, scale = 1) {
     return new TextGeometry(String(hour), {
         font: font,
-        size: CONSTANTS.SIZES.NUMBER_SIZE,
-        height: CONSTANTS.SIZES.NUMBER_HEIGHT,
+        size: CONSTANTS.SIZES.NUMBER_SIZE * scale,
+        height: (CONSTANTS.SIZES.NUMBER_HEIGHT) * (1 / scale),
         curveSegments: CONSTANTS.SEGMENTS / 8,
         bevelEnabled: false
     });
 }
 
 // Text geometries for each minute number
-export function createMinuteGeometry(minute, font) {
+export function createMinuteGeometry(minute, font, scale = 1) {
     return new TextGeometry(String(minute), {
         font: font,
-        size: CONSTANTS.SIZES.NUMBER_SIZE / 2,
+        size: (CONSTANTS.SIZES.NUMBER_SIZE / 2) * scale,
         height: CONSTANTS.SIZES.NUMBER_HEIGHT / 2,
         curveSegments: CONSTANTS.SEGMENTS / 8,
         bevelEnabled: false
     });
 }
+
 
 // Geometries for each indicator (tick mark)
 export function createIndicatorGeometry(isFiveMinuteMark, scale = 1) {

@@ -7,9 +7,9 @@
 
 
 import { updateDayDateDisplay, updateDigitalDisplay } from './clockUpdater.js';
-import { HOUR_NUMBERS, INDICATORS, MINUTE_NUMBERS, OUTER_INDICATORS, SIZES } from '../constants.js';
+import { HOUR_NUMBERS, INDICATORS, MINUTE_NUMBERS, OUTER_HOUR_NUMBERS, OUTER_INDICATORS, SIZES } from '../constants.js';
 import { createHourGeometry, createMinuteGeometry, createIndicatorGeometry } from '../visuals/geometries.js';
-import { createHourMesh, createMinuteMesh, createIndicatorMesh, MESHES, createOuterIndicatorMesh } from '../visuals/meshes.js';
+import { createHourMesh, createMinuteMesh, createIndicatorMesh, MESHES, createOuterHourMesh, createOuterIndicatorMesh } from '../visuals/meshes.js';
 
 
 /**
@@ -25,13 +25,19 @@ function createNumbers(scene, font) {
         // Hours
         const hourGeometry = createHourGeometry(i, font);
         hourGeometry.center();
-
         const hourMesh = createHourMesh(hourGeometry)
         const distanceFromCenter = SIZES.CLOCK_RADIUS * 5/6;
 
         configureMesh(hourMesh, `hour${i}`, angle, distanceFromCenter)
         HOUR_NUMBERS[i] = hourMesh;
         scene.add(hourMesh);
+
+        const outerHourGeometry = createHourGeometry(i, font, 1.25);
+        outerHourGeometry.center();
+        const outerHourMesh = createOuterHourMesh(outerHourGeometry)
+        configureMesh(outerHourMesh, `outerHour${i}`, angle, distanceFromCenter)
+        OUTER_HOUR_NUMBERS[i] = outerHourMesh;
+        scene.add(outerHourMesh);
 
         // Minutes
         const minuteNumber = i * 5;
@@ -46,6 +52,21 @@ function createNumbers(scene, font) {
         MINUTE_NUMBERS[minuteNumber] = minuteMesh;
         scene.add(minuteMesh);
     }
+}
+
+/**
+ * Configures the position and name of a mesh object in the scene.
+ *
+ * @param {THREE.Mesh} mesh - The mesh object to configure.
+ * @param {string} meshName - The name to assign to the mesh.
+ * @param {number} meshAngle - The angle used to calculate the mesh's x and y positions.
+ * @param {number} centerDistance - The distance from the center of the scene to the mesh.
+ */
+function configureMesh(mesh, meshName, meshAngle, centerDistance) {
+    mesh.position.x = Math.sin(meshAngle) * centerDistance;
+    mesh.position.y = Math.cos(meshAngle) * centerDistance;
+    mesh.position.z = 0;
+    mesh.name = meshName;
 }
 
 /**
