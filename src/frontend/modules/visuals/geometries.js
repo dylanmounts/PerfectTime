@@ -69,10 +69,11 @@ export function createDigitalTimeGeometry(dayDateStr, font) {
 
 // Text geometries for each hour number
 export function createHourGeometry(hour, font, scale = 1) {
+    const heightScale = scale > 1 ? 0.001 : 0;
     return new TextGeometry(String(hour), {
         font: font,
         size: CONSTANTS.SIZES.NUMBER_SIZE * scale,
-        height: (CONSTANTS.SIZES.NUMBER_HEIGHT) * (1 / scale),
+        height: CONSTANTS.SIZES.NUMBER_HEIGHT - heightScale,
         curveSegments: CONSTANTS.SEGMENTS / 8,
         bevelEnabled: false
     });
@@ -80,10 +81,11 @@ export function createHourGeometry(hour, font, scale = 1) {
 
 // Text geometries for each minute number
 export function createMinuteGeometry(minute, font, scale = 1) {
+    const heightScale = scale > 1 ? 0.001 : 0;
     return new TextGeometry(String(minute), {
         font: font,
         size: (CONSTANTS.SIZES.NUMBER_SIZE / 2) * scale,
-        height: CONSTANTS.SIZES.NUMBER_HEIGHT / 2,
+        height: CONSTANTS.SIZES.NUMBER_HEIGHT / 2 - heightScale,
         curveSegments: CONSTANTS.SEGMENTS / 8,
         bevelEnabled: false
     });
