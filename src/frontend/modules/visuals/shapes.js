@@ -26,7 +26,7 @@ export const minuteHandShape = (scale = 1) => {
     const shape = new THREE.Shape();
     shape.moveTo(0, -0.2 * scale);
     shape.lineTo(-0.15 * scale, 0);
-    shape.lineTo(0, SIZES.CLOCK_RADIUS * 9/10 * lengthScale);
+    shape.lineTo(0, SIZES.CLOCK_RADIUS * 23/24 * lengthScale);
     shape.lineTo(0.15 * scale, 0);
     shape.lineTo(0, -0.2 * scale);
     return shape;
