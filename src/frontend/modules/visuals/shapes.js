@@ -36,10 +36,10 @@ export const minuteHandShape = (scale = 1) => {
 export const secondHandShape = (scale = 1) => {
     const lengthScale = scale != 1 ? scale * 1.25 : scale;
     const shape = new THREE.Shape();
-    shape.moveTo(0, -0.1 * scale);
-    shape.lineTo(-0.05 * scale, 0);
+    shape.moveTo(0, -0.0999 * scale);
+    shape.lineTo(-0.0333 * scale, 0);
     shape.lineTo(0, SIZES.CLOCK_RADIUS * 23/24 * lengthScale);
-    shape.lineTo(0.05 * scale, 0);
-    shape.lineTo(0, -0.1 * scale);
+    shape.lineTo(0.0333 * scale, 0);
+    shape.lineTo(0, -0.0999 * scale);
     return shape;
 };
