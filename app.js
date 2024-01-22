@@ -1,19 +1,28 @@
 const express = require('express');
 const path = require('path');
 const timeServer = require('./src/backend/timeServer');
-const cors = require('cors');
 
 const app = express();
 const port = process.env.PORT || 8100;
 const hostname = process.env.HOSTNAME || '127.0.0.1';
-
-app.use(cors());
+const allowedOrigins = ['https://perfecttime.org', 'https://www.perfecttime.org'];
 
 // Serve static files from the 'dist' directory
 app.use(express.static(path.join(__dirname, 'dist')));
 
 // Endpoint to get the perfect time
-app.get('/api/time', (req, res) => {
+app.use('/api/time', function(req, res) {
+    const origin = req.headers.origin;
+
+    if (!origin || allowedOrigins.includes(origin)) {
+        // Set the Access-Control-Allow-Origin header to the origin of the request,
+        // or to 'https://perfecttime.org' if the origin is not present
+        res.setHeader('Access-Control-Allow-Origin', origin || 'https://perfecttime.org');
+    } else {
+        res.status(403).send('Access Denied');
+        return;
+    }
+
     const currentTime = timeServer.getPerfectTime();
     res.json({ time: currentTime });
 });
