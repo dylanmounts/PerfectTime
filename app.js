@@ -12,12 +12,18 @@ app.use(express.static(path.join(__dirname, 'dist')));
 
 // Endpoint to get the perfect time
 app.use('/api/time', function(req, res) {
-    const origin = req.headers.origin;
+    let sourceOrigin = req.headers.origin;
 
-    if (!origin || allowedOrigins.includes(origin)) {
-        // Set the Access-Control-Allow-Origin header to the origin of the request,
-        // or to 'https://perfecttime.org' if the origin is not present
-        res.setHeader('Access-Control-Allow-Origin', origin || 'https://perfecttime.org');
+    // Fallback to Referer if Origin is not present
+    if (!sourceOrigin) {
+        const referer = req.headers.referer;
+        if (referer) {
+            sourceOrigin = new URL(referer).origin;
+        }
+    }
+
+    if (allowedOrigins.includes(sourceOrigin)) {
+        res.setHeader('Access-Control-Allow-Origin', sourceOrigin);
     } else {
         res.status(403).send('Access Denied');
         return;
