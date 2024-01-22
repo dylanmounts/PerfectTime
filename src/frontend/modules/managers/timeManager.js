@@ -23,7 +23,11 @@ class TimeManager {
     async fetchPerfectTime() {
         try {
             const startTime = Date.now();
-            const response = await fetch(TIME_ENDPOINT);
+            const response = await fetch(TIME_ENDPOINT, {
+                headers: {
+                    'Referer': 'https://perfecttime.org'
+                }
+            });
             const endTime = Date.now();
             const roundTripTime = endTime - startTime;
             const data = await response.json();
