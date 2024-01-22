@@ -1,7 +1,0 @@
-{
-  "name": "perfecttime.org",
-  "integrations": {
-    "capacitor": {}
-  },
-  "type": "custom"
-}
