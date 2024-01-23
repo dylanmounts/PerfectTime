@@ -17,12 +17,12 @@ import { createDayDateGeometry, createDigitalTimeGeometry } from '../visuals/geo
 
 // State variables for the visibility of clock components.
 let dayDateExists = document.getElementById('dayDateOption').checked;
-let digitalDisplayExists = document.getElementById('digitalDisplayOption').checked;
+let digitalDisplayExists = document.getElementById('digitalTimeOption').checked;
 let hourIndicatorsExist = document.getElementById('hourIndicatorsOption').checked;
-let hourNumbersExist = document.getElementById('hourNumbersOption').checked;
+let hourNumbersExist = document.getElementById('hoursOption').checked;
 let hourHandExists = document.getElementById('hourHandOption').checked;
 let minuteIndicatorsExist = document.getElementById('minuteIndicatorsOption').checked;
-let minuteNumbersExist = document.getElementById('minuteNumbersOption').checked;
+let minuteNumbersExist = document.getElementById('minutesOption').checked;
 let minuteHandExists = document.getElementById('minuteHandOption').checked;
 let secondHandExists = document.getElementById('secondHandOption').checked;
 let sweepingSeconds = document.getElementById('sweepingSecondsOption').checked;
@@ -126,7 +126,11 @@ export function updateDayDateDisplay(scene, font) {
         prevDayDateDisplay.geometry.dispose();
         prevDayDateDisplay.material.dispose();
         scene.remove(prevDayDateDisplay);
+    }
 
+    // Remove the associated complication box if it exists
+    const prevDayDatePart = scene.getObjectByName(DAY_DATE_PARTS[0]);
+    if (prevDayDatePart) {
         for (const part of DAY_DATE_PARTS) {
             const prevPart = scene.getObjectByName(part);
             scene.remove(prevPart);
