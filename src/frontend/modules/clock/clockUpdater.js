@@ -184,7 +184,11 @@ export function updateDigitalDisplay(scene, font) {
         prevDigitalDisplay.geometry.dispose();
         prevDigitalDisplay.material.dispose();
         scene.remove(prevDigitalDisplay);
+    }
 
+    // Remove the associated complication box if it exists
+    const prevDigitalDisplayPart = scene.getObjectByName(DIGITAL_DISPLAY_PARTS[0])
+    if (prevDigitalDisplayPart) {
         for (const part of DIGITAL_DISPLAY_PARTS) {
             const prevPart = scene.getObjectByName(part);
             scene.remove(prevPart);
