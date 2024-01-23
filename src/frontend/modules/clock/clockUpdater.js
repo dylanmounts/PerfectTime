@@ -16,16 +16,16 @@ import { createDayDateGeometry, createDigitalTimeGeometry } from '../visuals/geo
 
 
 // State variables for the visibility of clock components.
-let dayDateExists = true;
-let digitalDisplayExists = true;
-let hourIndicatorsExist = true;
-let hourNumbersExist = true;
-let hourHandExists = true;
-let minuteIndicatorsExist = true;
-let minuteNumbersExist = true;
-let minuteHandExists = true;
-let secondHandExists = true;
-let sweepingSeconds = true;
+let dayDateExists = document.getElementById('dayDateOption').checked;
+let digitalDisplayExists = document.getElementById('digitalTimeOption').checked;
+let hourIndicatorsExist = document.getElementById('hourIndicatorsOption').checked;
+let hourNumbersExist = document.getElementById('hoursOption').checked;
+let hourHandExists = document.getElementById('hourHandOption').checked;
+let minuteIndicatorsExist = document.getElementById('minuteIndicatorsOption').checked;
+let minuteNumbersExist = document.getElementById('minutesOption').checked;
+let minuteHandExists = document.getElementById('minuteHandOption').checked;
+let secondHandExists = document.getElementById('secondHandOption').checked;
+let sweepingSeconds = document.getElementById('sweepingSecondsOption').checked;
 
 // State variables for tracking the perfect time.
 let currentTime = null;
@@ -126,7 +126,11 @@ export function updateDayDateDisplay(scene, font) {
         prevDayDateDisplay.geometry.dispose();
         prevDayDateDisplay.material.dispose();
         scene.remove(prevDayDateDisplay);
+    }
 
+    // Remove the associated complication box if it exists
+    const prevDayDatePart = scene.getObjectByName(DAY_DATE_PARTS[0]);
+    if (prevDayDatePart) {
         for (const part of DAY_DATE_PARTS) {
             const prevPart = scene.getObjectByName(part);
             scene.remove(prevPart);
@@ -180,7 +184,11 @@ export function updateDigitalDisplay(scene, font) {
         prevDigitalDisplay.geometry.dispose();
         prevDigitalDisplay.material.dispose();
         scene.remove(prevDigitalDisplay);
+    }
 
+    // Remove the associated complication box if it exists
+    const prevDigitalDisplayPart = scene.getObjectByName(DIGITAL_DISPLAY_PARTS[0])
+    if (prevDigitalDisplayPart) {
         for (const part of DIGITAL_DISPLAY_PARTS) {
             const prevPart = scene.getObjectByName(part);
             scene.remove(prevPart);
