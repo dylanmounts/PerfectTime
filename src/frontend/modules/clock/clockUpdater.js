@@ -9,7 +9,7 @@
  *       into its own updater or controller.
  */
 
-import { DAY_DATE_PARTS, DIGITAL_DISPLAY_PARTS, HOUR_NUMBERS, OUTER_HOUR_NUMBERS, INDICATORS, OUTER_INDICATORS, MINUTE_NUMBERS } from '../constants.js';
+import { DAY_DATE_PARTS, DIGITAL_DISPLAY_PARTS, HOUR_NUMBERS, OUTER_HOUR_NUMBERS, INDICATORS, OUTER_INDICATORS, MINUTE_NUMBERS, SIZES } from '../constants.js';
 import { createDayDateMesh, createDigitalDisplayMesh, MESHES } from '../visuals/meshes.js';
 import { timeManager } from '../managers/timeManager.js';
 import { createDayDateGeometry, createDigitalTimeGeometry } from '../visuals/geometries.js';
@@ -27,9 +27,13 @@ let minuteHandExists = document.getElementById('minuteHandOption').checked;
 let secondHandExists = document.getElementById('secondHandOption').checked;
 let sweepingSeconds = document.getElementById('sweepingSecondsOption').checked;
 
-// State variables for tracking the perfect time.
+// State variables for tracking the perfect time and its displays.
 let currentTime = null;
 let lastTime = null;
+let lastSecond = null;
+let lastDayDate = null;
+let lastDayDateExists = null;
+let lastDigitalDisplayExists = null;
 
 /**
  * Main function to update the clock based on the current time retrieved from the
@@ -113,50 +117,55 @@ export function updateDayDateDisplay(scene, font) {
         return;
     }
 
-    // Get current date
     const day = currentTime.toLocaleString('en-US', { weekday: 'short' });
     const date = currentTime.toLocaleString('en-US', { month: 'short', day: 'numeric' });
-
-    // Combine day and date
     const dayDateStr = `${day.toUpperCase()} ${date}`;
 
-    // Remove previous day/date display if it exists
-    const prevDayDateDisplay = scene.getObjectByName('dayDateDisplay');
-    if (prevDayDateDisplay) {
-        prevDayDateDisplay.geometry.dispose();
-        prevDayDateDisplay.material.dispose();
-        scene.remove(prevDayDateDisplay);
-    }
+    const shouldUpdate = dayDateStr !== lastDayDate || dayDateExists !== lastDayDateExists;
 
-    // Remove the associated complication box if it exists
-    const prevDayDatePart = scene.getObjectByName(DAY_DATE_PARTS[0]);
-    if (prevDayDatePart) {
-        for (const part of DAY_DATE_PARTS) {
-            const prevPart = scene.getObjectByName(part);
-            scene.remove(prevPart);
+    if (shouldUpdate) {
+        const prevDayDateDisplay = scene.getObjectByName('dayDateDisplay');
+        if (prevDayDateDisplay) {
+            prevDayDateDisplay.geometry.dispose();
+            prevDayDateDisplay.material.dispose();
+            scene.remove(prevDayDateDisplay);
         }
-    }
 
-    // Create text geometry for day and date
-    const dayDateGeometry = createDayDateGeometry(dayDateStr, font);
-    dayDateGeometry.center();
-
-    // Create mesh for day and date
-    const dayDateMesh = createDayDateMesh(dayDateGeometry);
-    dayDateMesh.name = 'dayDateDisplay'
-
-    // Position inside the existing Day/Date box
-    dayDateMesh.position.x = MESHES.dayDateBox.position.x;
-    dayDateMesh.position.y = MESHES.dayDateBox.position.y;
-    dayDateMesh.position.z = MESHES.dayDateBox.position.z + 0.01;
-
-    // Add to the scene
-    if (dayDateExists) {
-        scene.add(dayDateMesh);
-
-        for (const part of DAY_DATE_PARTS) {
-            scene.add(MESHES[part]);
+        // Remove the associated complication box if it exists and the day/date doesn't
+        if (!dayDateExists) {
+            for (const part of DAY_DATE_PARTS) {
+                const prevPart = scene.getObjectByName(part);
+                if (prevPart) {
+                    scene.remove(prevPart);
+                }
+            }
         }
+
+        if (dayDateExists) {
+            // Create the new day/date display
+            const dayDateGeometry = createDayDateGeometry(dayDateStr, font);
+            dayDateGeometry.center();
+
+            const dayDateMesh = createDayDateMesh(dayDateGeometry);
+            dayDateMesh.name = 'dayDateDisplay';
+            dayDateMesh.position.set(
+                MESHES.dayDateBox.position.x,
+                MESHES.dayDateBox.position.y,
+                MESHES.dayDateBox.position.z + 0.01
+            );
+
+            scene.add(dayDateMesh);
+
+            // Add complication box if necessary
+            for (const part of DAY_DATE_PARTS) {
+                if (!scene.getObjectByName(part)) {
+                    scene.add(MESHES[part]);
+                }
+            }
+        }
+
+        lastDayDate = dayDateStr;
+        lastDayDateExists = dayDateExists;
     }
 }
 
@@ -175,46 +184,52 @@ export function updateDigitalDisplay(scene, font) {
         return;
     }
 
-    // Get current date
     const digitalTimeStr = currentTime.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
-    
-    // Remove previous digital time display if it exists
-    const prevDigitalDisplay = scene.getObjectByName('digitalDisplay');
-    if (prevDigitalDisplay) {
-        prevDigitalDisplay.geometry.dispose();
-        prevDigitalDisplay.material.dispose();
-        scene.remove(prevDigitalDisplay);
-    }
+    const currentSecond = currentTime.getSeconds();
 
-    // Remove the associated complication box if it exists
-    const prevDigitalDisplayPart = scene.getObjectByName(DIGITAL_DISPLAY_PARTS[0])
-    if (prevDigitalDisplayPart) {
-        for (const part of DIGITAL_DISPLAY_PARTS) {
-            const prevPart = scene.getObjectByName(part);
-            scene.remove(prevPart);
+    const shouldUpdate = currentSecond !== lastSecond || digitalDisplayExists !== lastDigitalDisplayExists;
+
+    if (shouldUpdate) {
+        const prevDigitalDisplay = scene.getObjectByName('digitalDisplay');
+        if (prevDigitalDisplay) {
+            prevDigitalDisplay.geometry.dispose();
+            prevDigitalDisplay.material.dispose();
+            scene.remove(prevDigitalDisplay);
         }
-    }
 
-    // Create text geometry for digital time
-    const digitalTimeGeometry = createDigitalTimeGeometry(digitalTimeStr, font);
-    digitalTimeGeometry.center()
-
-    // Create mesh for digital time
-    const digitalDisplayMesh = createDigitalDisplayMesh(digitalTimeGeometry);
-    digitalDisplayMesh.name = 'digitalDisplay';
-
-    // Position inside the existing digital time box
-    digitalDisplayMesh.position.x = Math.sin(0) * 5.0 * 1/3;
-    digitalDisplayMesh.position.y = Math.cos(0) * 5.0 * 1/3;
-    digitalDisplayMesh.position.z = 0 + 0.01;
-
-    // Add to the scene
-    if (digitalDisplayExists) {
-        scene.add(digitalDisplayMesh);
-
-        for (const part of DIGITAL_DISPLAY_PARTS) {
-            scene.add(MESHES[part]);
+        // Remove associated complication box if it exists and the digital time doesn't
+        if (!digitalDisplayExists) {
+            for (const part of DIGITAL_DISPLAY_PARTS) {
+                const prevPart = scene.getObjectByName(part);
+                if (prevPart) {
+                    scene.remove(prevPart);
+                }
+            }
         }
+
+        if (digitalDisplayExists) {
+            // Create and add new digital time display
+            const digitalTimeGeometry = createDigitalTimeGeometry(digitalTimeStr, font);
+            digitalTimeGeometry.center();
+
+            const digitalDisplayMesh = createDigitalDisplayMesh(digitalTimeGeometry);
+            digitalDisplayMesh.name = 'digitalDisplay';
+            digitalDisplayMesh.position.x = 0
+            digitalDisplayMesh.position.y = SIZES.CLOCK_RADIUS * 1/3;
+            digitalDisplayMesh.position.z = 0.01;
+
+            scene.add(digitalDisplayMesh);
+
+            // Add complication box if necessary
+            for (const part of DIGITAL_DISPLAY_PARTS) {
+                if (!scene.getObjectByName(part)) {
+                    scene.add(MESHES[part]);
+                }
+            }
+        }
+
+        lastSecond = currentSecond;
+        lastDigitalDisplayExists = digitalDisplayExists;
     }
 }
 
