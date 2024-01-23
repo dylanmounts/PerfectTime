@@ -16,16 +16,16 @@ import { createDayDateGeometry, createDigitalTimeGeometry } from '../visuals/geo
 
 
 // State variables for the visibility of clock components.
-let dayDateExists = true;
-let digitalDisplayExists = true;
-let hourIndicatorsExist = true;
-let hourNumbersExist = true;
-let hourHandExists = true;
-let minuteIndicatorsExist = true;
-let minuteNumbersExist = true;
-let minuteHandExists = true;
-let secondHandExists = true;
-let sweepingSeconds = true;
+let dayDateExists = document.getElementById('dayDateOption').checked;
+let digitalDisplayExists = document.getElementById('digitalDisplayOption').checked;
+let hourIndicatorsExist = document.getElementById('hourIndicatorsOption').checked;
+let hourNumbersExist = document.getElementById('hourNumbersOption').checked;
+let hourHandExists = document.getElementById('hourHandOption').checked;
+let minuteIndicatorsExist = document.getElementById('minuteIndicatorsOption').checked;
+let minuteNumbersExist = document.getElementById('minuteNumbersOption').checked;
+let minuteHandExists = document.getElementById('minuteHandOption').checked;
+let secondHandExists = document.getElementById('secondHandOption').checked;
+let sweepingSeconds = document.getElementById('sweepingSecondsOption').checked;
 
 // State variables for tracking the perfect time.
 let currentTime = null;
