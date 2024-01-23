@@ -128,9 +128,9 @@ export function updateDayDateDisplay(scene, font) {
         scene.remove(prevDayDateDisplay);
     }
 
-    // Remove the associated complication box if it exists
+    // Remove the associated complication box if necessary
     const prevDayDatePart = scene.getObjectByName(DAY_DATE_PARTS[0]);
-    if (prevDayDatePart) {
+    if (prevDayDatePart&& !dayDateExists) {
         for (const part of DAY_DATE_PARTS) {
             const prevPart = scene.getObjectByName(part);
             scene.remove(prevPart);
@@ -154,8 +154,11 @@ export function updateDayDateDisplay(scene, font) {
     if (dayDateExists) {
         scene.add(dayDateMesh);
 
-        for (const part of DAY_DATE_PARTS) {
-            scene.add(MESHES[part]);
+        // Only add the complication box if necessary
+        if (!prevDayDatePart) {
+            for (const part of DAY_DATE_PARTS) {
+                scene.add(MESHES[part]);
+            }
         }
     }
 }
