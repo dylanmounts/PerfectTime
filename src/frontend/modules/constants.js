@@ -85,7 +85,6 @@ export const DIGITAL_DISPLAY_PARTS = [
 export const INDICATORS = {};
 export const OUTER_INDICATORS = {};
 export const HOUR_NUMBERS = {};
-export const OUTER_HOUR_NUMBERS = {};
 export const MINUTE_NUMBERS = {};
 export const OUTER_MINUTE_NUMBERS = {};
 export const TIME_ENDPOINT = 'https://PerfectTime.org/api/time';
