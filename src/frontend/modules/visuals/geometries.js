@@ -19,13 +19,13 @@ const digitalDisplayFrameHorizontal = new THREE.BoxGeometry(CONSTANTS.DIGITAL_DI
 const digitalDisplayFrameVertical = new THREE.BoxGeometry(CONSTANTS.SIZES.COMPLICATION_FRAME_THICKNESS, CONSTANTS.DIGITAL_DISPLAY_FRAME_HEIGHT, CONSTANTS.SIZES.DAY_DATE_BOX_DEPTH);
 const dayDateBox = new THREE.BoxGeometry(CONSTANTS.SIZES.DAY_DATE_BOX_WIDTH, CONSTANTS.SIZES.DAY_DATE_BOX_HEIGHT, CONSTANTS.SIZES.DAY_DATE_BOX_DEPTH);
 const digitalDisplayBox = new THREE.BoxGeometry(CONSTANTS.SIZES.DIGITAL_DISPLAY_BOX_WIDTH, CONSTANTS.SIZES.DIGITAL_DISPLAY_BOX_HEIGHT, CONSTANTS.SIZES.DIGITAL_DISPLAY_BOX_DEPTH);
-const hourHand = new THREE.ShapeGeometry(SHAPES.hourHandShape(CONSTANTS.SIZES.HOUR_HAND_SCALE));
-const outerHourHand = new THREE.ShapeGeometry(SHAPES.hourHandShape());
-const minuteHand = new THREE.ShapeGeometry(SHAPES.minuteHandShape(CONSTANTS.SIZES.MINUTE_HAND_SCALE));
-const outerMinuteHand = new THREE.ShapeGeometry(SHAPES.minuteHandShape());
 const post = new THREE.CylinderGeometry(CONSTANTS.SIZES.POST_RADIUS, CONSTANTS.SIZES.POST_RADIUS, CONSTANTS.SIZES.POST_HEIGHT, CONSTANTS.SEGMENTS / 8);
-const secondHand = new THREE.ShapeGeometry(SHAPES.secondHandShape(CONSTANTS.SIZES.SECOND_HAND_SCALE));
-const outerSecondHand = new THREE.ShapeGeometry(SHAPES.secondHandShape());
+const hourHand = new THREE.ShapeGeometry(SHAPES.createClockHand(0.036, 0.4, 0.3, 5/8, CONSTANTS.SIZES.HOUR_HAND_SCALE));
+const outerHourHand = new THREE.ShapeGeometry(SHAPES.createClockHand(0.036, 0.4, 0.3, 5/8, 1));
+const minuteHand = new THREE.ShapeGeometry(SHAPES.createClockHand(0.036, 0.3, 0.3, 23/24, CONSTANTS.SIZES.MINUTE_HAND_SCALE));
+const outerMinuteHand = new THREE.ShapeGeometry(SHAPES.createClockHand(0.036, 0.3, 0.3, 23/24, 1));
+const secondHand = new THREE.ShapeGeometry(SHAPES.createClockHand(0.009, 0.075, 0.1, 23/24, CONSTANTS.SIZES.SECOND_HAND_SCALE));
+const outerSecondHand = new THREE.ShapeGeometry(SHAPES.createClockHand(0.009, 0.075, 0.1, 23/24, 1));
 
 export const GEOMETRIES = {
     clockFace,
