@@ -158,8 +158,8 @@ export function createHourGeometry(hour, font, scale = 1) {
         height: CONSTANTS.SIZES.NUMBER_HEIGHT - heightScale,
         curveSegments: CONSTANTS.SEGMENTS / 8,
         bevelEnabled: true,
-        bevelThickness: 0.01,
-        bevelSize: 0.025,
+        bevelThickness: CONSTANTS.SIZES.NUMBER_BEVEL_THICKNESS,
+        bevelSize: CONSTANTS.SIZES.NUMBER_BEVEL_SIZE,
         bevelSegments: 1
     });
 }
