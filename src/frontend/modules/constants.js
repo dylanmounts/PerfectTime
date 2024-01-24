@@ -60,7 +60,6 @@ export const SIZES = {
 };
 
 export const CLOCK_FONT = 'fonts/droid/droid_sans_regular.typeface.json';
-export const CLOCK_FONT_BOLD = 'fonts/droid/droid_sans_bold.typeface.json'
 export const CLOCK_FONT_MONO = 'fonts/droid/droid_sans_mono_regular.typeface.json';
 export const CLOCK_OUTER_RADIUS = SIZES.CLOCK_RADIUS + SIZES.BEZEL_THICKNESS;
 export const DAY_DATE_FRAME_HEIGHT = SIZES.DAY_DATE_BOX_HEIGHT + 2 * SIZES.COMPLICATION_FRAME_THICKNESS;

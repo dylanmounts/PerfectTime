@@ -32,9 +32,8 @@ function configureMesh(mesh, meshName, meshAngle, centerDistance) {
  * 
  * @param {Object} scene - The Three.js scene object.
  * @param {Object} font - The font used for the numbers.
- * @param {Object} boldFont - The bold font used for the number borders.
  */
-function createNumbers(scene, font, boldFont) {
+function createNumbers(scene, font) {
     for (let i = 1; i <= 12; i++) {
         const angle = (Math.PI / 6) * i;
 
@@ -47,14 +46,6 @@ function createNumbers(scene, font, boldFont) {
         configureMesh(hourMesh, `hour${i}`, angle, distanceFromCenter)
         HOUR_NUMBERS[i] = hourMesh;
         scene.add(hourMesh);
-
-        const outerHourGeometry = createHourGeometry(i, boldFont, 1.025);
-        outerHourGeometry.center();
-        const outerHourMesh = createOuterHourMesh(outerHourGeometry)
-
-        configureMesh(outerHourMesh, `outerHour${i}`, angle, distanceFromCenter)
-        OUTER_HOUR_NUMBERS[i] = outerHourMesh;
-        scene.add(outerHourMesh);
 
         // Minutes
         const minuteNumber = i * 5;
@@ -113,12 +104,11 @@ function createIndicators(scene) {
  * 
  * @param {Object} scene - The Three.js scene object.
  * @param {Object} regularFont - The regular font for the clock numbers.
- * @param {Object} boldFont - The bold font for the clock number borders.
  * @param {Object} monoFont - The monospace font for the digital display and date.
  */
-export async function addClock(scene, regularFont, boldFont, monoFont) {
+export async function addClock(scene, regularFont, monoFont) {
     createIndicators(scene);
-    createNumbers(scene, regularFont, boldFont);
+    createNumbers(scene, regularFont);
     updateDayDateDisplay(scene, monoFont);
     updateDigitalDisplay(scene, monoFont);
 
