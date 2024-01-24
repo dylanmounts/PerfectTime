@@ -127,11 +127,6 @@ export function createHourMesh(hourGeometry) {
     return new THREE.Mesh(hourGeometry, [MATERIALS.hourNumber, MATERIALS.outerHourNumber]);
 }
 
-// Mesh used for each hour number's border
-export function createOuterHourMesh(outerHourGeometry) {
-    return new THREE.Mesh(outerHourGeometry, MATERIALS.outerHourNumber);
-}
-
 // Mesh used for each minute number
 export function createMinuteMesh(minuteGeometry) {
     return new THREE.Mesh(minuteGeometry, MATERIALS.minuteNumber);

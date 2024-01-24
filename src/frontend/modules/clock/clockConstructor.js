@@ -9,7 +9,7 @@
 import { updateDayDateDisplay, updateDigitalDisplay } from './clockUpdater.js';
 import { HOUR_NUMBERS, INDICATORS, MINUTE_NUMBERS, OUTER_INDICATORS, SIZES } from '../constants.js';
 import { createHourGeometry, createMinuteGeometry, createIndicatorGeometry } from '../visuals/geometries.js';
-import { createHourMesh, createMinuteMesh, createIndicatorMesh, MESHES, createOuterHourMesh, createOuterIndicatorMesh } from '../visuals/meshes.js';
+import { createHourMesh, createMinuteMesh, createIndicatorMesh, MESHES, createOuterIndicatorMesh } from '../visuals/meshes.js';
 
 
 /**
