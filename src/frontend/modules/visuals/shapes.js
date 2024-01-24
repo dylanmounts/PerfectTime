@@ -20,7 +20,9 @@ import { SIZES } from '../constants.js';
  */
 export const createClockHand = (tipWidth, baseWidth, baseOffset, handLengthRatio, scale = 1) => {
     const lengthScale = scale === 1 ? scale : SIZES.OUTER_HAND_LENGTH_SCALE;
-    const handLength = SIZES.CLOCK_RADIUS * handLengthRatio * lengthScale;
+    const scaledClockRadius = SIZES.CLOCK_RADIUS * handLengthRatio;
+    const totalHandLength = scaledClockRadius + SIZES.INDICATOR_RADIUS / 2;
+    const handLength = totalHandLength * lengthScale;
     const triangleHeight = tipWidth * 3;
 
     baseWidth = baseWidth * scale;
