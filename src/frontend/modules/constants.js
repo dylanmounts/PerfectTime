@@ -35,7 +35,7 @@ export const SIZES = {
     DIGITAL_DISPLAY_BOX_DEPTH: 0.05,
     DIGITAL_DISPLAY_BOX_HEIGHT: 0.65,
     DIGITAL_DISPLAY_BOX_WIDTH: 3.5,
-    INDICATOR_HEIGHT: 0.081,
+    INDICATOR_HEIGHT: 0.074,
     INDICATOR_RADIUS: 0.09,
     INDICATOR_SCALE: 0.8,
     NUMBER_HEIGHT: 0.05,
@@ -87,6 +87,5 @@ export const INDICATORS = {};
 export const OUTER_INDICATORS = {};
 export const HOUR_NUMBERS = {};
 export const MINUTE_NUMBERS = {};
-export const OUTER_MINUTE_NUMBERS = {};
 export const TIME_ENDPOINT = 'https://PerfectTime.org/api/time';
 export const PERFECT_TIME_SYNC_SECONDS = 60
