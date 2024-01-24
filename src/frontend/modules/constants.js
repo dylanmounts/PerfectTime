@@ -10,9 +10,9 @@ export const COLORS = {
     HOUR_HAND: 0xB6C2CF,
     OUTER_HOUR_HAND: 0x101214,
     HOUR_NUMBERS: 0xB6C2CF,
-    OUTER_HOUR_NUMBERS: 0x22272B,
+    OUTER_HOUR_NUMBERS: 0x1D2125,
     INDICATORS: 0x9FADBC,
-    OUTER_INDICATOR: 0x161A1D,
+    OUTER_INDICATOR: 0x1D2125,
     MINUTE_HAND: 0x738496,
     OUTER_MINUTE_HAND: 0x101214,
     MINUTE_NUMBERS: 0x738496,
@@ -39,6 +39,8 @@ export const SIZES = {
     INDICATOR_SCALE: 0.8,
     NUMBER_HEIGHT: 0.05,
     NUMBER_SIZE: 0.5,
+    NUMBER_BEVEL_SIZE: 0.025,
+    NUMBER_BEVEL_THICKNESS: 0.01,
     POST_HEIGHT: 0.045,
     POST_RADIUS: 0.015,
     HOUR_HAND_SCALE: 0.75,
@@ -60,7 +62,6 @@ export const SIZES = {
 };
 
 export const CLOCK_FONT = 'fonts/droid/droid_sans_regular.typeface.json';
-export const CLOCK_FONT_BOLD = 'fonts/droid/droid_sans_bold.typeface.json'
 export const CLOCK_FONT_MONO = 'fonts/droid/droid_sans_mono_regular.typeface.json';
 export const CLOCK_OUTER_RADIUS = SIZES.CLOCK_RADIUS + SIZES.BEZEL_THICKNESS;
 export const DAY_DATE_FRAME_HEIGHT = SIZES.DAY_DATE_BOX_HEIGHT + 2 * SIZES.COMPLICATION_FRAME_THICKNESS;
@@ -84,7 +85,6 @@ export const DIGITAL_DISPLAY_PARTS = [
 export const INDICATORS = {};
 export const OUTER_INDICATORS = {};
 export const HOUR_NUMBERS = {};
-export const OUTER_HOUR_NUMBERS = {};
 export const MINUTE_NUMBERS = {};
 export const OUTER_MINUTE_NUMBERS = {};
 export const TIME_ENDPOINT = 'https://PerfectTime.org/api/time';

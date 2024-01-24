@@ -124,12 +124,7 @@ export function createDigitalDisplayMesh(digitalDisplayGeometry) {
 
 // Mesh used for each hour number
 export function createHourMesh(hourGeometry) {
-    return new THREE.Mesh(hourGeometry, MATERIALS.hourNumber);
-}
-
-// Mesh used for each hour number's border
-export function createOuterHourMesh(outerHourGeometry) {
-    return new THREE.Mesh(outerHourGeometry, MATERIALS.outerHourNumber);
+    return new THREE.Mesh(hourGeometry, [MATERIALS.hourNumber, MATERIALS.outerHourNumber]);
 }
 
 // Mesh used for each minute number

@@ -157,7 +157,10 @@ export function createHourGeometry(hour, font, scale = 1) {
         size: CONSTANTS.SIZES.NUMBER_SIZE * scale,
         height: CONSTANTS.SIZES.NUMBER_HEIGHT - heightScale,
         curveSegments: CONSTANTS.SEGMENTS / 8,
-        bevelEnabled: false
+        bevelEnabled: true,
+        bevelThickness: CONSTANTS.SIZES.NUMBER_BEVEL_THICKNESS,
+        bevelSize: CONSTANTS.SIZES.NUMBER_BEVEL_SIZE,
+        bevelSegments: 1
     });
 }
 
