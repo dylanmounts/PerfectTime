@@ -129,7 +129,7 @@ export function createHourMesh(hourGeometry) {
 
 // Mesh used for each minute number
 export function createMinuteMesh(minuteGeometry) {
-    return new THREE.Mesh(minuteGeometry, MATERIALS.minuteNumber);
+    return new THREE.Mesh(minuteGeometry, [MATERIALS.minuteNumber, MATERIALS.outerMinuteNumber]);
 }
 
 // Mesh used for each indicator (tick mark)
