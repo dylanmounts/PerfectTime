@@ -40,6 +40,7 @@ function createNumbers(scene, font) {
         // Hours
         const hourGeometry = createHourGeometry(i, font);
         hourGeometry.center();
+
         const hourMesh = createHourMesh(hourGeometry)
         const distanceFromCenter = SIZES.CLOCK_RADIUS * 5/6;
 
