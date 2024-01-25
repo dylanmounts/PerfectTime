@@ -33,12 +33,12 @@ export const calculateHandLength = (handLengthRatio, scale) => {
  * @returns {THREE.Shape} A THREE.Shape object representing the clock hand.
  */
 export const createClockHand = (tipWidth, baseWidth, baseOffset, handLengthRatio, scale = 1) => {
+    const handLength = calculateHandLength(handLengthRatio, scale);
+    const triangleHeight = tipWidth * Math.PI;
+
     baseWidth *= scale;
     baseOffset *= scale;
     tipWidth *= scale;
-
-    const handLength = calculateHandLength(handLengthRatio, scale);
-    const triangleHeight = tipWidth * Math.PI;
 
     const shape = new THREE.Shape();
     shape.moveTo(0, -baseOffset);
