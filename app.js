@@ -46,5 +46,5 @@ app.listen(port, hostname, () => {
 // Initial backend time synchronization with NTP server
 timeServer.updateTimeFromNTP();
 
-// Update time from NTP server every 15 minutes
-setInterval(timeServer.updateTimeFromNTP, 15 * 60 * 1000);
+// Update time from NTP server every 10 minutes
+setInterval(timeServer.updateTimeFromNTP, 10 * 60 * 1000);
