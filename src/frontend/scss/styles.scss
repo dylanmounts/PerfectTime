@@ -36,3 +36,13 @@ html, body {
     position: absolute;
     right: 10px;
 }
+
+.toast .toast-body {
+    overflow-y: auto;
+}
+
+@media (max-height: 450px) {
+    .toast .toast-body {
+        max-height: 225px;
+    }
+}
