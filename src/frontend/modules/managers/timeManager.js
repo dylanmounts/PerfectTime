@@ -33,7 +33,7 @@ class TimeManager {
 
             this.timeOffset = this.perfectTime - deviceTime;
         } catch (error) {
-            console.error(new Date() +  ' - Error fetching perfect time:', error);
+            console.error("Error fetching perfect time: ", error);
             if (this.timeOffset === null) {
                 this.timeOffset = 0;
             }

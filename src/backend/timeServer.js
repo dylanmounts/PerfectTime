@@ -16,7 +16,7 @@ let lastSyncTime = Date.now();
 function updateTimeFromNTP() {
     ntpClient.getNetworkTime("pool.ntp.org", 123, (err, date) => {
         if (err) {
-            console.error("Error updating time from NTP:", err);
+            console.error(new Date() + " - Error updating time from NTP:", err);
             return;
         }
         lastSyncTime = Date.now();
