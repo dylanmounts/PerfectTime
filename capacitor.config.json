@@ -1,8 +1,14 @@
 {
-  "appId": "perfecttime.org",
-  "appName": "perfecttime.org",
+  "appId": "org.perfecttime.app",
+  "appName": "perfecttime",
   "webDir": "dist",
+  "plugins": {
+    "CapacitorHttp": {
+      "enabled": true
+    }
+  },
   "server": {
-    "androidScheme": "https"
+    "androidScheme": "https",
+    "hostname": "perfecttime.org"
   }
 }

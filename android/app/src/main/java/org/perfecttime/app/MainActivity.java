@@ -1,4 +1,4 @@
-package perfecttime.org;
+package org.perfecttime.app;
 
 import com.getcapacitor.BridgeActivity;
 
