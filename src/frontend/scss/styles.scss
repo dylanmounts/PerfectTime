@@ -25,14 +25,26 @@ html, body {
     top: 10px;
     left: 0;
     right: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 2;
+}
+
+#clockContainer {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    z-index: 1;
 }
 
 #infoMenuBtn {
     position: absolute;
     left: 10px;
+    z-index: 2;
 }
 
 #optionsMenuBtn {
     position: absolute;
     right: 10px;
+    z-index: 2;
 }

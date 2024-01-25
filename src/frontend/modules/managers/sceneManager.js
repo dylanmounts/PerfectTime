@@ -17,6 +17,7 @@ import { MESHES } from '../visuals/meshes';
 
 const scene = new THREE.Scene();
 const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+const container = document.getElementById('clockContainer');
 const renderer = new THREE.WebGLRenderer({ antialias: true });
 
 let regularFont = null;
@@ -29,8 +30,8 @@ function setupScene() {
     const ambientLight = new THREE.AmbientLight(0xffffff, 5);
     scene.add(ambientLight);
 
-    renderer.setSize(window.innerWidth, window.innerHeight);
-    document.body.appendChild(renderer.domElement);
+    renderer.setSize(container.clientWidth, container.clientHeight);
+    container.appendChild(renderer.domElement);
 }
 
 /**
@@ -55,10 +56,11 @@ function updateCamera() {
  * Handles window resize events to keep the clock centered and full screen.
  */
 export function onWindowResize() {
-    camera.aspect = window.innerWidth / window.innerHeight;
-    camera.updateProjectionMatrix();
-    renderer.setSize(window.innerWidth, window.innerHeight);
+    camera.aspect = container.clientWidth / container.clientHeight;
+    renderer.setSize(container.clientWidth, container.clientHeight);
+
     updateCamera();
+    camera.updateProjectionMatrix();
 }
 
 /**
@@ -85,6 +87,6 @@ export async function initializeScene() {
     monoFont = await monoFontManager.getLoadedFont();
 
     addClock(scene, regularFont, monoFont);
-    updateCamera();
     animate();
+    updateCamera();
 }
