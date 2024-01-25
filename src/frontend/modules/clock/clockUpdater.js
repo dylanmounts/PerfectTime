@@ -405,8 +405,6 @@ export function updateTimeOffset() {
     const offsetNumberField = document.getElementById('timeOffsetNumber')
     const offsetDirectionField = document.getElementById('timeOffsetDirection')
 
-    let offsetInSeconds = (offset / 1000).toFixed(1);
-
-    offsetNumberField.textContent = Math.abs(offsetInSeconds);
+    offsetNumberField.textContent = Math.abs(offset / 1000);
     offsetDirectionField.textContent = offset > 0 ? "behind" : "ahead";
 }
