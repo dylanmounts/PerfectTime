@@ -8,7 +8,7 @@
 import * as THREE from 'three';
 
 import { PERFECT_TIME_SYNC_SECONDS } from '../constants';
-import { fontManager, boldFontManager, monoFontManager } from './fontManager';
+import { fontManager, monoFontManager } from './fontManager';
 import { timeManager } from './timeManager';
 import { addClock } from '../clock/clockConstructor';
 import { updateClock } from '../clock/clockUpdater';
@@ -20,7 +20,6 @@ const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerH
 const renderer = new THREE.WebGLRenderer({ antialias: true });
 
 let regularFont = null;
-let boldFont = null;
 let monoFont = null;
 
 /**
@@ -83,10 +82,9 @@ export async function initializeScene() {
     }, PERFECT_TIME_SYNC_SECONDS * 1000);
 
     regularFont = await fontManager.getLoadedFont();
-    boldFont = await boldFontManager.getLoadedFont();
     monoFont = await monoFontManager.getLoadedFont();
 
-    addClock(scene, regularFont, boldFont, monoFont);
+    addClock(scene, regularFont, monoFont);
     updateCamera();
     animate();
 }

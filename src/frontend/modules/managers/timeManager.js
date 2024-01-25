@@ -32,13 +32,15 @@ class TimeManager {
             const roundTripTime = endTime - startTime;
             const data = await response.json();
 
-            this.perfectTime = new Date(data.time).getTime() + roundTripTime / 2;
+            this.perfectTime = new Date(data.time).getTime();
             const deviceTime = startTime + roundTripTime / 2;
 
             this.timeOffset = this.perfectTime - deviceTime;
         } catch (error) {
-            console.error('Error fetching perfect time:', error);
-            this.timeOffset = 0;
+            console.error("Error fetching perfect time: ", error);
+            if (this.timeOffset === null) {
+                this.timeOffset = 0;
+            }
         }
     }
 

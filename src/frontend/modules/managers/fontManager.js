@@ -11,7 +11,7 @@ import * as THREE from 'three';
 import { FontLoader } from 'three/addons/loaders/FontLoader.js';
 import { TextGeometry } from 'three/addons/geometries/TextGeometry.js';
 
-import { CLOCK_FONT, CLOCK_FONT_BOLD, CLOCK_FONT_MONO, SIZES, SEGMENTS } from '../constants';
+import { CLOCK_FONT, CLOCK_FONT_MONO, SIZES, SEGMENTS } from '../constants';
 
 class FontManager {
     constructor(url) {
@@ -76,5 +76,4 @@ class FontManager {
 }
 
 export const fontManager = new FontManager(CLOCK_FONT);
-export const boldFontManager = new FontManager(CLOCK_FONT_BOLD);
 export const monoFontManager = new FontManager(CLOCK_FONT_MONO);
