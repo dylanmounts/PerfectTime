@@ -48,3 +48,13 @@ html, body {
     right: 10px;
     z-index: 2;
 }
+
+.toast .toast-body {
+    overflow-y: auto;
+}
+
+@media (max-height: 450px) {
+    .toast .toast-body {
+        max-height: 225px;
+    }
+}
