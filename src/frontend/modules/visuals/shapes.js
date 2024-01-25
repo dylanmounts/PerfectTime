@@ -9,6 +9,20 @@ import { SIZES } from '../constants.js';
 
 
 /**
+ * Calculates the length of a clock hand.
+ * 
+ * @param {number} handLengthRatio - Proportional length of the clock hand relative to the clock's radius.
+ * @param {number} scale - Scaling factor to adjust the overall size of the clock hand.
+ * @returns {number} Length of the clock hand.
+ */
+export const calculateHandLength = (handLengthRatio, scale) => {
+    const lengthScale = scale === 1 ? scale : SIZES.OUTER_HAND_LENGTH_SCALE;
+    const scaledClockRadius = SIZES.CLOCK_RADIUS * handLengthRatio;
+    const totalHandLength = scaledClockRadius + (SIZES.INDICATOR_RADIUS / 2) * SIZES.INDICATOR_SCALE;
+    return totalHandLength * lengthScale;
+};
+
+/**
  * Creates the clock hands for the perfect clock.
  * 
  * @param {number} tipWidth - Width of the tip of the clock hand.
@@ -19,15 +33,12 @@ import { SIZES } from '../constants.js';
  * @returns {THREE.Shape} A THREE.Shape object representing the clock hand.
  */
 export const createClockHand = (tipWidth, baseWidth, baseOffset, handLengthRatio, scale = 1) => {
-    const lengthScale = scale === 1 ? scale : SIZES.OUTER_HAND_LENGTH_SCALE;
-    const scaledClockRadius = SIZES.CLOCK_RADIUS * handLengthRatio;
-    const totalHandLength = scaledClockRadius + (SIZES.INDICATOR_RADIUS / 2) * SIZES.INDICATOR_SCALE;
-    const handLength = totalHandLength * lengthScale;
-    const triangleHeight = tipWidth * 3;
+    baseWidth *= scale;
+    baseOffset *= scale;
+    tipWidth *= scale;
 
-    baseWidth = baseWidth * scale;
-    baseOffset = baseOffset * scale;
-    tipWidth = tipWidth * scale;
+    const handLength = calculateHandLength(handLengthRatio, scale);
+    const triangleHeight = tipWidth * Math.PI;
 
     const shape = new THREE.Shape();
     shape.moveTo(0, -baseOffset);
