@@ -28,7 +28,7 @@ class TimeManager {
             const roundTripTime = endTime - startTime;
             const data = await response.json();
 
-            this.perfectTime = new Date(data.time).getTime() + roundTripTime / 2;
+            this.perfectTime = new Date(data.time).getTime();
             const deviceTime = startTime + roundTripTime / 2;
 
             this.timeOffset = this.perfectTime - deviceTime;
