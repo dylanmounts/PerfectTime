@@ -19,7 +19,8 @@
  */
 
 
-import { Button, Toast } from 'bootstrap';
+import { AndroidFullScreen } from '@awesome-cordova-plugins/android-full-screen';
+import { Toast } from 'bootstrap';
 
 import '../frontend/scss/styles.scss'
 import { initializeScene, onWindowResize } from './modules/managers/sceneManager';
@@ -85,25 +86,15 @@ document.getElementById('fullscreenBtn').addEventListener('click', function() {
 
 document.addEventListener('fullscreenchange', (event) => {
     const btn = document.getElementById("fullscreenBtn");
-    const bootstrapBtn = Button.getOrCreateInstance(btn);
     
-    function isTouchDevice() {
-        const userAgent = navigator.userAgent.toLowerCase();
-        return /android|webos|iphone|ipad|ipod|blackberry|iemobile|opera mini/.test(userAgent);
-    }
-
     if (document.fullscreenElement) {
-        bootstrapBtn.toggle();
-        if (isTouchDevice()) {
-            btn.style.backgroundColor = "#585f63";
-            btn.style.color = "#e8e6e3";
-        }
+        AndroidFullScreen.immersiveMode();
+        btn.style.backgroundColor = "#585f63";
+        btn.style.color = "#e8e6e3";
     } else {
-        bootstrapBtn.toggle();
-        if (isTouchDevice()) {
-            btn.style.backgroundColor = "transparent";
-            btn.style.color = "#6c757d";
-        }
+        AndroidFullScreen.showSystemUI();
+        btn.style.backgroundColor = "transparent";
+        btn.style.color = "#6c757d";
     }
 });
 
