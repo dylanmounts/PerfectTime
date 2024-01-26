@@ -45,7 +45,7 @@ function updateCamera() {
     // Calculations for camera position
     const maxDim = Math.max(size.x, size.y, size.z);
     const fov = camera.fov * (Math.PI / 180);
-    let cameraZ = Math.abs(maxDim / 1.15 * Math.tan(fov / 2));
+    let cameraZ = Math.abs(maxDim / 1.175 * Math.tan(fov / 2));
     if (camera.aspect < 1) cameraZ = cameraZ / camera.aspect;
 
     camera.position.set(center.x, center.y, center.z + cameraZ);
