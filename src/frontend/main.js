@@ -84,7 +84,7 @@ function toggleFullscreen() {
 }
 document.getElementById('fullscreenBtn').addEventListener('click', toggleFullscreen);
 
-function toggleGUI() {
+function toggleGUI(isFullscreen) {
     const btn = document.getElementById("fullscreenBtn");
     const bootstrapBtn = Button.getOrCreateInstance(btn);
     
@@ -93,7 +93,7 @@ function toggleGUI() {
         return /android|webos|iphone|ipad|ipod|blackberry|iemobile|opera mini/.test(userAgent);
     }
 
-    if (document.fullscreenElement) {
+    if (isFullscreen) {
         bootstrapBtn.toggle();
         if (isTouchDevice()) {
             AndroidFullScreen.immersiveMode();
@@ -109,7 +109,17 @@ function toggleGUI() {
         }
     }
 }
-document.addEventListener('fullscreenchange', toggleGUI);
+document.addEventListener('fullscreenchange', () => {
+    toggleGUI(!!document.fullscreenElement);
+});
+
+window.addEventListener("orientationchange", () => {
+    // Only update UI if not in fullscreen.
+    if (!document.fullscreenElement) {
+        const isPortrait = screen.orientation.angle === 0 || screen.orientation.angle === 180;
+        toggleGUI(!isPortrait);
+    }
+});
 window.addEventListener('resize', onWindowResize);
 
 // Tick tock run the clock
