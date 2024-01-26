@@ -74,7 +74,7 @@ handleCheckboxChange('minuteHandOption', ClockUpdater.toggleMinuteHand);
 handleCheckboxChange('secondHandOption', ClockUpdater.toggleSecondHand);
 handleCheckboxChange('sweepingSecondsOption', ClockUpdater.toggleSweepingSeconds);
 
-document.getElementById('fullscreenBtn').addEventListener('click', function() {
+function toggleFullscreen() {
     if (!document.fullscreenElement) {
         document.documentElement.requestFullscreen();
     } else {
@@ -82,12 +82,12 @@ document.getElementById('fullscreenBtn').addEventListener('click', function() {
             document.exitFullscreen();
         }
     }
-});
+}
+document.getElementById('fullscreenBtn').addEventListener('click', toggleFullscreen);
 
-document.addEventListener('fullscreenchange', (event) => {
+function toggleImmersive(isFullscreen) {
     const btn = document.getElementById("fullscreenBtn");
-    
-    if (document.fullscreenElement) {
+    if (isFullscreen) {
         AndroidFullScreen.immersiveMode();
         btn.style.backgroundColor = "#585f63";
         btn.style.color = "#e8e6e3";
@@ -96,8 +96,17 @@ document.addEventListener('fullscreenchange', (event) => {
         btn.style.backgroundColor = "transparent";
         btn.style.color = "#6c757d";
     }
+}
+document.addEventListener('fullscreenchange', () => {
+    toggleImmersive(!!document.fullscreenElement);
 });
-
+window.addEventListener("orientationchange", () => {
+    // Only update UI if not in fullscreen.
+    if (!document.fullscreenElement) {
+        const isPortrait = screen.orientation.angle === 0 || screen.orientation.angle === 180;
+        toggleImmersive(!isPortrait);
+    }
+});
 window.addEventListener('resize', onWindowResize);
 
 // Tick tock run the clock
