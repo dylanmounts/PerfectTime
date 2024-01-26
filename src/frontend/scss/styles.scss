@@ -65,8 +65,14 @@ html, body {
 }
 
 /* Media Queries */
-@media (max-height: 485px) {
+@media screen and (max-height: 485px) {
     .toast .toast-body {
         max-height: 250px;
+    }
+}
+
+@media screen and (max-width: 400px) {
+    .github-logo {
+        display: none;
     }
 }

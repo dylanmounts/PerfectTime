@@ -15,18 +15,18 @@
 <body>
     <div class="button-container">
         <button type="button" class="btn btn-outline-secondary btn-lg" id="infoMenuBtn">
-            <div class="d-flex align-content-center justify-content-center">
+            <div class="d-flex align-items-center justify-content-center">
                 <i class="bx bx-info-circle bx-sm"></i>
             </div>
         </button>
         <div class="d-flex config-button-container">
             <button type="button" class="btn btn-outline-secondary btn-lg me-1" id="optionsMenuBtn">
-                <div class="d-flex align-content-center justify-content-center">
+                <div class="d-flex align-items-center justify-content-center">
                     <i class="bx bx-cog bx-sm"></i>
                 </div>
             </button>
             <button type="button" class="btn btn-outline-secondary btn-lg" id="fullscreenBtn">
-                <div class="d-flex align-content-center justify-content-center">
+                <div class="d-flex align-items-center justify-content-center">
                     <i class="bx bx-expand bx-sm"></i>
                 </div>
             </button>
@@ -41,10 +41,12 @@
             </div>
             <div class="toast-body">
                 <p><strong>Perfect Time</strong> is designed to show the perfect time every time.</p>
-                <p>Your device's clock is <strong><span id="timeOffsetNumber">0</span> seconds</strong> <span id="timeOffsetDirection">ahead</span>.</p>
-                <center>
-                    <small>Available on <a href="https://github.com/dylanmounts/PerfectTime.org">GitHub</a></small>
-                </center>
+                <div class="d-flex justify-content-between">
+                    <p class="mb-0">Your device's clock is <strong><span id="timeOffsetNumber">0</span> seconds</strong> <span id="timeOffsetDirection">ahead</span>.</p>
+                    <a class="d-flex align-items-center" href="https://github.com/dylanmounts/PerfectTime" target="_blank">
+                        <img class="github-logo" alt="PerfectTime Repo" src="img/github-mark-white.png" style="width: 20px; height: 20px;">
+                    </a>
+                </div>
             </div>
         </div>
     </div>
