@@ -6,8 +6,10 @@
  * time server's API and calculates the offset from the user's local time.
  */
 
+import { CapacitorHttp } from '@capacitor/core';
 
 import { TIME_ENDPOINT } from "../constants";
+
 
 class TimeManager {
     constructor() {
@@ -22,12 +24,16 @@ class TimeManager {
      */
     async fetchPerfectTime() {
         try {
+            const options = {
+                url: TIME_ENDPOINT,
+                headers: { 'Referer': 'https://perfecttime.org' }
+            };
             const startTime = Date.now();
-            const response = await fetch(TIME_ENDPOINT);
+            const response = await CapacitorHttp.request({ ...options, method: 'GET' })
             const endTime = Date.now();
             const roundTripTime = endTime - startTime;
-            const data = await response.json();
 
+            const data = response.data;
             this.perfectTime = new Date(data.time).getTime();
             const deviceTime = startTime + roundTripTime / 2;
 

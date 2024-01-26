@@ -18,7 +18,7 @@
  *  - Clock and manager modules for functionality and scene management.
  */
 
-
+import { AndroidFullScreen } from '@awesome-cordova-plugins/android-full-screen';
 import { Button, Toast } from 'bootstrap';
 
 import '../frontend/scss/styles.scss'
@@ -73,7 +73,7 @@ handleCheckboxChange('minuteHandOption', ClockUpdater.toggleMinuteHand);
 handleCheckboxChange('secondHandOption', ClockUpdater.toggleSecondHand);
 handleCheckboxChange('sweepingSecondsOption', ClockUpdater.toggleSweepingSeconds);
 
-document.getElementById('fullscreenBtn').addEventListener('click', function() {
+function toggleFullscreen() {
     if (!document.fullscreenElement) {
         document.documentElement.requestFullscreen();
     } else {
@@ -81,9 +81,10 @@ document.getElementById('fullscreenBtn').addEventListener('click', function() {
             document.exitFullscreen();
         }
     }
-});
+}
+document.getElementById('fullscreenBtn').addEventListener('click', toggleFullscreen);
 
-document.addEventListener('fullscreenchange', (event) => {
+function toggleGUI(isFullscreen) {
     const btn = document.getElementById("fullscreenBtn");
     const bootstrapBtn = Button.getOrCreateInstance(btn);
     
@@ -92,21 +93,33 @@ document.addEventListener('fullscreenchange', (event) => {
         return /android|webos|iphone|ipad|ipod|blackberry|iemobile|opera mini/.test(userAgent);
     }
 
-    if (document.fullscreenElement) {
+    if (isFullscreen) {
         bootstrapBtn.toggle();
         if (isTouchDevice()) {
+            AndroidFullScreen.immersiveMode();
             btn.style.backgroundColor = "#585f63";
             btn.style.color = "#e8e6e3";
         }
     } else {
         bootstrapBtn.toggle();
         if (isTouchDevice()) {
+            AndroidFullScreen.showSystemUI();
             btn.style.backgroundColor = "transparent";
             btn.style.color = "#6c757d";
         }
     }
+}
+document.addEventListener('fullscreenchange', () => {
+    toggleGUI(!!document.fullscreenElement);
 });
 
+window.addEventListener("orientationchange", () => {
+    // Only update UI if not in fullscreen.
+    if (!document.fullscreenElement) {
+        const isPortrait = screen.orientation.angle === 0 || screen.orientation.angle === 180;
+        toggleGUI(!isPortrait);
+    }
+});
 window.addEventListener('resize', onWindowResize);
 
 // Tick tock run the clock

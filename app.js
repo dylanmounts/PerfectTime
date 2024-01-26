@@ -42,9 +42,3 @@ app.get('*', (req, res) => {
 app.listen(port, hostname, () => {
     console.log(`Server running at http://${hostname}:${port}/`);
 });
-
-// Initial backend time synchronization with NTP server
-timeServer.updateTimeFromNTP();
-
-// Update time from NTP server every 10 minutes
-setInterval(timeServer.updateTimeFromNTP, 10 * 60 * 1000);
