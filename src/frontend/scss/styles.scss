@@ -46,3 +46,10 @@ html, body {
         max-height: 225px;
     }
 }
+
+@media (hover: none) {
+    #fullscreenBtn.btn:hover {
+        color: #6c757d;
+        background-color: transparent;
+    }
+}
