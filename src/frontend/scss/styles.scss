@@ -1,5 +1,6 @@
 @import "bootstrap/scss/bootstrap";
 
+/* Global Styles */
 html, body {
     height: 100%;
     width: 100%;
@@ -8,18 +9,7 @@ html, body {
     background-color: black;
 }
 
-.table {
-    width: 100%;
-}
-
-.table td {
-    width: 50%;
-}
-
-.table-header {
-    margin-bottom: 0.25rem;
-}
-
+/* Layout and Structure */
 .button-container {
     position: fixed;
     top: 10px;
@@ -35,6 +25,19 @@ html, body {
     height: 100%;
     position: relative;
     z-index: 1;
+}
+
+/* Components and Elements */
+.table {
+    width: 100%;
+}
+
+.table td {
+    width: 50%;
+}
+
+.table-header {
+    margin-bottom: 0.25rem;
 }
 
 .config-button-container {
@@ -61,6 +64,7 @@ html, body {
     overflow-y: auto;
 }
 
+/* Media Queries */
 @media (max-height: 450px) {
     .toast .toast-body {
         max-height: 225px;
