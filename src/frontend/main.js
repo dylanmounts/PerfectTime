@@ -74,30 +74,35 @@ handleCheckboxChange('secondHandOption', ClockUpdater.toggleSecondHand);
 handleCheckboxChange('sweepingSecondsOption', ClockUpdater.toggleSweepingSeconds);
 
 document.getElementById('fullscreenBtn').addEventListener('click', function() {
-    const btn = document.getElementById("fullscreenBtn");
-    const bootstrapBtn = Button.getOrCreateInstance(btn);
-
-    function isTouchDevice() {
-        return ('ontouchstart' in window) || 
-               (navigator.maxTouchPoints > 0) ||
-               (navigator.msMaxTouchPoints > 0);
-    }
-
     if (!document.fullscreenElement) {
         document.documentElement.requestFullscreen();
+    } else {
+        if (document.exitFullscreen) {
+            document.exitFullscreen();
+        }
+    }
+});
+
+document.addEventListener('fullscreenchange', (event) => {
+    const btn = document.getElementById("fullscreenBtn");
+    const bootstrapBtn = Button.getOrCreateInstance(btn);
+    
+    function isTouchDevice() {
+        const userAgent = navigator.userAgent.toLowerCase();
+        return /android|webos|iphone|ipad|ipod|blackberry|iemobile|opera mini/.test(userAgent);
+    }
+
+    if (document.fullscreenElement) {
         bootstrapBtn.toggle();
         if (isTouchDevice()) {
             btn.style.backgroundColor = "#585f63";
             btn.style.color = "#e8e6e3";
         }
     } else {
-        if (document.exitFullscreen) {
-            document.exitFullscreen();
-            bootstrapBtn.toggle();
-            if (isTouchDevice()) {
-                btn.style.backgroundColor = "transparent";
-                btn.style.color = "#6c757d";
-            }
+        bootstrapBtn.toggle();
+        if (isTouchDevice()) {
+            btn.style.backgroundColor = "transparent";
+            btn.style.color = "#6c757d";
         }
     }
 });
