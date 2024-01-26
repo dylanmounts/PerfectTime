@@ -19,7 +19,7 @@
  */
 
 
-import { Toast } from 'bootstrap';
+import { Button, Toast } from 'bootstrap';
 
 import '../frontend/scss/styles.scss'
 import { initializeScene, onWindowResize } from './modules/managers/sceneManager';
@@ -74,7 +74,8 @@ handleCheckboxChange('secondHandOption', ClockUpdater.toggleSecondHand);
 handleCheckboxChange('sweepingSecondsOption', ClockUpdater.toggleSweepingSeconds);
 
 document.getElementById('fullscreenBtn').addEventListener('click', function() {
-    var btn = document.getElementById("fullscreenBtn");
+    const btn = document.getElementById("fullscreenBtn");
+    const bootstrapBtn = Button.getOrCreateInstance(btn);
 
     function isTouchDevice() {
         return ('ontouchstart' in window) || 
@@ -84,6 +85,7 @@ document.getElementById('fullscreenBtn').addEventListener('click', function() {
 
     if (!document.fullscreenElement) {
         document.documentElement.requestFullscreen();
+        bootstrapBtn.toggle();
         if (isTouchDevice()) {
             btn.style.backgroundColor = "#585f63";
             btn.style.color = "#e8e6e3";
@@ -91,6 +93,7 @@ document.getElementById('fullscreenBtn').addEventListener('click', function() {
     } else {
         if (document.exitFullscreen) {
             document.exitFullscreen();
+            bootstrapBtn.toggle();
             if (isTouchDevice()) {
                 btn.style.backgroundColor = "transparent";
                 btn.style.color = "#6c757d";
