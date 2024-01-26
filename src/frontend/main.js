@@ -18,9 +18,8 @@
  *  - Clock and manager modules for functionality and scene management.
  */
 
-
 import { AndroidFullScreen } from '@awesome-cordova-plugins/android-full-screen';
-import { Toast } from 'bootstrap';
+import { Button, Toast } from 'bootstrap';
 
 import '../frontend/scss/styles.scss'
 import { initializeScene, onWindowResize } from './modules/managers/sceneManager';
@@ -85,28 +84,32 @@ function toggleFullscreen() {
 }
 document.getElementById('fullscreenBtn').addEventListener('click', toggleFullscreen);
 
-function toggleImmersive(isFullscreen) {
+function toggleGUI() {
     const btn = document.getElementById("fullscreenBtn");
-    if (isFullscreen) {
-        AndroidFullScreen.immersiveMode();
-        btn.style.backgroundColor = "#585f63";
-        btn.style.color = "#e8e6e3";
+    const bootstrapBtn = Button.getOrCreateInstance(btn);
+    
+    function isTouchDevice() {
+        const userAgent = navigator.userAgent.toLowerCase();
+        return /android|webos|iphone|ipad|ipod|blackberry|iemobile|opera mini/.test(userAgent);
+    }
+
+    if (document.fullscreenElement) {
+        bootstrapBtn.toggle();
+        if (isTouchDevice()) {
+            AndroidFullScreen.immersiveMode();
+            btn.style.backgroundColor = "#585f63";
+            btn.style.color = "#e8e6e3";
+        }
     } else {
-        AndroidFullScreen.showSystemUI();
-        btn.style.backgroundColor = "transparent";
-        btn.style.color = "#6c757d";
+        bootstrapBtn.toggle();
+        if (isTouchDevice()) {
+            AndroidFullScreen.showSystemUI();
+            btn.style.backgroundColor = "transparent";
+            btn.style.color = "#6c757d";
+        }
     }
 }
-document.addEventListener('fullscreenchange', () => {
-    toggleImmersive(!!document.fullscreenElement);
-});
-window.addEventListener("orientationchange", () => {
-    // Only update UI if not in fullscreen.
-    if (!document.fullscreenElement) {
-        const isPortrait = screen.orientation.angle === 0 || screen.orientation.angle === 180;
-        toggleImmersive(!isPortrait);
-    }
-});
+document.addEventListener('fullscreenchange', toggleGUI);
 window.addEventListener('resize', onWindowResize);
 
 // Tick tock run the clock
