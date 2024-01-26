@@ -65,8 +65,8 @@ html, body {
 }
 
 /* Media Queries */
-@media (max-height: 450px) {
+@media (max-height: 485px) {
     .toast .toast-body {
-        max-height: 225px;
+        max-height: 250px;
     }
 }
