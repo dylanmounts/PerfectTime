@@ -27,14 +27,14 @@ html, body {
     right: 0;
 }
 
+.config-button-container {
+    position: absolute;
+    right: 10px;
+}
+
 #infoMenuBtn {
     position: absolute;
     left: 10px;
-}
-
-#optionsMenuBtn {
-    position: absolute;
-    right: 10px;
 }
 
 .toast .toast-body {

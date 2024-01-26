@@ -72,6 +72,17 @@ handleCheckboxChange('minutesOption', ClockUpdater.toggleMinuteNumbers);
 handleCheckboxChange('minuteHandOption', ClockUpdater.toggleMinuteHand);
 handleCheckboxChange('secondHandOption', ClockUpdater.toggleSecondHand);
 handleCheckboxChange('sweepingSecondsOption', ClockUpdater.toggleSweepingSeconds);
+
+document.getElementById('fullscreenBtn').addEventListener('click', function() {
+    if (!document.fullscreenElement) {
+        document.documentElement.requestFullscreen();
+    } else {
+        if (document.exitFullscreen) {
+            document.exitFullscreen();
+        }
+    }
+});
+
 window.addEventListener('resize', onWindowResize);
 
 // Tick tock run the clock

@@ -14,9 +14,18 @@
 
 <body>
     <div class="button-container">
-        <button type="button" class="btn btn-outline-secondary" id="infoMenuBtn"><i class="fa-solid fa-circle-info"></i></button>
-        <button type="button" class="btn btn-outline-secondary" id="optionsMenuBtn"><i class="fa-solid fa-gear"></i></button>
-    </div>
+        <button type="button" class="btn btn-outline-secondary" id="infoMenuBtn">
+            <i class="fa-solid fa-circle-info"></i>
+        </button>
+        <div class="d-flex config-button-container">
+            <button type="button" class="btn btn-outline-secondary me-1" id="optionsMenuBtn">
+                <i class="fa-solid fa-gear"></i>
+            </button>
+            <button type="button" class="btn btn-outline-secondary" id="fullscreenBtn">
+                <i class="fa-solid fa-expand"></i> 
+            </button>
+        </div>
+    </div>    
 
     <div class="toast-container position-fixed top-0 start-0 p-3">
         <div id="infoMenu" class="toast" role="alert" aria-live="assertive" aria-atomic="true" data-bs-autohide="false">
