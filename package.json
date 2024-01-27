@@ -27,7 +27,7 @@
     "vite": "5.0.12"
   },
   "scripts": {
-    "build": "npx vite build --minify false",
+    "build": "npx vite build",
     "start": "node app.js",
     "ionic:build": "npm run build",
     "ionic:serve": "npm run start"
