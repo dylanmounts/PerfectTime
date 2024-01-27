@@ -1,0 +1,23 @@
+Privacy Policy for Perfect Time
+
+Effective Date: 26 Jan 2024
+
+Welcome to Perfect Time. This privacy policy outlines our firm commitment to your privacy and explains how Perfect Time uses and protects any information provided when using this app.
+
+Our Commitment to Your Privacy
+At Perfect Time, we deeply respect your right to privacy. We have made a conscious decision to create an app free from invasive tracking. Perfect Time stands as a bastion of digital privacy, intentionally omitting all forms of tracking services, including traffic analytics. Your usage of Perfect Time remains private and unmonitored, as we believe in offering at least one place in the world where you're not being tracked.
+
+Information We Collect
+While Perfect Time itself collects no personal information, it's important to note that our web servers (powered by NGINX) maintain standard access logs. These logs may include data such as your IP address, the type of browser you use, the time and date of your access, and other standard logging information. This data is not used for tracking purposes but is a standard practice for maintaining web server security and operational effectiveness.
+
+Use of Server Log Information
+The server log data is used purely for administrative purposes, such as ensuring server security and optimal functioning. This data is not aggregated, analyzed for user trends, nor shared with any third parties.
+
+Security
+Our commitment to security is as strong as our commitment to privacy. We take reasonable steps to protect the server logs from unauthorized access, alteration, disclosure, or destruction. However, please be aware that no method of transmission over the internet, or method of electronic storage, is 100% secure.
+
+Changes to Our Privacy Policy
+Perfect Time may update this privacy policy to reflect changes to our information practices. We will notify you of any significant changes by updating the policy on our app. We encourage you to periodically review this page for the latest information on our privacy practices.
+
+Contact Us
+If you have any questions or suggestions about our privacy policy please contact us at PerfectTime@dylan.mozmail.com.
