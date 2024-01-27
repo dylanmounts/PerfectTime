@@ -109,17 +109,22 @@ function toggleGUI(isFullscreen) {
         }
     }
 }
-document.addEventListener('fullscreenchange', () => {
-    toggleGUI(!!document.fullscreenElement);
-});
-
-window.addEventListener("orientationchange", () => {
-    // Only update UI if not in fullscreen.
+function handleOrientationChange() {
+    const isPortrait = screen.orientation.angle === 0 || screen.orientation.angle === 180;
     if (!document.fullscreenElement) {
-        const isPortrait = screen.orientation.angle === 0 || screen.orientation.angle === 180;
         isPortrait ? AndroidFullScreen.showSystemUI() : AndroidFullScreen.showUnderSystemUI();
     }
+}
+
+document.addEventListener('fullscreenchange', () => {
+    const isFullscreen = !!document.fullscreenElement;
+    toggleGUI(isFullscreen);
+    if (!isFullscreen) {
+        handleOrientationChange();
+    }
 });
+
+window.addEventListener("orientationchange", handleOrientationChange);
 window.addEventListener('resize', onWindowResize);
 
 // Tick tock run the clock
