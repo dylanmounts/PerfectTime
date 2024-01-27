@@ -1,11 +1,15 @@
 const express = require('express');
 const path = require('path');
-const timeServer = require('./src/backend/timeServer');
-
 const app = express();
 const port = process.env.PORT || 8100;
 const hostname = process.env.HOSTNAME || '127.0.0.1';
+const isWebApp = process.env.IS_WEB_APP === 'true';
 const allowedOrigins = ['https://perfecttime.org', 'https://www.perfecttime.org'];
+
+let timeServer;
+if (isWebApp) {
+    timeServer = require('./src/backend/timeServer');
+}
 
 // Serve static files from the 'dist' directory
 app.use(express.static(path.join(__dirname, 'dist')));
@@ -42,3 +46,11 @@ app.get('*', (req, res) => {
 app.listen(port, hostname, () => {
     console.log(`Server running at http://${hostname}:${port}/`);
 });
+
+if (isWebApp) {
+    // Initial backend time synchronization with NTP server
+    timeServer.updateTimeFromNTP();
+
+    // Update time from NTP server every 10 minutes
+    setInterval(timeServer.updateTimeFromNTP, 10 * 60 * 1000);
+}
