@@ -10,7 +10,7 @@ if (isWebApp) {
     const timeServer = require('./src/backend/timeServer');
 
     // Endpoint to get the perfect time
-    app.use('/api/time', function(req, res) {
+    app.use('/api/time', (req, res) => {
         let sourceOrigin = req.headers.origin;
 
         // Fallback to Referer if Origin is not present
@@ -32,6 +32,10 @@ if (isWebApp) {
         res.json({ time: currentTime });
     });
 
+    app.use('/privacy', (req, res) => {
+        res.sendFile(path.join(__dirname, 'dist/policies/privacy.txt'))
+    });
+
     // Initial backend time synchronization with NTP server
     timeServer.updateTimeFromNTP();
 
@@ -51,4 +55,3 @@ app.get('*', (req, res) => {
 app.listen(port, hostname, () => {
     console.log(`Server running at http://${hostname}:${port}/`);
 });
-
