@@ -8,7 +8,7 @@
 <br />
 <div align="center">
   <a href="https://github.com/dylanmounts/PerfectTime">
-    <img src="https://github.com/dylanmounts/PerfectTime/blob/main/src/assets/img/favicon-75x75.png" alt="Logo" width="75" height="75">
+    <img src="https://github.com/dylanmounts/PerfectTime/blob/main/src/assets/img/clock.256x256.png" alt="Logo" width="75" height="75">
   </a>
 
   <h3 align="center">PerfectTime</h3>
