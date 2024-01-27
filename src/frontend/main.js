@@ -117,7 +117,7 @@ window.addEventListener("orientationchange", () => {
     // Only update UI if not in fullscreen.
     if (!document.fullscreenElement) {
         const isPortrait = screen.orientation.angle === 0 || screen.orientation.angle === 180;
-        toggleGUI(!isPortrait);
+        isPortrait ? AndroidFullScreen.showSystemUI() : AndroidFullScreen.showUnderSystemUI();
     }
 });
 window.addEventListener('resize', onWindowResize);
