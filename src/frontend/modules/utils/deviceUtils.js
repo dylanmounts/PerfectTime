@@ -25,24 +25,18 @@ export function isTouchDevice() {
 export function applyTouchDeviceStyles() {
     if (!isTouchDevice()) return;
 
-    const buttonContainer = document.querySelector('.button-container');
     const configButtonContainer = document.querySelector('.config-button-container');
     const infoMenuBtn = document.getElementById('infoMenuBtn');
 
-    if (buttonContainer) {
-        buttonContainer.style.top = 'auto';
-        buttonContainer.style.bottom = '10px';
-    }
-
     if (configButtonContainer) {
-        configButtonContainer.style.bottom = '10px';
-        configButtonContainer.style.right = '10px';
+        configButtonContainer.style.bottom = '20px';
+        configButtonContainer.style.right = '15px';
         configButtonContainer.style.top = 'auto';
     }
 
     if (infoMenuBtn) {
-        infoMenuBtn.style.bottom = '10px';
-        infoMenuBtn.style.left = '10px';
+        infoMenuBtn.style.bottom = '20px';
+        infoMenuBtn.style.left = '15px';
         infoMenuBtn.style.top = 'auto';
     }
 }
