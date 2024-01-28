@@ -87,9 +87,9 @@ export function handleOrientationChange() {
 }
 
 /**
- * Adjusts toast container positions for mobile devices.
+ * Adjusts toast container positions for touch devices.
  */
-export function adjustToastsMobile() {
+export function adjustToastsForTouch() {
     if (isTouchDevice()) {
         const toastContainers = document.querySelectorAll('.toast-container');
         toastContainers.forEach(container => {
