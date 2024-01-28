@@ -9,6 +9,7 @@
 
 import { AndroidFullScreen } from '@awesome-cordova-plugins/android-full-screen';
 import { Button } from 'bootstrap';
+import { StatusBar } from '@capacitor/status-bar';
 
 /**
  * Check if the current device is a touch device.
@@ -63,12 +64,14 @@ export function toggleGUI(isFullscreen) {
     btn.toggle();
     if (isFullscreen) {
         if (isTouchDevice()) {
+            StatusBar.hide();
             AndroidFullScreen.immersiveMode();
             btnEl.style.backgroundColor = "#585f63";
             btnEl.style.color = "#e8e6e3";
         }
     } else {
         if (isTouchDevice()) {
+            StatusBar.show();
             AndroidFullScreen.showSystemUI();
             btnEl.style.backgroundColor = "transparent";
             btnEl.style.color = "#6c757d";
