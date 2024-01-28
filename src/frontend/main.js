@@ -22,28 +22,27 @@
 import '../frontend/scss/styles.scss';
 import * as ClockUpdater from './modules/clock/clockUpdater';
 import { initializeScene, onWindowResize } from './modules/managers/sceneManager';
-import { adjustToastsMobile,applyTouchDeviceStyles, handleOrientationChange, isTouchDevice, toggleFullscreen, toggleGUI } from './modules/utils/deviceUtils';
-import { handleCheckboxChange, setupToastToggle } from './modules/utils/uiUtils';
-
+import * as DeviceUtils from './modules/utils/deviceUtils';
+import * as UIUtils from './modules/utils/uiUtils';
 
 // Style functions for toast buttons
 function styleButtonForToastVisible(btn) {
-    if (isTouchDevice()) {
+    if (DeviceUtils.isTouchDevice()) {
         btn.style.backgroundColor = "#585f63";
         btn.style.color = "#e8e6e3";
     }
 }
 
 function styleButtonForToastHidden(btn) {
-    if (isTouchDevice()) {
+    if (DeviceUtils.isTouchDevice()) {
         btn.style.backgroundColor = "transparent";
         btn.style.color = "#6c757d";
     }
 }
 
 // Initialize and configure UI components
-setupToastToggle('optionsMenuBtn', 'optionsMenu', styleButtonForToastVisible, styleButtonForToastHidden);
-setupToastToggle('infoMenuBtn', 'infoMenu', styleButtonForToastVisible, styleButtonForToastHidden);
+UIUtils.setupToastToggle('optionsMenuBtn', 'optionsMenu', styleButtonForToastVisible, styleButtonForToastHidden);
+UIUtils.setupToastToggle('infoMenuBtn', 'infoMenu', styleButtonForToastVisible, styleButtonForToastHidden);
 
 // Create checkbox event listeners for clock features
 const clockOptions = [
@@ -58,25 +57,25 @@ const clockOptions = [
     { id: 'secondHandOption', toggleFunction: ClockUpdater.toggleSecondHand },
     { id: 'sweepingSecondsOption', toggleFunction: ClockUpdater.toggleSweepingSeconds }
 ];
-clockOptions.forEach(option => handleCheckboxChange(option.id, option.toggleFunction));
+clockOptions.forEach(option => UIUtils.handleCheckboxChange(option.id, option.toggleFunction));
 
 // Fullscreen and orientation change event listeners
-document.getElementById('fullscreenBtn').addEventListener('click', toggleFullscreen);
+document.getElementById('fullscreenBtn').addEventListener('click', DeviceUtils.toggleFullscreen);
 document.addEventListener('fullscreenchange', () => {
     const isFullscreen = !!document.fullscreenElement;
-    toggleGUI(isFullscreen);
+    DeviceUtils.toggleGUI(isFullscreen);
     if (!isFullscreen) {
-        handleOrientationChange();
+        DeviceUtils.handleOrientationChange();
     }
 });
-window.addEventListener("orientationchange", handleOrientationChange);
+window.addEventListener("orientationchange", DeviceUtils.handleOrientationChange);
 window.addEventListener('resize', onWindowResize);
 
 // Responsive adjustments for touch devices
-window.addEventListener('resize', applyTouchDeviceStyles);
-window.addEventListener('orientationchange', applyTouchDeviceStyles);
-applyTouchDeviceStyles();
-adjustToastsMobile();
+window.addEventListener('resize', DeviceUtils.applyTouchDeviceStyles);
+window.addEventListener('orientationchange', DeviceUtils.applyTouchDeviceStyles);
+DeviceUtils.applyTouchDeviceStyles();
+DeviceUtils.adjustToastsForTouch();
 
 // Tick tock run the clock
 initializeScene();
