@@ -13,24 +13,22 @@
 </head>
 
 <body>
-    <div class="button-container">
-        <button type="button" class="btn btn-outline-secondary btn-lg" id="infoMenuBtn">
+    <button type="button" class="btn btn-outline-secondary btn-lg" id="infoMenuBtn">
+        <div class="d-flex align-items-center justify-content-center">
+            <i class="bx bx-info-circle bx-sm"></i>
+        </div>
+    </button>
+    <div class="d-flex config-button-container">
+        <button type="button" class="btn btn-outline-secondary btn-lg me-1" id="optionsMenuBtn">
             <div class="d-flex align-items-center justify-content-center">
-                <i class="bx bx-info-circle bx-sm"></i>
+                <i class="bx bx-cog bx-sm"></i>
             </div>
         </button>
-        <div class="d-flex config-button-container">
-            <button type="button" class="btn btn-outline-secondary btn-lg me-1" id="optionsMenuBtn">
-                <div class="d-flex align-items-center justify-content-center">
-                    <i class="bx bx-cog bx-sm"></i>
-                </div>
-            </button>
-            <button type="button" class="btn btn-outline-secondary btn-lg" id="fullscreenBtn">
-                <div class="d-flex align-items-center justify-content-center">
-                    <i class="bx bx-expand bx-sm"></i>
-                </div>
-            </button>
-        </div>
+        <button type="button" class="btn btn-outline-secondary btn-lg" id="fullscreenBtn">
+            <div class="d-flex align-items-center justify-content-center">
+                <i class="bx bx-expand bx-sm"></i>
+            </div>
+        </button>
     </div>    
 
     <div class="toast-container position-fixed top-0 start-0 p-3">
