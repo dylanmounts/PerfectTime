@@ -62,7 +62,13 @@ clockOptions.forEach(option => handleCheckboxChange(option.id, option.toggleFunc
 
 // Fullscreen and orientation change event listeners
 document.getElementById('fullscreenBtn').addEventListener('click', toggleFullscreen);
-document.addEventListener('fullscreenchange', () => toggleGUI(!!document.fullscreenElement));
+document.addEventListener('fullscreenchange', () => {
+    const isFullscreen = !!document.fullscreenElement;
+    toggleGUI(isFullscreen);
+    if (!isFullscreen) {
+        handleOrientationChange();
+    }
+});
 window.addEventListener("orientationchange", handleOrientationChange);
 window.addEventListener('resize', onWindowResize);
 
