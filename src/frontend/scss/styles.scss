@@ -97,9 +97,9 @@ html, body {
 }
 
 /* Media Queries */
-@media screen and (max-height: 485px) {
+@media screen and (max-height: 620px) {
     .toast .toast-body {
-        max-height: 250px;
+        max-height: 225px;
     }
 }
 
@@ -111,13 +111,13 @@ html, body {
 
 @media screen and (max-width: 768px) {
     .config-button-container {
-        bottom: 20px;
+        bottom: 25px;
         right: 15px;
         top: auto;
     }
 
     #infoMenuBtn {
-        bottom: 20px;
+        bottom: 25px;
         left: 15px;
         top: auto;
     }
