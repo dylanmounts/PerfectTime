@@ -22,7 +22,7 @@
 import '../frontend/scss/styles.scss';
 import * as ClockUpdater from './modules/clock/clockUpdater';
 import { initializeScene, onWindowResize } from './modules/managers/sceneManager';
-import { applyTouchDeviceStyles, handleOrientationChange, isTouchDevice, toggleFullscreen, toggleGUI } from './modules/utils/deviceUtils';
+import { adjustToastsMobile,applyTouchDeviceStyles, handleOrientationChange, isTouchDevice, toggleFullscreen, toggleGUI } from './modules/utils/deviceUtils';
 import { handleCheckboxChange, setupToastToggle } from './modules/utils/uiUtils';
 
 
@@ -76,6 +76,7 @@ window.addEventListener('resize', onWindowResize);
 window.addEventListener('resize', applyTouchDeviceStyles);
 window.addEventListener('orientationchange', applyTouchDeviceStyles);
 applyTouchDeviceStyles();
+adjustToastsMobile();
 
 // Tick tock run the clock
 initializeScene();

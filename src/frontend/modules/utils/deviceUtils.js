@@ -85,3 +85,16 @@ export function handleOrientationChange() {
         isPortrait ? AndroidFullScreen.showSystemUI() : AndroidFullScreen.showUnderSystemUI();
     }
 }
+
+/**
+ * Adjusts toast container positions for mobile devices.
+ */
+export function adjustToastsMobile() {
+    if (isTouchDevice()) {
+        const toastContainers = document.querySelectorAll('.toast-container');
+        toastContainers.forEach(container => {
+            container.classList.remove('top-0', 'start-0', 'end-0');
+            container.classList.add('top-50', 'start-50', 'translate-middle');
+        });
+    }
+}
