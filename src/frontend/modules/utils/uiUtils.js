@@ -34,8 +34,19 @@ export function setupToastToggle(buttonId, toastId, styleVisible, styleHidden) {
         }
     });
 
-    toastEl.addEventListener('show.bs.toast', () => styleVisible(buttonEl));
-    toastEl.addEventListener('hide.bs.toast', () => styleHidden(buttonEl));
+    toastEl.addEventListener('show.bs.toast', () => {
+        styleVisible(buttonEl);
+        if (!buttonEl.classList.contains('active')) {
+            button.toggle();
+        }
+    });
+
+    toastEl.addEventListener('hidden.bs.toast', () => {
+        styleHidden(buttonEl);
+        if (buttonEl.classList.contains('active')) {
+            button.toggle();
+        }
+    });
 }
 
 /**
