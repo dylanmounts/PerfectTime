@@ -60,8 +60,12 @@ export function updateClock(scene, monoFont) {
     const seconds = currentTime.getSeconds();
     const milliseconds = currentTime.getMilliseconds();
 
-    const hourAngle = calculateHourAngle(hours, minutes, seconds, milliseconds);
-    const minuteAngle = calculateMinuteAngle(minutes, seconds, milliseconds);
+    const hourAngle = sweepingSeconds 
+        ? calculateSweepingHourAngle(hours, minutes, seconds, milliseconds)
+        : calculateHourAngle(hours, minutes, seconds);
+    const minuteAngle = sweepingSeconds 
+        ? calculateSweepingMinuteAngle(minutes, seconds, milliseconds)
+        : calculateMinuteAngle(minutes, seconds);
     const secondAngle = sweepingSeconds 
         ? calculateSweepingSecondAngle(seconds, milliseconds)
         : calculateSecondAngle(seconds);
@@ -84,21 +88,32 @@ export function updateClock(scene, monoFont) {
 }
 
 // Helper functions for calculating clock hand angles
-function calculateHourAngle(hours, minutes, seconds, milliseconds) {
+function calculateHourAngle(hours, minutes, seconds) {
+    return (Math.PI / 6) * hours + 
+           (Math.PI / 360) * minutes + 
+           (Math.PI / 21600) * seconds
+}
+
+function calculateMinuteAngle(minutes, seconds) {
+    return (Math.PI / 30) * minutes + 
+           (Math.PI / 1800) * seconds
+}
+
+function calculateSecondAngle(seconds) {
+    return (Math.PI / 30) * seconds;
+}
+
+function calculateSweepingHourAngle(hours, minutes, seconds, milliseconds) {
     return (Math.PI / 6) * hours + 
            (Math.PI / 360) * minutes + 
            (Math.PI / 21600) * seconds + 
            (Math.PI / 21600000) * milliseconds;
 }
 
-function calculateMinuteAngle(minutes, seconds, milliseconds) {
+function calculateSweepingMinuteAngle(minutes, seconds, milliseconds) {
     return (Math.PI / 30) * minutes + 
            (Math.PI / 1800) * seconds + 
            (Math.PI / 1800000) * milliseconds;
-}
-
-function calculateSecondAngle(seconds) {
-    return (Math.PI / 30) * seconds;
 }
 
 function calculateSweepingSecondAngle(seconds, milliseconds) {
