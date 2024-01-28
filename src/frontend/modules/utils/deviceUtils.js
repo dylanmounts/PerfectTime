@@ -29,13 +29,13 @@ export function applyTouchDeviceStyles() {
     const infoMenuBtn = document.getElementById('infoMenuBtn');
 
     if (configButtonContainer) {
-        configButtonContainer.style.bottom = '20px';
+        configButtonContainer.style.bottom = '25px';
         configButtonContainer.style.right = '15px';
         configButtonContainer.style.top = 'auto';
     }
 
     if (infoMenuBtn) {
-        infoMenuBtn.style.bottom = '20px';
+        infoMenuBtn.style.bottom = '25px';
         infoMenuBtn.style.left = '15px';
         infoMenuBtn.style.top = 'auto';
     }
