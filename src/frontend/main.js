@@ -27,23 +27,76 @@ import * as ClockUpdater from './modules/clock/clockUpdater';
 
 
 // Bootstrap components
-const optionsTrigger = document.getElementById('optionsMenuBtn')
-const optionsMenu = document.getElementById('optionsMenu')
-const infoTrigger = document.getElementById('infoMenuBtn')
-const infoMenu = document.getElementById('infoMenu')
+const optionsBtn = document.getElementById('optionsMenuBtn');
+const optionsMenu = document.getElementById('optionsMenu');
+const infoBtn = document.getElementById('infoMenuBtn');
+const infoMenu = document.getElementById('infoMenu');
 
-// Initialize Bootstrap Toasts, which serve as options and info menus
-if (optionsTrigger) {
-        const toastBootstrap = Toast.getOrCreateInstance(optionsMenu)
-        optionsTrigger.addEventListener('click', () => {
-            toastBootstrap.show()
-    })
+    
+function isTouchDevice() {
+    const userAgent = navigator.userAgent.toLowerCase();
+    return /android|webos|iphone|ipad|ipod|blackberry|iemobile|opera mini/.test(userAgent);
 }
-if (infoTrigger) {
-        const toastBootstrap = Toast.getOrCreateInstance(infoMenu)
-        infoTrigger.addEventListener('click', () => {
-            toastBootstrap.show()
-    })
+
+// Function to apply styles when the toast is shown
+function styleButtonForToastVisible(btn) {
+    if (isTouchDevice()) {
+        console.log("here1");
+        btn.style.backgroundColor = "#585f63";
+        btn.style.color = "#e8e6e3";
+    }
+}
+
+// Function to apply styles when the toast is hidden
+function styleButtonForToastHidden(btn) {
+    if (isTouchDevice()) {
+        console.log("here2");
+        btn.style.backgroundColor = "transparent";
+        btn.style.color = "#6c757d";
+    }
+}
+
+// Function to toggle toast visibility
+function toggleToast(toastInstance, toastElement, btn) {
+    if (toastElement.classList.contains('show')) {
+        toastInstance.hide();
+    } else {
+        toastInstance.show();
+        styleButtonForToastVisible(btn);
+    }
+}
+
+// Initialize Bootstrap components and event listeners
+if (optionsBtn && optionsMenu) {
+    const optionsToast = Toast.getOrCreateInstance(optionsMenu);
+
+    optionsBtn.addEventListener('click', () => {
+        toggleToast(optionsToast, optionsMenu, optionsBtn);
+    });
+
+    optionsMenu.addEventListener('show.bs.toast', () => {
+        styleButtonForToastVisible(optionsBtn);
+    });
+
+    optionsMenu.addEventListener('hidden.bs.toast', () => {
+        styleButtonForToastHidden(optionsBtn);
+    });
+}
+
+if (infoBtn && infoMenu) {
+    const infoToast = Toast.getOrCreateInstance(infoMenu);
+
+    infoBtn.addEventListener('click', () => {
+        toggleToast(infoToast, infoMenu, infoBtn);
+    });
+
+    infoMenu.addEventListener('show.bs.toast', () => {
+        styleButtonForToastVisible(infoBtn);
+    });
+
+    infoMenu.addEventListener('hidden.bs.toast', () => {
+        styleButtonForToastHidden(infoBtn);
+    });
 }
 
 /**
@@ -61,7 +114,7 @@ function handleCheckboxChange(checkboxId, callback) {
     }
 }
 
-// Create the event listeners
+// Create the checkbox event listeners
 handleCheckboxChange('dayDateOption', ClockUpdater.toggleDayDate);
 handleCheckboxChange('digitalTimeOption', ClockUpdater.toggleDigitalDisplay);
 handleCheckboxChange('hourIndicatorsOption', ClockUpdater.toggleHourIndicators);
@@ -73,6 +126,7 @@ handleCheckboxChange('minuteHandOption', ClockUpdater.toggleMinuteHand);
 handleCheckboxChange('secondHandOption', ClockUpdater.toggleSecondHand);
 handleCheckboxChange('sweepingSecondsOption', ClockUpdater.toggleSweepingSeconds);
 
+// Fullscreen toggling
 function toggleFullscreen() {
     if (!document.fullscreenElement) {
         document.documentElement.requestFullscreen();
@@ -87,11 +141,6 @@ document.getElementById('fullscreenBtn').addEventListener('click', toggleFullscr
 function toggleGUI(isFullscreen) {
     const btn = document.getElementById("fullscreenBtn");
     const bootstrapBtn = Button.getOrCreateInstance(btn);
-    
-    function isTouchDevice() {
-        const userAgent = navigator.userAgent.toLowerCase();
-        return /android|webos|iphone|ipad|ipod|blackberry|iemobile|opera mini/.test(userAgent);
-    }
 
     if (isFullscreen) {
         bootstrapBtn.toggle();
@@ -126,6 +175,38 @@ document.addEventListener('fullscreenchange', () => {
 
 window.addEventListener("orientationchange", handleOrientationChange);
 window.addEventListener('resize', onWindowResize);
+
+function applyTouchDeviceStyles() {
+    if (isTouchDevice()) {
+        const buttonContainer = document.querySelector('.button-container');
+        const configButtonContainer = document.querySelector('.config-button-container');
+        const infoMenuBtn = document.getElementById('infoMenuBtn');
+
+        if (buttonContainer) {
+            buttonContainer.style.top = 'auto';
+            buttonContainer.style.bottom = '10px';
+        }
+
+        if (configButtonContainer) {
+            configButtonContainer.style.bottom = '10px';
+            configButtonContainer.style.right = '10px';
+            configButtonContainer.style.top = 'auto';
+        }
+
+        if (infoMenuBtn) {
+            infoMenuBtn.style.bottom = '10px';
+            infoMenuBtn.style.left = '10px';
+            infoMenuBtn.style.top = 'auto';
+        }
+    }
+}
+
+// Call the function when the script loads
+applyTouchDeviceStyles();
+
+// Optionally, you might want to call this function on window resize or orientation change if the device capability might change
+window.addEventListener('resize', applyTouchDeviceStyles);
+window.addEventListener('orientationchange', applyTouchDeviceStyles);
 
 // Tick tock run the clock
 initializeScene();
