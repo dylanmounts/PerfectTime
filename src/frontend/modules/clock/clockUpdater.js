@@ -308,46 +308,44 @@ export function toggleMinuteIndicators(isChecked) {
 /**
  * Updates the numbers on the perfect clock.
  * 
- * Due to the design choice of having the day/date window cover the 
- * 3 o'clock position, the logic here is particularly complex.
- * 
  * @param {Object} scene - The Three.js scene object.
- * @param {Object} font - The font used for the day-date display.
  */
 function updateNumbers(scene) {
     for (let i = 1; i <= 12; i++) {
-        const hourName = `hour${i}`;
-        const outerHourName = `outerHour${i}`
-        const minuteName = `minute${i * 5}`;
+        updateNumber(scene, i, HOUR_NUMBERS, 'hour', hourNumbersExist);
+        updateNumber(scene, i, MINUTE_NUMBERS, 'minute', minuteNumbersExist, 5);
+    }
+}
 
-        const hourNumber = scene.getObjectByName(hourName);
-        const outerHourNumber = scene.getObjectByName(outerHourName);
-        const minuteNumber = scene.getObjectByName(minuteName);
+/**
+ * Updates a single number on the clock, either hour or minute.
+ *
+ * Due to the design choice of having the day/date window cover the
+ * 3 o'clock position, the logic here is particularly complex.
+ *
+ * @param {Object} scene - The Three.js scene object.
+ * @param {number} index - The index of the number to be updated.
+ * @param {Array} numbersArray - The array containing the numbers.
+ * @param {string} namePrefix - The prefix for the object name ('hour' or 'minute').
+ * @param {boolean} numbersExist - Flag indicating if numbers exist.
+ * @param {number} multiplier - Multiplier for minute number calculation (default is 1).
+ */
+function updateNumber(scene, index, numbersArray, namePrefix, numbersExist, multiplier = 1) {
+    const name = `${namePrefix}${index * multiplier}`;
+    const numberObject = scene.getObjectByName(name);
 
-        // Hours
-        if (hourNumbersExist) {
-            if (i === 3) {
-                if (!dayDateExists && !hourNumber) {
-                    scene.add(HOUR_NUMBERS[i]);
-                } else if (dayDateExists && hourNumber) {
-                    scene.remove(hourNumber);
-                    scene.remove(outerHourNumber);
-                }
-            } else {
-                scene.add(HOUR_NUMBERS[i]);
+    if (numbersExist) {
+        if (index === 3) {
+            if (!dayDateExists && !numberObject) {
+                scene.add(numbersArray[index * multiplier]);
+            } else if (dayDateExists && numberObject) {
+                scene.remove(numberObject);
             }
         } else {
-            scene.remove(hourNumber);
+            scene.add(numbersArray[index * multiplier]);
         }
-
-        // Minutes
-        if (minuteNumbersExist) {
-            if (!minuteNumber) {
-                scene.add(MINUTE_NUMBERS[i * 5]);
-            }
-        } else {
-            scene.remove(minuteNumber);
-        }
+    } else {
+        scene.remove(numberObject);
     }
 }
 
