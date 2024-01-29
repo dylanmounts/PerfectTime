@@ -172,7 +172,7 @@ export function createMinuteGeometry(minute, font) {
         curveSegments: CONSTANTS.SEGMENTS / 8,
         bevelEnabled: true,
         bevelThickness: CONSTANTS.SIZES.NUMBER_BEVEL_THICKNESS / 2,
-        bevelSize: CONSTANTS.SIZES.NUMBER_BEVEL_SIZE / 2,
+        bevelSize: CONSTANTS.SIZES.NUMBER_BEVEL_SIZE * 5/6,
         bevelSegments: 1
     });
 }
