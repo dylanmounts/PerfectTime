@@ -41,7 +41,7 @@ export function setupToastToggle(buttonId, toastId, styleVisible, styleHidden) {
         }
     });
 
-    toastEl.addEventListener('hidden.bs.toast', () => {
+    toastEl.addEventListener('hide.bs.toast', () => {
         styleHidden(buttonEl);
         if (buttonEl.classList.contains('active')) {
             button.toggle();
