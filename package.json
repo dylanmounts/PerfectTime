@@ -23,7 +23,6 @@
     "three": "0.160.0"
   },
   "devDependencies": {
-    "@capacitor/assets": "^3.0.4",
     "rollup-plugin-copy": "3.5.0",
     "sass": "1.69.7",
     "vite": "5.0.12"
