@@ -34,7 +34,7 @@ let monoFont = null;
  */
 function setupScene() {
     controls.enableDamping = true;
-    controls.dampingFactor = 0.1;
+    controls.dampingFactor = 0.5;
     controls.enableRotate = false;
     controls.minPolarAngle = Math.PI / 2;
     controls.maxPolarAngle = Math.PI / 2;
