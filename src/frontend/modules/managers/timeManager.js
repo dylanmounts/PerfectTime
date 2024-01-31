@@ -15,7 +15,6 @@ class TimeManager {
     constructor() {
         this.perfectTime = null;
         this.timeOffset = null;
-        this.fetchPerfectTime();
     }
 
     /**
