@@ -6,6 +6,7 @@
  */
 
 import * as THREE from 'three';
+import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 
 import { PERFECT_TIME_SYNC_SECONDS } from '../constants';
 import { fontManager, monoFontManager } from './fontManager';
@@ -16,9 +17,13 @@ import { MESHES } from '../visuals/meshes';
 
 
 const scene = new THREE.Scene();
-const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight);
 const container = document.getElementById('clockContainer');
 const renderer = new THREE.WebGLRenderer({ antialias: true });
+
+const controls = new OrbitControls(camera, renderer.domElement);
+const minPan = new THREE.Vector3();
+const maxPan = new THREE.Vector3();
 
 let regularFont = null;
 let monoFont = null;
@@ -27,11 +32,46 @@ let monoFont = null;
  * Initializes and sets up the scene with lighting and renderer.
  */
 function setupScene() {
+    controls.enableDamping = true;
+    controls.dampingFactor = 1;
+    controls.enableRotate = false;
+    controls.minPolarAngle = Math.PI / 2;
+    controls.maxPolarAngle = Math.PI / 2;
+    controls.minAzimuthAngle = 0;
+    controls.maxAzimuthAngle = 0;
+
+    const originalUpdate = controls.update.bind(controls);
+    controls.update = function() {
+        originalUpdate();
+        updatePanLimits();
+        this.target.clamp(minPan, maxPan);
+    };
+
     const ambientLight = new THREE.AmbientLight(0xffffff, 5);
     scene.add(ambientLight);
 
     renderer.setSize(container.clientWidth, container.clientHeight);
     container.appendChild(renderer.domElement);
+}
+
+/**
+ * Dynamically updates the panning limits of the camera based on its current zoom level.
+ */
+function updatePanLimits() {
+    const boundingBox = new THREE.Box3().setFromObject(MESHES.clockBezel);
+    const center = boundingBox.getCenter(new THREE.Vector3());
+    const size = boundingBox.getSize(new THREE.Vector3());
+
+    // Calculate the ratio of current zoom level to the maximum zoom level
+    const zoomRatio = controls.maxDistance / camera.position.distanceTo(center);
+
+    // Calculate the original pan limits based on the object size
+    const originalMinPan = center.clone().sub(size);
+    const originalMaxPan = center.clone().add(size);
+
+    // Linearly interpolate between the center and the original pan limits
+    minPan.lerpVectors(center, originalMinPan, Math.max(0, zoomRatio - 1));
+    maxPan.lerpVectors(center, originalMaxPan, Math.max(0, zoomRatio - 1));
 }
 
 /**
@@ -50,6 +90,12 @@ function updateCamera() {
 
     camera.position.set(center.x, center.y, center.z + cameraZ);
     camera.lookAt(center);
+
+    // Set outer limits for camera controls
+    controls.maxDistance = camera.position.z;
+    controls.target = center;
+
+    updatePanLimits();
 }
 
 /**
@@ -61,6 +107,8 @@ export function onWindowResize() {
 
     updateCamera();
     camera.updateProjectionMatrix();
+
+    controls.update();
 }
 
 /**
@@ -69,6 +117,7 @@ export function onWindowResize() {
 function animate() {
     updateClock(scene, monoFont);
 
+    controls.update();
     requestAnimationFrame(animate);
     renderer.render(scene, camera);
 }
