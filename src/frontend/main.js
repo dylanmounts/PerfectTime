@@ -21,7 +21,7 @@
 
 import '../frontend/scss/styles.scss';
 import * as ClockUpdater from './modules/clock/clockUpdater';
-import { initializeScene, onWindowResize } from './modules/managers/sceneManager';
+import { initializeScene, onWindowResize, updateCameraZoom } from './modules/managers/sceneManager';
 import * as DeviceUtils from './modules/utils/deviceUtils';
 import * as UIUtils from './modules/utils/uiUtils';
 
@@ -58,6 +58,12 @@ const clockOptions = [
     { id: 'sweepingSecondsOption', toggleFunction: ClockUpdater.toggleSweepingSeconds }
 ];
 clockOptions.forEach(option => UIUtils.handleCheckboxChange(option.id, option.toggleFunction));
+
+// Zoom slider event listener
+document.getElementById('zoomSlider').addEventListener('input', (event) => {
+    const zoomLevel = parseFloat(event.target.value);
+    updateCameraZoom(zoomLevel);
+});
 
 // Fullscreen and orientation change event listeners
 document.getElementById('fullscreenBtn').addEventListener('click', DeviceUtils.toggleFullscreen);

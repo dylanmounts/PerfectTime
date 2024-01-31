@@ -11,6 +11,7 @@
 
 import { DAY_DATE_PARTS, DIGITAL_DISPLAY_PARTS, HOUR_NUMBERS, INDICATORS, OUTER_INDICATORS, MINUTE_NUMBERS, SIZES } from '../constants.js';
 import { createDayDateMesh, createDigitalDisplayMesh, MESHES } from '../visuals/meshes.js';
+import { updateCameraSlider } from '../managers/sceneManager.js';
 import { timeManager } from '../managers/timeManager.js';
 import { createDayDateGeometry, createDigitalTimeGeometry } from '../visuals/geometries.js';
 
@@ -79,6 +80,7 @@ export function updateClock(scene, monoFont) {
     MESHES.secondHand.rotation.z = -secondAngle;
     MESHES.outerSecondHand.rotation.z = -secondAngle;
 
+    updateCameraSlider();
     updateTimeOffset();
     updateDigitalDisplay(scene, monoFont);
     updateDayDateDisplay(scene, monoFont);
