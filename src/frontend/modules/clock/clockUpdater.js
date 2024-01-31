@@ -49,7 +49,9 @@ export function updateClock(scene, monoFont) {
         return;
     }
 
-    if (Math.abs(currentTime - lastTime) > 1000) {
+    // Reset the perfect time if the last times retrieved are off by more
+    // than 10 seconds
+    if (Math.abs(currentTime - lastTime) > 1000 * 10) {
         timeManager.fetchPerfectTime()
     }
 
