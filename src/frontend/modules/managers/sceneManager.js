@@ -45,6 +45,10 @@ function setupScene() {
         LEFT: THREE.MOUSE.PAN,
         MIDDLE: THREE.MOUSE.DOLLY,
     };
+    controls.touches = {
+        ONE: THREE.TOUCH.PAN,
+        TWO: THREE.TOUCH.DOLLY_PAN
+    }
 
     const originalUpdate = controls.update.bind(controls);
     controls.update = function() {
@@ -118,7 +122,7 @@ function updateCamera() {
  * @returns {number} The calculated camera zoom level.
  */
 function mapZoomLevel(sliderValue) {
-    return sliderValue / 100 * (initialZoom - 1) + 1;
+    return (100 - sliderValue) / 100 * (initialZoom - 1) + 1;
 }
 
 /**
@@ -127,7 +131,7 @@ function mapZoomLevel(sliderValue) {
  * @returns {number} The corresponding slider value.
  */
 function unmapZoomLevel(cameraZoom) {
-    return (cameraZoom - 1) / (initialZoom - 1) * 100;
+    return 100 - ((cameraZoom - 1) / (initialZoom - 1) * 100);
 }
 
 /**
