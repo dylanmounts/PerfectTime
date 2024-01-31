@@ -33,11 +33,18 @@ let monoFont = null;
  * Initializes and sets up the scene with lighting and renderer.
  */
 function setupScene() {
+    controls.enableDamping = true;
+    controls.dampingFactor = 0.1;
     controls.enableRotate = false;
     controls.minPolarAngle = Math.PI / 2;
     controls.maxPolarAngle = Math.PI / 2;
     controls.minAzimuthAngle = 0;
     controls.maxAzimuthAngle = 0;
+    controls.minDistance = 1;
+    controls.mouseButtons = {
+        LEFT: THREE.MOUSE.PAN,
+        MIDDLE: THREE.MOUSE.DOLLY,
+    };
 
     const originalUpdate = controls.update.bind(controls);
     controls.update = function() {
