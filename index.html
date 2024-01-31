@@ -142,20 +142,11 @@
                         </tr>
                     </tbody>
                 </table>
-                <table class="table table-borderless text-nowrap">
-                    <thead>
-                        <tr>
-                            <th scope="col">Zoom:</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>
-                                <input type="range" class="form-range" id="zoomSlider" min="0" max="100" value="0">
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
+                <div class="d-flex container align-items-center py-3">
+                    <i class="bx bx-zoom-out bx-sm pe-2" id="zoomOutBtn"></i>
+                    <input type="range" class="form-range" id="zoomSlider" min="0" max="100" value="0">
+                    <i class="bx bx-zoom-in bx-sm ps-2" id="zoomInBtn"></i>
+                </div>
             </div>
         </div>
     </div>
