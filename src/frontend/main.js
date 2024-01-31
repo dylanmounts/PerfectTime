@@ -21,7 +21,7 @@
 
 import '../frontend/scss/styles.scss';
 import * as ClockUpdater from './modules/clock/clockUpdater';
-import { initializeScene, onWindowResize, updateCameraZoom } from './modules/managers/sceneManager';
+import { initializeScene, onWindowResize } from './modules/managers/sceneManager';
 import * as DeviceUtils from './modules/utils/deviceUtils';
 import * as UIUtils from './modules/utils/uiUtils';
 
@@ -43,6 +43,7 @@ function styleButtonForToastHidden(btn) {
 // Initialize and configure UI components
 UIUtils.setupToastToggle('optionsMenuBtn', 'optionsMenu', styleButtonForToastVisible, styleButtonForToastHidden);
 UIUtils.setupToastToggle('infoMenuBtn', 'infoMenu', styleButtonForToastVisible, styleButtonForToastHidden);
+UIUtils.setupZoomControls();
 
 // Create checkbox event listeners for clock features
 const clockOptions = [
@@ -58,12 +59,6 @@ const clockOptions = [
     { id: 'sweepingSecondsOption', toggleFunction: ClockUpdater.toggleSweepingSeconds }
 ];
 clockOptions.forEach(option => UIUtils.handleCheckboxChange(option.id, option.toggleFunction));
-
-// Zoom slider event listener
-document.getElementById('zoomSlider').addEventListener('input', (event) => {
-    const zoomLevel = parseFloat(event.target.value);
-    updateCameraZoom(zoomLevel);
-});
 
 // Fullscreen and orientation change event listeners
 document.getElementById('fullscreenBtn').addEventListener('click', DeviceUtils.toggleFullscreen);

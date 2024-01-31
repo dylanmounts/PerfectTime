@@ -9,6 +9,8 @@
 
 import { Button, Toast } from 'bootstrap';
 
+import { updateCameraZoom } from '../managers/sceneManager';
+
 /**
  * Sets up a toggle for a Bootstrap toast element and manages button styles.
  *
@@ -62,4 +64,32 @@ export function handleCheckboxChange(checkboxId, callback) {
             callback(checkbox.checked);
         });
     }
+}
+
+/**
+ * Initializes zoom controls for the UI.
+ */
+export function setupZoomControls() {
+    const zoomSlider = document.getElementById('zoomSlider');
+    const zoomInBtn = document.getElementById('zoomInBtn');
+    const zoomOutBtn = document.getElementById('zoomOutBtn');
+
+    if (!zoomSlider || !zoomInBtn || !zoomOutBtn) return;
+
+    zoomSlider.addEventListener('input', (event) => {
+        const zoomLevel = parseFloat(event.target.value);
+        updateCameraZoom(zoomLevel);
+    });
+
+    zoomInBtn.addEventListener('click', () => {
+        const step = 10;
+        const zoomLevel = Math.min(parseInt(zoomSlider.value) + step, parseInt(zoomSlider.max));
+        updateCameraZoom(zoomLevel);
+    });
+
+    zoomOutBtn.addEventListener('click', () => {
+        const step = 10;
+        const zoomLevel = Math.max(parseInt(zoomSlider.value) - step, parseInt(zoomSlider.min));
+        updateCameraZoom(zoomLevel);
+    });
 }
