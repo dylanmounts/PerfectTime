@@ -29,7 +29,7 @@ let sweepingSeconds = document.getElementById('sweepingSecondsOption').checked;
 
 // State variables for tracking the perfect time and its displays.
 let currentTime = null;
-let lastTime = null;
+let lastTime = new Date;
 let lastSecond = null;
 let lastDayDate = null;
 let lastDayDateExists = null;
