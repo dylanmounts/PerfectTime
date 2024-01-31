@@ -87,4 +87,5 @@ export const OUTER_INDICATORS = {};
 export const HOUR_NUMBERS = {};
 export const MINUTE_NUMBERS = {};
 export const TIME_ENDPOINT = 'https://PerfectTime.org/api/time';
-export const PERFECT_TIME_SYNC_SECONDS = 60
+export const PERFECT_TIME_SYNC_SECONDS = 60;
+export const MINIMUM_ZOOM = 1;

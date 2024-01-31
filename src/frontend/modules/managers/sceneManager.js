@@ -8,7 +8,7 @@
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 
-import { PERFECT_TIME_SYNC_SECONDS, SIZES } from '../constants';
+import { MINIMUM_ZOOM, PERFECT_TIME_SYNC_SECONDS, SIZES } from '../constants';
 import { fontManager, monoFontManager } from './fontManager';
 import { timeManager } from './timeManager';
 import { addClock } from '../clock/clockConstructor';
@@ -24,7 +24,7 @@ const renderer = new THREE.WebGLRenderer({ antialias: true });
 const controls = new OrbitControls(camera, renderer.domElement);
 const minPan = new THREE.Vector3();
 const maxPan = new THREE.Vector3();
-let initialZoom = null;
+let maxZoom = null;
 
 let regularFont = null;
 let monoFont = null;
@@ -40,7 +40,7 @@ function setupScene() {
     controls.maxPolarAngle = Math.PI / 2;
     controls.minAzimuthAngle = 0;
     controls.maxAzimuthAngle = 0;
-    controls.minDistance = 1;
+    controls.minDistance = MINIMUM_ZOOM;
     controls.mouseButtons = {
         LEFT: THREE.MOUSE.PAN,
         MIDDLE: THREE.MOUSE.DOLLY,
@@ -74,8 +74,8 @@ function updatePanLimits() {
     const size = boundingBox.getSize(new THREE.Vector3());
 
     // Scale the clock size based on the screen size
-    const paddingFactor = SIZES.CLOCK_RADIUS / (initialZoom * initialZoom)
-    const scalingFactor = initialZoom * paddingFactor;
+    const paddingFactor = SIZES.CLOCK_RADIUS / (maxZoom * maxZoom)
+    const scalingFactor = maxZoom * paddingFactor;
     const adjustedSize = size.clone().multiplyScalar(scalingFactor);
 
     // Calculate the ratio of current zoom level to the maximum zoom level
@@ -103,7 +103,7 @@ function updateCamera() {
     const fov = camera.fov * (Math.PI / 180);
     let cameraZ = Math.abs(maxDim / 1.175 * Math.tan(fov / 2));
     if (camera.aspect < 1) cameraZ = cameraZ / camera.aspect;
-    if (initialZoom === null) initialZoom = cameraZ;
+    if (maxZoom === null) maxZoom = cameraZ;
 
     camera.position.set(center.x, center.y, center.z + cameraZ);
     camera.lookAt(center);
@@ -122,7 +122,7 @@ function updateCamera() {
  * @returns {number} The calculated camera zoom level.
  */
 function mapZoomLevel(sliderValue) {
-    return (100 - sliderValue) / 100 * (initialZoom - 1) + 1;
+    return (100 - sliderValue) / 100 * (maxZoom - MINIMUM_ZOOM) + MINIMUM_ZOOM;
 }
 
 /**
@@ -131,7 +131,7 @@ function mapZoomLevel(sliderValue) {
  * @returns {number} The corresponding slider value.
  */
 function unmapZoomLevel(cameraZoom) {
-    return 100 - ((cameraZoom - 1) / (initialZoom - 1) * 100);
+    return 100 - ((cameraZoom - MINIMUM_ZOOM) / (maxZoom - MINIMUM_ZOOM) * 100);
 }
 
 /**
@@ -160,9 +160,10 @@ export function onWindowResize() {
     renderer.setSize(container.clientWidth, container.clientHeight);
 
     updateCamera();
-    camera.updateProjectionMatrix();
+    maxZoom = camera.position.z;
 
     controls.update();
+    camera.updateProjectionMatrix();
 }
 
 /**
