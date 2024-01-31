@@ -43,6 +43,7 @@ function setupScene() {
     controls.minDistance = MINIMUM_ZOOM;
     controls.mouseButtons = {
         LEFT: THREE.MOUSE.PAN,
+        RIGHT: THREE.MOUSE.PAN,
         MIDDLE: THREE.MOUSE.DOLLY,
     };
     controls.touches = {
