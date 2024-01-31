@@ -93,6 +93,10 @@ html, body {
     z-index: 2;
 }
 
+#zoomOutBtn, #zoomInBtn {
+    cursor: pointer;
+}
+
 .toast .toast-body {
     overflow-y: auto;
 }
