@@ -9,7 +9,7 @@ import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 
 import { MINIMUM_ZOOM, PERFECT_TIME_SYNC_SECONDS, SIZES } from '../constants';
-import { fontManager, monoFontManager } from './fontManager';
+import { fontManager } from './fontManager';
 import { timeManager } from './timeManager';
 import { addClock } from '../clock/clockConstructor';
 import { updateClock } from '../clock/clockUpdater';
@@ -27,7 +27,6 @@ const maxPan = new THREE.Vector3();
 let maxZoom = null;
 
 let regularFont = null;
-let monoFont = null;
 
 /**
  * Initializes and sets up the scene with lighting and renderer.
@@ -171,7 +170,7 @@ export function onWindowResize() {
  * Primary animation loop. Keeps the clock running.
  */
 function animate() {
-    updateClock(scene, regularFont, monoFont);
+    updateClock(scene, regularFont);
 
     controls.update();
     requestAnimationFrame(animate);
@@ -189,9 +188,8 @@ export async function initializeScene() {
     }, PERFECT_TIME_SYNC_SECONDS * 1000);
 
     regularFont = await fontManager.getLoadedFont();
-    monoFont = await monoFontManager.getLoadedFont();
 
-    addClock(scene, regularFont, monoFont);
+    addClock(scene, regularFont);
     animate();
     updateCamera();
 }
