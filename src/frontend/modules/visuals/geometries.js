@@ -129,13 +129,15 @@ export const GEOMETRIES = {
 
 // Text geometry for the day/date display
 export function createDayDateGeometry(dayDateStr, font) {
-    return new TextGeometry(String(dayDateStr), {
+    const textGeometry = new TextGeometry(String(dayDateStr), {
         font: font,
         size: CONSTANTS.SIZES.DAY_DATE_SIZE,
         height: CONSTANTS.SIZES.COMPLICATION_NUMBER_HEIGHT,
         curveSegments: CONSTANTS.SEGMENTS / 8,
         bevelEnabled: false
     });
+    textGeometry.computeBoundingBox();
+    return textGeometry;
 }
 
 // Text geometry for the digital time display
