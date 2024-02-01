@@ -171,7 +171,7 @@ export function onWindowResize() {
  * Primary animation loop. Keeps the clock running.
  */
 function animate() {
-    updateClock(scene, monoFont);
+    updateClock(scene, regularFont, monoFont);
 
     controls.update();
     requestAnimationFrame(animate);
