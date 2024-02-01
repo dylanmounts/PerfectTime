@@ -21,7 +21,7 @@
 @import "bootstrap/scss/transitions";
 // @import "bootstrap/scss/dropdown";
 // @import "bootstrap/scss/button-group";
-// @import "bootstrap/scss/nav";
+@import "bootstrap/scss/nav";
 // @import "bootstrap/scss/navbar";
 // @import "bootstrap/scss/card";
 // @import "bootstrap/scss/accordion";
@@ -101,16 +101,29 @@ html, body {
     overflow-y: auto;
 }
 
+.github-logo {
+    border-radius: 5px;
+    width: 24px;
+    height: 24px;
+    background: #b6c2cf;
+}
+
+.bx-envelope {
+    font-size: 26px;
+    color: #b6c2cf;
+}
+
+.bmc-logo {
+    border-radius: 5px;
+    background: #b6c2cf;
+    width: 24px;
+    height: 24px;
+}
+
 /* Media Queries */
 @media screen and (max-height: 620px) {
     .toast .toast-body {
         max-height: 225px;
-    }
-}
-
-@media screen and (max-width: 400px) {
-    .github-logo {
-        display: none;
     }
 }
 
