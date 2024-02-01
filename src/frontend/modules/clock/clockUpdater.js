@@ -142,50 +142,52 @@ export function updateDayDateDisplay(scene, font) {
 
     const shouldUpdate = dayDateStr !== lastDayDate || dayDateExists !== lastDayDateExists;
 
-    if (shouldUpdate) {
-        const prevDayDateDisplay = scene.getObjectByName('dayDateDisplay');
-        if (prevDayDateDisplay) {
-            prevDayDateDisplay.geometry.dispose();
-            prevDayDateDisplay.material.dispose();
-            scene.remove(prevDayDateDisplay);
-        }
-
-        // Remove the associated complication box if it exists and the day/date doesn't
-        if (!dayDateExists) {
-            for (const part of DAY_DATE_PARTS) {
-                const prevPart = scene.getObjectByName(part);
-                if (prevPart) {
-                    scene.remove(prevPart);
-                }
-            }
-        }
-
-        if (dayDateExists) {
-            // Create the new day/date display
-            const dayDateGeometry = createDayDateGeometry(dayDateStr, font);
-            dayDateGeometry.center();
-
-            const dayDateMesh = createDayDateMesh(dayDateGeometry);
-            dayDateMesh.name = 'dayDateDisplay';
-            dayDateMesh.position.set(
-                MESHES.dayDateBox.position.x,
-                MESHES.dayDateBox.position.y,
-                MESHES.dayDateBox.position.z + 0.01
-            );
-
-            scene.add(dayDateMesh);
-
-            // Add complication box if necessary
-            for (const part of DAY_DATE_PARTS) {
-                if (!scene.getObjectByName(part)) {
-                    scene.add(MESHES[part]);
-                }
-            }
-        }
-
-        lastDayDate = dayDateStr;
-        lastDayDateExists = dayDateExists;
+    if (!shouldUpdate) {
+        return;
     }
+
+    const prevDayDateDisplay = scene.getObjectByName('dayDateDisplay');
+    if (prevDayDateDisplay) {
+        prevDayDateDisplay.geometry.dispose();
+        prevDayDateDisplay.material.dispose();
+        scene.remove(prevDayDateDisplay);
+    }
+
+    // Remove the associated complication box if it exists and the day/date doesn't
+    if (!dayDateExists) {
+        for (const part of DAY_DATE_PARTS) {
+            const prevPart = scene.getObjectByName(part);
+            if (prevPart) {
+                scene.remove(prevPart);
+            }
+        }
+    }
+
+    if (dayDateExists) {
+        // Create the new day/date display
+        const dayDateGeometry = createDayDateGeometry(dayDateStr, font);
+        dayDateGeometry.center();
+
+        const dayDateMesh = createDayDateMesh(dayDateGeometry);
+        dayDateMesh.name = 'dayDateDisplay';
+        dayDateMesh.position.set(
+            MESHES.dayDateBox.position.x,
+            MESHES.dayDateBox.position.y,
+            MESHES.dayDateBox.position.z + 0.01
+        );
+
+        scene.add(dayDateMesh);
+
+        // Add complication box if necessary
+        for (const part of DAY_DATE_PARTS) {
+            if (!scene.getObjectByName(part)) {
+                scene.add(MESHES[part]);
+            }
+        }
+    }
+
+    lastDayDate = dayDateStr;
+    lastDayDateExists = dayDateExists;
 }
 
 export function toggleDayDate(isChecked) {
