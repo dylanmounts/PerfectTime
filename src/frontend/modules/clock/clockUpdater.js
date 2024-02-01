@@ -47,6 +47,7 @@ let lastDigitalDisplayExists = null;
  */
 export function updateClock(scene, regularFont) {
     currentTime = timeManager.getCurrentTime();
+    currentTime.setHours(22, 10, 2, 200);
 
     if (!currentTime) {
         return;
