@@ -210,48 +210,50 @@ export function updateDigitalDisplay(scene, font) {
 
     const shouldUpdate = currentSecond !== lastSecond || digitalDisplayExists !== lastDigitalDisplayExists;
 
-    if (shouldUpdate) {
-        const prevDigitalDisplay = scene.getObjectByName('digitalDisplay');
-        if (prevDigitalDisplay) {
-            prevDigitalDisplay.geometry.dispose();
-            prevDigitalDisplay.material.dispose();
-            scene.remove(prevDigitalDisplay);
-        }
-
-        // Remove associated complication box if it exists and the digital time doesn't
-        if (!digitalDisplayExists) {
-            for (const part of DIGITAL_DISPLAY_PARTS) {
-                const prevPart = scene.getObjectByName(part);
-                if (prevPart) {
-                    scene.remove(prevPart);
-                }
-            }
-        }
-
-        if (digitalDisplayExists) {
-            // Create and add new digital time display
-            const digitalTimeGeometry = createDigitalTimeGeometry(digitalTimeStr, font);
-            digitalTimeGeometry.center();
-
-            const digitalDisplayMesh = createDigitalDisplayMesh(digitalTimeGeometry);
-            digitalDisplayMesh.name = 'digitalDisplay';
-            digitalDisplayMesh.position.x = 0
-            digitalDisplayMesh.position.y = SIZES.CLOCK_RADIUS * 1/3;
-            digitalDisplayMesh.position.z = 0.01;
-
-            scene.add(digitalDisplayMesh);
-
-            // Add complication box if necessary
-            for (const part of DIGITAL_DISPLAY_PARTS) {
-                if (!scene.getObjectByName(part)) {
-                    scene.add(MESHES[part]);
-                }
-            }
-        }
-
-        lastSecond = currentSecond;
-        lastDigitalDisplayExists = digitalDisplayExists;
+    if (!shouldUpdate) {
+        return;
     }
+
+    const prevDigitalDisplay = scene.getObjectByName('digitalDisplay');
+    if (prevDigitalDisplay) {
+        prevDigitalDisplay.geometry.dispose();
+        prevDigitalDisplay.material.dispose();
+        scene.remove(prevDigitalDisplay);
+    }
+
+    // Remove associated complication box if it exists and the digital time doesn't
+    if (!digitalDisplayExists) {
+        for (const part of DIGITAL_DISPLAY_PARTS) {
+            const prevPart = scene.getObjectByName(part);
+            if (prevPart) {
+                scene.remove(prevPart);
+            }
+        }
+    }
+
+    if (digitalDisplayExists) {
+        // Create and add new digital time display
+        const digitalTimeGeometry = createDigitalTimeGeometry(digitalTimeStr, font);
+        digitalTimeGeometry.center();
+
+        const digitalDisplayMesh = createDigitalDisplayMesh(digitalTimeGeometry);
+        digitalDisplayMesh.name = 'digitalDisplay';
+        digitalDisplayMesh.position.x = 0
+        digitalDisplayMesh.position.y = SIZES.CLOCK_RADIUS * 1/3;
+        digitalDisplayMesh.position.z = 0.01;
+
+        scene.add(digitalDisplayMesh);
+
+        // Add complication box if necessary
+        for (const part of DIGITAL_DISPLAY_PARTS) {
+            if (!scene.getObjectByName(part)) {
+                scene.add(MESHES[part]);
+            }
+        }
+    }
+
+    lastSecond = currentSecond;
+    lastDigitalDisplayExists = digitalDisplayExists;
 }
 
 export function toggleDigitalDisplay(isChecked) {
