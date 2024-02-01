@@ -98,9 +98,7 @@ export function setupZoomControls() {
  * Sets the language based on the user's browser settings.
  */
 export function setLanuage() {
-    console.log("setting language")
     const userLanguage = navigator.language || navigator.userLanguage;
-    console.log(userLanguage);
 
     const selectElement = document.getElementById('languageSelect');
     for (let i = 0; i < selectElement.options.length; i++) {
