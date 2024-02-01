@@ -139,9 +139,11 @@ export function updateDayDateDisplay(scene, font) {
         return;
     }
 
-    const day = currentTime.toLocaleString('en-US', { weekday: 'short' }).toUpperCase();
-    const month = currentTime.toLocaleString('en-US', { month: 'short' });
-    const date = currentTime.getDate();
+    const language = document.getElementById('languageSelect').value;
+
+    const day = currentTime.toLocaleString(language, { weekday: 'short' }).toUpperCase();
+    const month = currentTime.toLocaleString(language, { month: 'short' });
+    const date = currentTime.toLocaleString(language, { day: 'numeric' });
     const dayDateStr = `${day.toUpperCase()} ${month} ${date}`;
 
     const shouldUpdate = dayDateStr !== lastDayDate || dayDateExists !== lastDayDateExists;
