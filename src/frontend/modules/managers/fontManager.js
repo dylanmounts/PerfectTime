@@ -1,9 +1,5 @@
 /**
  * fontManager.js - Manages font resources for the perfect clock.
- *
- * This module provides a FontManager class for loading and handling fonts
- * using Three.js. We use two different font managers to handle the two
- * different (regular and monospaced) clock fonts.
  */
 
 
@@ -11,7 +7,7 @@ import * as THREE from 'three';
 import { FontLoader } from 'three/addons/loaders/FontLoader.js';
 import { TextGeometry } from 'three/addons/geometries/TextGeometry.js';
 
-import { CLOCK_FONT, CLOCK_FONT_MONO, SIZES, SEGMENTS } from '../constants';
+import { CLOCK_FONT, SIZES, SEGMENTS } from '../constants';
 
 class FontManager {
     constructor(url) {
@@ -76,4 +72,3 @@ class FontManager {
 }
 
 export const fontManager = new FontManager(CLOCK_FONT);
-export const monoFontManager = new FontManager(CLOCK_FONT_MONO);

@@ -44,10 +44,10 @@ let lastDigitalDisplayExists = null;
  * 
  * @param {Object} scene - The Three.js scene object.
  * @param {Object} regularFont - The font used for day/date elements.
- * @param {Object} monoFont - The font used for digital time elements.
  */
-export function updateClock(scene, regularFont, monoFont) {
+export function updateClock(scene, regularFont) {
     currentTime = timeManager.getCurrentTime();
+    currentTime.setHours(22, 10, 2, 200);
 
     if (!currentTime) {
         return;
@@ -85,7 +85,7 @@ export function updateClock(scene, regularFont, monoFont) {
 
     updateCameraSlider();
     updateTimeOffset();
-    updateDigitalDisplay(scene, monoFont);
+    updateDigitalDisplay(scene, regularFont);
     updateDayDateDisplay(scene, regularFont);
     updateIndicators(scene);
     updateNumbers(scene);

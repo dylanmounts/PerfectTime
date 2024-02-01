@@ -105,13 +105,12 @@ function createIndicators(scene) {
  * 
  * @param {Object} scene - The Three.js scene object.
  * @param {Object} regularFont - The regular font for the clock numbers.
- * @param {Object} monoFont - The monospace font for the digital display and date.
  */
-export async function addClock(scene, regularFont, monoFont) {
+export async function addClock(scene, regularFont) {
     createIndicators(scene);
     createNumbers(scene, regularFont);
-    updateDayDateDisplay(scene, monoFont);
-    updateDigitalDisplay(scene, monoFont);
+    updateDayDateDisplay(scene, regularFont);
+    updateDigitalDisplay(scene, regularFont);
 
     for (const mesh in MESHES) {
         scene.add(MESHES[mesh]);
