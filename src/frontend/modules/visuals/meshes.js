@@ -5,8 +5,8 @@
 
 import * as THREE from 'three';
 
-import { SIZES } from '../constants.js';
-import { GEOMETRIES } from './geometries.js'; 
+import { DAY_DATE_CENTER_X, DAY_DATE_CENTER_Y, DAY_DATE_BOX_LEFT_X, DAY_DATE_BOX_RIGHT_X, DAY_DATE_BOX_TOP_Y, DAY_DATE_BOX_BOTTOM_Y, SIZES } from '../constants.js';
+import { createDayDateGeometry, GEOMETRIES } from './geometries.js'; 
 import { MATERIALS } from './materials.js';
 
 
@@ -47,26 +47,25 @@ outerSecondHand.name = 'outerSecondHand';
 
 const dayDateBox = new THREE.Mesh(GEOMETRIES.dayDateBox, MATERIALS.dayDateBox);
 dayDateBox.name = 'dayDateBox';
-const dayDateBoxAngle = (Math.PI / 6) * 3;
-dayDateBox.position.x = Math.sin(dayDateBoxAngle) * SIZES.CLOCK_RADIUS * 3/4;
-dayDateBox.position.y = Math.cos(dayDateBoxAngle) * SIZES.CLOCK_RADIUS * 3/4;
+dayDateBox.position.x = DAY_DATE_CENTER_X
+dayDateBox.position.y = DAY_DATE_CENTER_Y
 dayDateBox.position.z = 0;
 
 const dayDateTopFrame = new THREE.Mesh(GEOMETRIES.dayDateFrameHorizontal, MATERIALS.complicationFrame);
 dayDateTopFrame.name = 'dayDateTopFrame';
-dayDateTopFrame.position.set(dayDateBox.position.x, dayDateBox.position.y + SIZES.DAY_DATE_BOX_HEIGHT / 2 + SIZES.COMPLICATION_FRAME_THICKNESS / 2, 0);
+dayDateTopFrame.position.set(dayDateBox.position.x, DAY_DATE_BOX_TOP_Y, 0);
 
 const dayDateBottomFrame = new THREE.Mesh(GEOMETRIES.dayDateFrameHorizontal, MATERIALS.complicationFrame);
 dayDateBottomFrame.name = 'dayDateBottomFrame';
-dayDateBottomFrame.position.set(dayDateBox.position.x, dayDateBox.position.y - SIZES.DAY_DATE_BOX_HEIGHT/2 - SIZES.COMPLICATION_FRAME_THICKNESS / 2, 0);
+dayDateBottomFrame.position.set(dayDateBox.position.x, DAY_DATE_BOX_BOTTOM_Y, 0);
 
 const dayDateLeftFrame = new THREE.Mesh(GEOMETRIES.dayDateFrameVertical, MATERIALS.complicationFrame);
 dayDateLeftFrame.name = 'dayDateLeftFrame';
-dayDateLeftFrame.position.set(dayDateBox.position.x - SIZES.DAY_DATE_BOX_WIDTH / 2 - SIZES.COMPLICATION_FRAME_THICKNESS / 2, dayDateBox.position.y, 0);
+dayDateLeftFrame.position.set(DAY_DATE_BOX_LEFT_X, dayDateBox.position.y, 0);
 
 const dayDateRightFrame = new THREE.Mesh(GEOMETRIES.dayDateFrameVertical, MATERIALS.complicationFrame);
 dayDateRightFrame.name = 'dayDateRightFrame';
-dayDateRightFrame.position.set(dayDateBox.position.x + SIZES.DAY_DATE_BOX_WIDTH / 2 + SIZES.COMPLICATION_FRAME_THICKNESS / 2, dayDateBox.position.y, 0);
+dayDateRightFrame.position.set(DAY_DATE_BOX_RIGHT_X, dayDateBox.position.y, 0);
 
 const digitalDisplayBox = new THREE.Mesh(GEOMETRIES.digitalDisplayBox, MATERIALS.digitalDisplayBox);
 digitalDisplayBox.name = 'digitalDisplayBox';
@@ -112,9 +111,92 @@ export const MESHES = {
     digitalDisplayRightFrame,
 }
 
-// Mesh used to show the day/date
-export function createDayDateMesh(dayDateGeometry) {
-    return new THREE.Mesh(dayDateGeometry, MATERIALS.dayDate);
+/**
+ * Removes a mesh by name from the specified Three.js.
+ * 
+ * @param {THREE.Scene} scene - The scene from which the object will be removed.
+ * @param {string} name - The name of the object to remove.
+ */
+export function removeMeshByName(scene, name) {
+    const selectedObject = scene.getObjectByName(name);
+    if (selectedObject) {
+        selectedObject.geometry.dispose();
+        selectedObject.material.dispose();
+        scene.remove(selectedObject);
+    }
+}
+
+/**
+ * Removes a group by its name from the scene and disposes of its resources.
+ * 
+ * @param {THREE.Scene} scene - The Three.js scene from which the group will be removed.
+ * @param {string} groupName - The name of the group to remove.
+ */
+export function removeMeshByGroup(scene, groupName) {
+    const selectedGroup = scene.getObjectByName(groupName);
+    if (selectedGroup) {
+        // Iterate over each mesh in the group and dispose of its resources
+        selectedGroup.children.forEach(child => {
+            if (child.geometry) child.geometry.dispose();
+            if (child.material) {
+                // If the material is an array, dispose of each material in the array
+                if (Array.isArray(child.material)) {
+                    child.material.forEach(material => material.dispose());
+                } else {
+                    // If it's a single material, dispose of it directly
+                    child.material.dispose();
+                }
+            }
+        });
+        // Remove the group from the scene
+        scene.remove(selectedGroup);
+    }
+}
+
+/**
+ * Generates a mesh for the day/date display.
+ * 
+ * @param {string} text - The text content for the mesh.
+ * @param {THREE.Font} font - The font object used for the text geometry.
+ * @param {Object} position - An object containing x, y, and z coordinates for the position.
+ * @returns {THREE.Mesh} The created text mesh, positioned as specified.
+ */
+function generateDayDateMesh(text, font, position) {
+    const geometry = createDayDateGeometry(text, font)
+    const mesh = new THREE.Mesh(geometry, MATERIALS.dayDate);
+    mesh.position.set(position.x, position.y, position.z);
+    return mesh;
+}
+
+/**
+ * Creates and adds a day/date text mesh to a specified group.
+ * 
+ * The mesh is generated and initially placed at the origin, then repositioned according to
+ * the provided initial position and the mesh's calculated width.
+ * 
+ * @param {string} text - The text content for the mesh.
+ * @param {THREE.Font} font - The Three.js font object used for the text geometry.
+ * @param {Object} position - The position object with x, y, z coordinates for placing the mesh.
+ * @param {THREE.Group} group - The group to which the mesh will be added.
+ * @returns {number} The new x position for the next mesh.
+ */
+export function createDayDateMesh(text, font, position, group) {
+    // Create the mesh
+    const mesh = generateDayDateMesh(text, font, { x: 0, y: 0, z: 0 }); // Temporarily position at origin
+    const width = mesh.geometry.boundingBox.max.x - mesh.geometry.boundingBox.min.x;
+
+    // Adjust position based on width
+    mesh.position.x = position.x - width;
+    mesh.position.y = position.y;
+    mesh.position.z = position.z;
+
+    // Update initialPosition for the next mesh, moving left
+    position.x -= (width + SIZES.DAY_DATE_SPACING);
+
+    // Add the mesh to the group
+    group.add(mesh)
+
+    return mesh.position.x;
 }
 
 // Mesh used to show the digital time
