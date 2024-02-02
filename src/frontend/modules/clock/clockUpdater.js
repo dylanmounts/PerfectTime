@@ -180,7 +180,7 @@ export function updateDayDateDisplay(scene, font) {
 
     // Initial position for the day mesh
     let currentPosition = {
-        x: DAY_DATE_BOX_RIGHT_X - SIZES.COMPLICATION_FRAME_THICKNESS * 2 - SIZES.DAY_DATE_SPACING,
+        x: DAY_DATE_BOX_RIGHT_X - SIZES.COMPLICATION_FRAME_THICKNESS * 2 - SIZES.DAY_DATE_SPACING / 2,
         y: (DAY_DATE_BOX_BOTTOM_Y + DAY_DATE_BOX_TOP_Y) / 2 - SIZES.DAY_DATE_SIZE / 2,
         z: MESHES.dayDateBox.position.z - SIZES.COMPLICATION_NUMBER_HEIGHT / 2
     };    
@@ -195,7 +195,7 @@ export function updateDayDateDisplay(scene, font) {
     scene.add(dayDateGroup);
 
     // Adjust the Day/Date box to fit
-    const newLeftX = lastMeshX - SIZES.DAY_DATE_SPACING;
+    const newLeftX = lastMeshX - SIZES.DAY_DATE_SPACING / 2;
     const newWidth = DAY_DATE_BOX_RIGHT_X - newLeftX;
     const newScale = newWidth / DAY_DATE_FRAME_WIDTH;
 
