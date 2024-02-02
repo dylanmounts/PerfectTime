@@ -278,15 +278,20 @@ export function updateDigitalDisplay(scene, font) {
     // Create and add new digital time display
     const digitalTimeGeometry = createDigitalTimeGeometry(digitalTimeStr, font);
     const digitalDisplayMesh = createDigitalDisplayMesh(digitalTimeGeometry);
-
-    digitalDisplayMesh.name = 'digitalDisplay';
-    digitalDisplayMesh.position.x = 0;
-    digitalDisplayMesh.position.y = SIZES.CLOCK_RADIUS * 1/3;
-    digitalDisplayMesh.position.z = 0.01;
-
     scene.add(digitalDisplayMesh);
 
-    // Find the new dimensions for the display
+    // Find how much the height differs from the default digital time display
+    const height = digitalDisplayMesh.geometry.boundingBox.max.y - digitalDisplayMesh.geometry.boundingBox.min.y;
+    const defaultHeight = 0.37962; // Height of the mesh in en-US
+    const heightDifference = (language === 'tr-TR' ? -1 : 1) * (height - defaultHeight);
+
+    // Position the dispaly
+    digitalDisplayMesh.name = 'digitalDisplay';
+    digitalDisplayMesh.position.x = 0;
+    digitalDisplayMesh.position.y = SIZES.CLOCK_RADIUS * 1/3 - heightDifference / 2;
+    digitalDisplayMesh.position.z = 0;
+
+    // Find the new dimensions and scale for the display
     const newLeftX = digitalDisplayMesh.geometry.boundingBox.min.x - SIZES.DIGITAL_TIME_SPACING;
     const newRightX = digitalDisplayMesh.geometry.boundingBox.max.x + SIZES.DIGITAL_TIME_SPACING;
     const newScaleX = (newRightX - newLeftX + SIZES.COMPLICATION_FRAME_THICKNESS) / DIGITAL_DISPLAY_FRAME_WIDTH;
