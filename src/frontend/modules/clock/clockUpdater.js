@@ -11,7 +11,7 @@
 
 import * as THREE from 'three';
 
-import { DAY_DATE_BOX_RIGHT_X, DAY_DATE_PARTS, DIGITAL_DISPLAY_PARTS, HOUR_NUMBERS, INDICATORS, OUTER_INDICATORS, MINUTE_NUMBERS, SIZES, DAY_DATE_BOX_TOP_Y, DAY_DATE_BOX_BOTTOM_Y, DAY_DATE_FRAME_WIDTH } from '../constants.js';
+import { DAY_DATE_BOX_RIGHT_X, DAY_DATE_PARTS, DIGITAL_DISPLAY_PARTS, HOUR_NUMBERS, INDICATORS, OUTER_INDICATORS, MINUTE_NUMBERS, SIZES, DAY_DATE_BOX_TOP_Y, DAY_DATE_BOX_BOTTOM_Y, DAY_DATE_FRAME_WIDTH, DIGITAL_DISPLAY_FRAME_WIDTH, DIGITAL_DISPLAY_FRAME_HEIGHT } from '../constants.js';
 import { createDayDateMesh, createDigitalDisplayMesh, removeMeshByGroup, removeMeshByName, MESHES } from '../visuals/meshes.js';
 import { updateCameraSlider } from '../managers/sceneManager.js';
 import { timeManager } from '../managers/timeManager.js';
@@ -37,6 +37,7 @@ let lastSecond = null;
 let lastDayDate = null;
 let lastDayDateExists = null;
 let lastDigitalDisplayExists = null;
+let language = 'en-US';
 
 /**
  * Main function to update the clock based on the current time retrieved from the
@@ -82,6 +83,7 @@ export function updateClock(scene, regularFont) {
     MESHES.secondHand.rotation.z = -secondAngle;
     MESHES.outerSecondHand.rotation.z = -secondAngle;
 
+    updateLanguage();
     updateCameraSlider();
     updateTimeOffset();
     updateDigitalDisplay(scene, regularFont);
@@ -137,8 +139,6 @@ export function updateDayDateDisplay(scene, font) {
     if (!currentTime) {
         return;
     }
-
-    const language = document.getElementById('languageSelect').value;
 
     const day = currentTime.toLocaleString(language, { weekday: 'short' }).toUpperCase();
     const month = currentTime.toLocaleString(language, { month: 'short' });
@@ -227,9 +227,22 @@ export function updateDigitalDisplay(scene, font) {
         return;
     }
 
-    const digitalTimeStr = currentTime.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
-    const currentSecond = currentTime.getSeconds();
+    const digitalTime = currentTime.toLocaleTimeString(language, {
+        hour12: true,
+        hour: '2-digit',
+        minute: '2-digit',
+        second: '2-digit'
+    });
+    const [part1, part2] = digitalTime.split(' ');
 
+    // Add a middle dot of the AM/PM indicator is placed before the time
+    // TODO: This is an unfortunate work around to maintain width consistency.
+    //       Need to figure out a better way to deal with this.
+    const digitalTimeStr = part1.length > part2.length
+        ? digitalTime
+        : `${digitalTime}\u00B7`;
+
+    const currentSecond = currentTime.getSeconds();
     const shouldUpdate = currentSecond !== lastSecond || digitalDisplayExists !== lastDigitalDisplayExists;
 
     if (!shouldUpdate) {
@@ -248,23 +261,12 @@ export function updateDigitalDisplay(scene, font) {
         }
     }
 
+    // If the digital display isn't showing, we don't need to update it
     if (!digitalDisplayExists) {
         lastSecond = currentSecond;
         lastDigitalDisplayExists = digitalDisplayExists;
         return;
     }
-
-    // Create and add new digital time display
-    const digitalTimeGeometry = createDigitalTimeGeometry(digitalTimeStr, font);
-    digitalTimeGeometry.center();
-
-    const digitalDisplayMesh = createDigitalDisplayMesh(digitalTimeGeometry);
-    digitalDisplayMesh.name = 'digitalDisplay';
-    digitalDisplayMesh.position.x = 0
-    digitalDisplayMesh.position.y = SIZES.CLOCK_RADIUS * 1/3;
-    digitalDisplayMesh.position.z = 0.01;
-
-    scene.add(digitalDisplayMesh);
 
     // Add complication box if necessary
     for (const part of DIGITAL_DISPLAY_PARTS) {
@@ -272,6 +274,32 @@ export function updateDigitalDisplay(scene, font) {
             scene.add(MESHES[part]);
         }
     }
+
+    // Create and add new digital time display
+    const digitalTimeGeometry = createDigitalTimeGeometry(digitalTimeStr, font);
+    const digitalDisplayMesh = createDigitalDisplayMesh(digitalTimeGeometry);
+
+    digitalDisplayMesh.name = 'digitalDisplay';
+    digitalDisplayMesh.position.x = 0;
+    digitalDisplayMesh.position.y = SIZES.CLOCK_RADIUS * 1/3;
+    digitalDisplayMesh.position.z = 0.01;
+
+    scene.add(digitalDisplayMesh);
+
+    // Find the new dimensions for the display
+    const newLeftX = digitalDisplayMesh.geometry.boundingBox.min.x - SIZES.DIGITAL_TIME_SPACING;
+    const newRightX = digitalDisplayMesh.geometry.boundingBox.max.x + SIZES.DIGITAL_TIME_SPACING;
+    const newScaleX = (newRightX - newLeftX + SIZES.COMPLICATION_FRAME_THICKNESS) / DIGITAL_DISPLAY_FRAME_WIDTH;
+
+    // Adjust the digital display box to fit
+    MESHES.digitalDisplayBox.scale.x = newScaleX;
+
+    // Adjust the digital display frames to fit
+    MESHES.digitalDisplayLeftFrame.position.x = newLeftX
+    MESHES.digitalDisplayRightFrame.position.x = newRightX;
+    ['digitalDisplayTopFrame', 'digitalDisplayBottomFrame'].forEach(frame => {
+        MESHES[frame].scale.x = newScaleX;
+    });
 
     lastSecond = currentSecond;
     lastDigitalDisplayExists = digitalDisplayExists;
@@ -449,4 +477,9 @@ export function updateTimeOffset() {
 
     offsetNumberField.textContent = Math.abs(offset / 1000);
     offsetDirectionField.textContent = offset > 0 ? "behind" : "ahead";
+}
+
+// Sets the language for the clock's displays based on the selected dropdown value
+function updateLanguage() {
+    language = document.getElementById('languageSelect').value;
 }
