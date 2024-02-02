@@ -142,13 +142,15 @@ export function createDayDateGeometry(dayDateStr, font) {
 
 // Text geometry for the digital time display
 export function createDigitalTimeGeometry(dayDateStr, font) {
-    return new TextGeometry(String(dayDateStr), {
+    const textGeometry = new TextGeometry(String(dayDateStr), {
         font: font,
         size: CONSTANTS.SIZES.DIGITAL_TIME_SIZE,
         height: CONSTANTS.SIZES.COMPLICATION_NUMBER_HEIGHT,
         curveSegments: CONSTANTS.SEGMENTS / 8,
         bevelEnabled: false
     });
+    textGeometry.center();
+    return textGeometry;
 }
 
 // Text geometries for each hour number
