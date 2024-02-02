@@ -37,6 +37,7 @@ let lastSecond = null;
 let lastDayDate = null;
 let lastDayDateExists = null;
 let lastDigitalDisplayExists = null;
+let lastLanguage = null;
 let language = 'en-US';
 
 /**
@@ -229,7 +230,7 @@ export function updateDigitalDisplay(scene, font) {
 
     const digitalTime = currentTime.toLocaleTimeString(language, {
         hour12: true,
-        hour: '2-digit',
+        hour: 'numeric',
         minute: '2-digit',
         second: '2-digit'
     });
@@ -243,7 +244,10 @@ export function updateDigitalDisplay(scene, font) {
         : `${digitalTime}\u00B7`;
 
     const currentSecond = currentTime.getSeconds();
-    const shouldUpdate = currentSecond !== lastSecond || digitalDisplayExists !== lastDigitalDisplayExists;
+    const shouldUpdate = (
+        (currentSecond !== lastSecond || digitalDisplayExists !== lastDigitalDisplayExists)
+            || language !== lastLanguage
+    );
 
     if (!shouldUpdate) {
         return;
@@ -265,6 +269,7 @@ export function updateDigitalDisplay(scene, font) {
     if (!digitalDisplayExists) {
         lastSecond = currentSecond;
         lastDigitalDisplayExists = digitalDisplayExists;
+        lastLanguage = language;
         return;
     }
 
@@ -283,7 +288,12 @@ export function updateDigitalDisplay(scene, font) {
     // Find how much the height differs from the default digital time display
     const height = digitalDisplayMesh.geometry.boundingBox.max.y - digitalDisplayMesh.geometry.boundingBox.min.y;
     const defaultHeight = 0.37962; // Height of the mesh in en-US
-    const heightDifference = (language === 'tr-TR' ? -1 : 1) * (height - defaultHeight);
+
+    // The difference in height from the current mesh to the default (en-US) mesh
+    // If the difference is very small, we round it down to 0.
+    // TODO: There has to be a beter way to handle this.
+    let heightDifference = (language === 'tr-TR' ? -1 : 1) * (height - defaultHeight);
+    heightDifference = Math.abs(heightDifference) > 0.05 ? heightDifference : 0;
 
     // Position the dispaly
     digitalDisplayMesh.name = 'digitalDisplay';
@@ -308,6 +318,7 @@ export function updateDigitalDisplay(scene, font) {
 
     lastSecond = currentSecond;
     lastDigitalDisplayExists = digitalDisplayExists;
+    lastLanguage = language;
 }
 
 export function toggleDigitalDisplay(isChecked) {
