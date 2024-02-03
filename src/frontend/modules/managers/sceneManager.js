@@ -9,7 +9,7 @@ import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 
 import { MINIMUM_ZOOM, PERFECT_TIME_SYNC_SECONDS, SIZES } from '../constants';
-import { fontManager } from './fontManager';
+import { complicationsFontManager, hoursFontManager, minutesFontManager } from './fontManager';
 import { timeManager } from './timeManager';
 import { addClock } from '../clock/clockConstructor';
 import { updateClock } from '../clock/clockUpdater';
@@ -26,7 +26,9 @@ const minPan = new THREE.Vector3();
 const maxPan = new THREE.Vector3();
 let maxZoom = null;
 
-let regularFont = null;
+let complicationsFont = null;
+let hoursFont = null;
+let minutesFont = null;
 
 /**
  * Initializes and sets up the scene with lighting and renderer.
@@ -170,7 +172,7 @@ export function onWindowResize() {
  * Primary animation loop. Keeps the clock running.
  */
 function animate() {
-    updateClock(scene, regularFont);
+    updateClock(scene, complicationsFont);
 
     controls.update();
     requestAnimationFrame(animate);
@@ -187,9 +189,11 @@ export async function initializeScene() {
         timeManager.fetchPerfectTime();
     }, PERFECT_TIME_SYNC_SECONDS * 1000);
 
-    regularFont = await fontManager.getLoadedFont();
+    complicationsFont = await complicationsFontManager.getLoadedFont();
+    hoursFont = await hoursFontManager.getLoadedFont();
+    minutesFont = await minutesFontManager.getLoadedFont();
 
-    addClock(scene, regularFont);
+    addClock(scene, hoursFont, minutesFont);
     animate();
     updateCamera();
 }
