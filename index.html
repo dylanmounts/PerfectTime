@@ -31,7 +31,7 @@
         </button>
     </div>    
 
-    <div class="toast-container position-fixed top-0 start-0 p-3">
+    <div class="toast-container position-fixed top-0 start-0 p-3" id="infoToast">
         <div id="infoMenu" class="toast" role="alert" aria-live="assertive" aria-atomic="true" data-bs-autohide="false">
             <div class="toast-header">
                 <strong class="me-auto">About</strong>
@@ -57,7 +57,7 @@
         </div>
     </div>
 
-    <div class="toast-container position-fixed top-0 end-0 p-3">
+    <div class="toast-container position-fixed top-0 end-0 p-3" id="optionsToast">
         <div id="optionsMenu" class="toast" role="alert" aria-live="assertive" aria-atomic="true" data-bs-autohide="false">
             <div class="toast-header">
                 <strong class="me-auto">Settings</strong>
@@ -97,8 +97,8 @@
                             </td>
                         </tr>
                         <tr>
-                            <td colspan="2">
-                                <div class="d-flex justify-content-center pe-3">
+                            <td class="py-3" colspan="2">
+                                <div class="d-flex justify-content-center pe-5">
                                     <div class="h6 m-0" id="twelveHour">12-hour</div>
                                     <div class="d-flex form-check form-switch align-items-center m-0 px-3">
                                         <input class="form-check-input m-0" type="checkbox" role="switch" id="useTwentyFourHour">
