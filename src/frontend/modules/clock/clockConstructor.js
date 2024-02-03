@@ -31,14 +31,15 @@ function configureMesh(mesh, meshName, meshAngle, centerDistance) {
  * Creates and places hour and minute numbers in the scene.
  * 
  * @param {Object} scene - The Three.js scene object.
- * @param {Object} font - The font used for the numbers.
+ * @param {Object} hoursFont - The serif font used for the hours.
+ * @param {Object} minutesFont - The sans font used for the minutes.
  */
-function createNumbers(scene, font) {
+function createNumbers(scene, hoursFont, minutesFont) {
     for (let i = 1; i <= 12; i++) {
         const angle = (Math.PI / 6) * i;
 
         // Hours
-        const hourGeometry = createHourGeometry(i, font);
+        const hourGeometry = createHourGeometry(i, hoursFont);
         hourGeometry.center();
 
         const hourMesh = createHourMesh(hourGeometry)
@@ -51,7 +52,7 @@ function createNumbers(scene, font) {
         // Minutes
         const minuteNumber = i * 5;
 
-        const minuteGeometry = createMinuteGeometry(minuteNumber, font);
+        const minuteGeometry = createMinuteGeometry(minuteNumber, minutesFont);
         minuteGeometry.center();
 
         const minuteMesh = createMinuteMesh(minuteGeometry);
@@ -104,13 +105,14 @@ function createIndicators(scene) {
  * Adds the complete clock to the scene, including indicators, numbers, and other displays.
  * 
  * @param {Object} scene - The Three.js scene object.
- * @param {Object} regularFont - The regular font for the clock numbers.
+ * @param {Object} hoursFont - The serif font used for the hours.
+ * @param {Object} minutesFont - The sans font used for the minutes.
  */
-export async function addClock(scene, regularFont) {
+export async function addClock(scene, hoursFont, minutesFont) {
     createIndicators(scene);
-    createNumbers(scene, regularFont);
-    updateDayDateDisplay(scene, regularFont);
-    updateDigitalDisplay(scene, regularFont);
+    createNumbers(scene, hoursFont, minutesFont);
+    updateDayDateDisplay(scene, hoursFont);
+    updateDigitalDisplay(scene, hoursFont);
 
     for (const mesh in MESHES) {
         scene.add(MESHES[mesh]);
