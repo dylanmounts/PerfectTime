@@ -94,6 +94,24 @@ export function setupZoomControls() {
     });
 }
 
+export function setupTimeFormatToggle() {
+    const twelveHour = document.getElementById('twelveHour');
+    const twentyFourHour = document.getElementById('twentyFourHour');
+    const useTwentyFourHour = document.getElementById('useTwentyFourHour');
+
+    twelveHour.addEventListener('click', () => {
+        useTwentyFourHour.checked = false;
+        console.log(useTwentyFourHour)
+        console.log(useTwentyFourHour.value)
+    });
+
+    twentyFourHour.addEventListener('click', () => {
+        useTwentyFourHour.checked = true;
+        console.log(useTwentyFourHour)
+        console.log(useTwentyFourHour.value)
+    });
+}
+
 /**
  * Sets the language based on the user's browser settings.
  */
