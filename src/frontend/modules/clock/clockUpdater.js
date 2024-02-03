@@ -241,7 +241,7 @@ export function updateDigitalDisplay(scene, font) {
     // These sneaky unicode characters are hidden by the digital time frame. They exist so
     // the time remains centered within its frame and doesn't shift slightly as the seconds tick.
     // It's either this or monospace fonts, and monospace fonts are gross.
-    const digitalTimeStr = `\u007C\u200A${digitalTime}\u200A\u007C`;
+    const digitalTimeStr = `\u007C\u200B${digitalTime}\u200B\u007C`;
 
     const currentSecond = currentTime.getSeconds();
     const shouldUpdate = (
