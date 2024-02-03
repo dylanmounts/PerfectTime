@@ -75,19 +75,19 @@ digitalDisplayBox.position.z = 0;
 
 const digitalDisplayTopFrame = new THREE.Mesh(GEOMETRIES.digitalDisplayFrameHorizontal, MATERIALS.complicationFrame);
 digitalDisplayTopFrame.name = 'digitalDisplayTopFrame';
-digitalDisplayTopFrame.position.set(digitalDisplayBox.position.x, digitalDisplayBox.position.y + SIZES.DIGITAL_DISPLAY_BOX_HEIGHT / 2 + SIZES.COMPLICATION_FRAME_THICKNESS / 2, 0);
+digitalDisplayTopFrame.position.set(digitalDisplayBox.position.x, digitalDisplayBox.position.y + SIZES.DIGITAL_DISPLAY_BOX_HEIGHT / 2 + SIZES.DIGITAL_TIME_FRAME_THICKNESS / 2, 0);
 
 const digitalDisplayBottomFrame = new THREE.Mesh(GEOMETRIES.digitalDisplayFrameHorizontal, MATERIALS.complicationFrame);
 digitalDisplayBottomFrame.name = 'digitalDisplayBottomFrame';
-digitalDisplayBottomFrame.position.set(digitalDisplayBox.position.x, digitalDisplayBox.position.y - SIZES.DIGITAL_DISPLAY_BOX_HEIGHT/2 - SIZES.COMPLICATION_FRAME_THICKNESS / 2, 0);
+digitalDisplayBottomFrame.position.set(digitalDisplayBox.position.x, digitalDisplayBox.position.y - SIZES.DIGITAL_DISPLAY_BOX_HEIGHT/2 - SIZES.DIGITAL_TIME_FRAME_THICKNESS / 2, 0);
 
 const digitalDisplayLeftFrame = new THREE.Mesh(GEOMETRIES.digitalDisplayFrameVertical, MATERIALS.complicationFrame);
 digitalDisplayLeftFrame.name = 'digitalDisplayLeftFrame';
-digitalDisplayLeftFrame.position.set(digitalDisplayBox.position.x - SIZES.DIGITAL_DISPLAY_BOX_WIDTH / 2 - SIZES.COMPLICATION_FRAME_THICKNESS / 2, digitalDisplayBox.position.y, 0);
+digitalDisplayLeftFrame.position.set(digitalDisplayBox.position.x - SIZES.DIGITAL_DISPLAY_BOX_WIDTH / 2 - SIZES.DIGITAL_TIME_FRAME_THICKNESS / 2, digitalDisplayBox.position.y, 0);
 
 const digitalDisplayRightFrame = new THREE.Mesh(GEOMETRIES.digitalDisplayFrameVertical, MATERIALS.complicationFrame);
 digitalDisplayRightFrame.name = 'digitalDisplayRightFrame';
-digitalDisplayRightFrame.position.set(digitalDisplayBox.position.x + SIZES.DIGITAL_DISPLAY_BOX_WIDTH / 2 + SIZES.COMPLICATION_FRAME_THICKNESS / 2, digitalDisplayBox.position.y, 0)
+digitalDisplayRightFrame.position.set(digitalDisplayBox.position.x + SIZES.DIGITAL_DISPLAY_BOX_WIDTH / 2 + SIZES.DIGITAL_TIME_FRAME_THICKNESS / 2, digitalDisplayBox.position.y, 0)
 
 export const MESHES = {
     clockBezel,
