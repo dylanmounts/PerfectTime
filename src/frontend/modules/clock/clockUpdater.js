@@ -47,7 +47,7 @@ let useTwentyFourHour = false;
  * backend time server.
  * 
  * @param {Object} scene - The Three.js scene object.
- * @param {Object} regularFont - The font used for day/date elements.
+ * @param {Object} regularFont - The regular (sans) font for the clock.
  */
 export function updateClock(scene, regularFont) {
     currentTime = timeManager.getCurrentTime();
@@ -290,7 +290,7 @@ export function updateDigitalDisplay(scene, font) {
     // Position the dispaly
     digitalDisplayMesh.name = 'digitalDisplay';
     digitalDisplayMesh.position.x = 0;
-    digitalDisplayMesh.position.y = SIZES.CLOCK_RADIUS * 1/3 - SIZES.DIGITAL_TIME_FRAME_THICKNESS
+    digitalDisplayMesh.position.y = SIZES.CLOCK_RADIUS * 1/3 - SIZES.DIGITAL_TIME_FRAME_THICKNESS * 2
     digitalDisplayMesh.position.z = 0;
 
     // Find the new dimensions and scale for the display
