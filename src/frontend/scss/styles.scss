@@ -121,9 +121,9 @@ html, body {
 }
 
 /* Media Queries */
-@media screen and (max-height: 620px) {
+@media screen and (max-height: 700px) {
     .toast .toast-body {
-        max-height: 225px;
+        max-height: 300px;
     }
 }
 
