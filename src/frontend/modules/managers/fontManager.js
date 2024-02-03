@@ -7,7 +7,7 @@ import * as THREE from 'three';
 import { FontLoader } from 'three/addons/loaders/FontLoader.js';
 import { TextGeometry } from 'three/addons/geometries/TextGeometry.js';
 
-import { CLOCK_FONT, SIZES, SEGMENTS } from '../constants';
+import { CLOCK_COMPLICATIONS_FONT, CLOCK_HOURS_FONT, CLOCK_MINUTES_FONT, SIZES, SEGMENTS } from '../constants';
 
 class FontManager {
     constructor(url) {
@@ -71,4 +71,6 @@ class FontManager {
     }
 }
 
-export const fontManager = new FontManager(CLOCK_FONT);
+export const complicationsFontManager = new FontManager(CLOCK_COMPLICATIONS_FONT);
+export const hoursFontManager = new FontManager(CLOCK_HOURS_FONT);
+export const minutesFontManager = new FontManager(CLOCK_MINUTES_FONT);
