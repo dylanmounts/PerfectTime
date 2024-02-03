@@ -231,12 +231,13 @@ export function updateDigitalDisplay(scene, font) {
         return;
     }
 
-    const digitalTime = currentTime.toLocaleTimeString(language, {
-        hour12: !(useTwentyFourHour),
+    let digitalTime = currentTime.toLocaleTimeString(language, {
+        hour12: !useTwentyFourHour,
         hour: 'numeric',
         minute: '2-digit',
         second: '2-digit'
     });
+    digitalTime = digitalTime.replace(/^24/, '00');
 
     // These sneaky unicode characters are hidden by the digital time frame. They exist so
     // the time remains centered within its frame and doesn't shift slightly as the seconds tick.
