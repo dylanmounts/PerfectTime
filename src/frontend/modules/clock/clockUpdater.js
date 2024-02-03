@@ -47,9 +47,10 @@ let useTwentyFourHour = false;
  * backend time server.
  * 
  * @param {Object} scene - The Three.js scene object.
- * @param {Object} regularFont - The regular (sans) font for the clock.
+ * @param {Object} digitalFont - The font used for the digital display
+ * @param {Object} dayDateFont - The font used for the day/date display
  */
-export function updateClock(scene, regularFont) {
+export function updateClock(scene, digitalFont, dayDateFont) {
     currentTime = timeManager.getCurrentTime();
 
     if (!currentTime) {
@@ -90,8 +91,8 @@ export function updateClock(scene, regularFont) {
     updateTimeFormat();
     updateCameraSlider();
     updateTimeOffset();
-    updateDigitalDisplay(scene, regularFont);
-    updateDayDateDisplay(scene, regularFont);
+    updateDigitalDisplay(scene, digitalFont);
+    updateDayDateDisplay(scene, dayDateFont);
     updateIndicators(scene);
     updateNumbers(scene);
     updateHourHand(scene);
