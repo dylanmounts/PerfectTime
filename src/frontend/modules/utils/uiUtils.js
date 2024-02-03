@@ -101,14 +101,10 @@ export function setupTimeFormatToggle() {
 
     twelveHour.addEventListener('click', () => {
         useTwentyFourHour.checked = false;
-        console.log(useTwentyFourHour)
-        console.log(useTwentyFourHour.value)
     });
 
     twentyFourHour.addEventListener('click', () => {
         useTwentyFourHour.checked = true;
-        console.log(useTwentyFourHour)
-        console.log(useTwentyFourHour.value)
     });
 }
 
