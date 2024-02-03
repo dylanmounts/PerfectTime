@@ -43,8 +43,9 @@ function styleButtonForToastHidden(btn) {
 // Initialize and configure UI components
 UIUtils.setupToastToggle('optionsMenuBtn', 'optionsMenu', styleButtonForToastVisible, styleButtonForToastHidden);
 UIUtils.setupToastToggle('infoMenuBtn', 'infoMenu', styleButtonForToastVisible, styleButtonForToastHidden);
-UIUtils.setupZoomControls();
 UIUtils.setLanuage();
+UIUtils.setupTimeFormatToggle();
+UIUtils.setupZoomControls();
 
 // Create checkbox event listeners for clock features
 const clockOptions = [

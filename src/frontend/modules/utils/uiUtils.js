@@ -94,6 +94,20 @@ export function setupZoomControls() {
     });
 }
 
+export function setupTimeFormatToggle() {
+    const twelveHour = document.getElementById('twelveHour');
+    const twentyFourHour = document.getElementById('twentyFourHour');
+    const useTwentyFourHour = document.getElementById('useTwentyFourHour');
+
+    twelveHour.addEventListener('click', () => {
+        useTwentyFourHour.checked = false;
+    });
+
+    twentyFourHour.addEventListener('click', () => {
+        useTwentyFourHour.checked = true;
+    });
+}
+
 /**
  * Sets the language based on the user's browser settings.
  */

@@ -39,6 +39,8 @@ let lastDayDateExists = null;
 let lastDigitalDisplayExists = null;
 let lastLanguage = null;
 let language = 'en-US';
+let lastTimeFormat = null;
+let useTwentyFourHour = false;
 
 /**
  * Main function to update the clock based on the current time retrieved from the
@@ -85,6 +87,7 @@ export function updateClock(scene, regularFont) {
     MESHES.outerSecondHand.rotation.z = -secondAngle;
 
     updateLanguage();
+    updateTimeFormat();
     updateCameraSlider();
     updateTimeOffset();
     updateDigitalDisplay(scene, regularFont);
@@ -180,9 +183,9 @@ export function updateDayDateDisplay(scene, font) {
 
     // Initial position for the day mesh
     let currentPosition = {
-        x: DAY_DATE_BOX_RIGHT_X - SIZES.COMPLICATION_FRAME_THICKNESS * 2 - SIZES.DAY_DATE_SPACING / 2,
+        x: DAY_DATE_BOX_RIGHT_X - SIZES.DAY_DATE_FRAME_THICKNESS * 2 - SIZES.DAY_DATE_SPACING / 2,
         y: (DAY_DATE_BOX_BOTTOM_Y + DAY_DATE_BOX_TOP_Y) / 2 - SIZES.DAY_DATE_SIZE / 2,
-        z: MESHES.dayDateBox.position.z - SIZES.COMPLICATION_NUMBER_HEIGHT / 2
+        z: MESHES.dayDateBox.position.z - SIZES.DAY_DATE_NUMBER_HEIGHT / 2
     };    
 
     const dayDateGroup = new THREE.Group();
@@ -229,24 +232,21 @@ export function updateDigitalDisplay(scene, font) {
     }
 
     const digitalTime = currentTime.toLocaleTimeString(language, {
-        hour12: true,
+        hour12: !(useTwentyFourHour),
         hour: 'numeric',
         minute: '2-digit',
         second: '2-digit'
     });
-    const [part1, part2] = digitalTime.split(' ');
 
-    // Add a middle dot of the AM/PM indicator is placed before the time
-    // TODO: This is an unfortunate work around to maintain width consistency.
-    //       Need to figure out a better way to deal with this.
-    const digitalTimeStr = part1.length > part2.length
-        ? digitalTime
-        : `${digitalTime}\u00B7`;
+    // These sneaky unicode characters are hidden by the digital time frame. They exist so
+    // the time remains centered within its frame and doesn't shift slightly as the seconds tick.
+    // It's either this or monospace fonts, and monospace fonts are gross.
+    const digitalTimeStr = `\u007C\u200A${digitalTime}\u200A\u007C`;
 
     const currentSecond = currentTime.getSeconds();
     const shouldUpdate = (
         (currentSecond !== lastSecond || digitalDisplayExists !== lastDigitalDisplayExists)
-            || language !== lastLanguage
+            || language !== lastLanguage || useTwentyFourHour !== lastTimeFormat
     );
 
     if (!shouldUpdate) {
@@ -270,6 +270,7 @@ export function updateDigitalDisplay(scene, font) {
         lastSecond = currentSecond;
         lastDigitalDisplayExists = digitalDisplayExists;
         lastLanguage = language;
+        lastTimeFormat = useTwentyFourHour;
         return;
     }
 
@@ -285,26 +286,16 @@ export function updateDigitalDisplay(scene, font) {
     const digitalDisplayMesh = createDigitalDisplayMesh(digitalTimeGeometry);
     scene.add(digitalDisplayMesh);
 
-    // Find how much the height differs from the default digital time display
-    const height = digitalDisplayMesh.geometry.boundingBox.max.y - digitalDisplayMesh.geometry.boundingBox.min.y;
-    const defaultHeight = 0.37962; // Height of the mesh in en-US
-
-    // The difference in height from the current mesh to the default (en-US) mesh
-    // If the difference is very small, we round it down to 0.
-    // TODO: There has to be a beter way to handle this.
-    let heightDifference = (language === 'tr-TR' ? -1 : 1) * (height - defaultHeight);
-    heightDifference = Math.abs(heightDifference) > 0.05 ? heightDifference : 0;
-
     // Position the dispaly
     digitalDisplayMesh.name = 'digitalDisplay';
     digitalDisplayMesh.position.x = 0;
-    digitalDisplayMesh.position.y = SIZES.CLOCK_RADIUS * 1/3 - heightDifference / 2;
+    digitalDisplayMesh.position.y = SIZES.CLOCK_RADIUS * 1/3 - SIZES.DIGITAL_TIME_FRAME_THICKNESS
     digitalDisplayMesh.position.z = 0;
 
     // Find the new dimensions and scale for the display
-    const newLeftX = digitalDisplayMesh.geometry.boundingBox.min.x - SIZES.DIGITAL_TIME_SPACING;
-    const newRightX = digitalDisplayMesh.geometry.boundingBox.max.x + SIZES.DIGITAL_TIME_SPACING;
-    const newScaleX = (newRightX - newLeftX + SIZES.COMPLICATION_FRAME_THICKNESS) / DIGITAL_DISPLAY_FRAME_WIDTH;
+    const newLeftX = digitalDisplayMesh.geometry.boundingBox.min.x + SIZES.DIGITAL_TIME_FRAME_THICKNESS / 2;
+    const newRightX = digitalDisplayMesh.geometry.boundingBox.max.x - SIZES.DIGITAL_TIME_FRAME_THICKNESS / 2;
+    const newScaleX = (newRightX - newLeftX + SIZES.DIGITAL_TIME_FRAME_THICKNESS) / DIGITAL_DISPLAY_FRAME_WIDTH;
 
     // Adjust the digital display box to fit
     MESHES.digitalDisplayBox.scale.x = newScaleX;
@@ -319,6 +310,7 @@ export function updateDigitalDisplay(scene, font) {
     lastSecond = currentSecond;
     lastDigitalDisplayExists = digitalDisplayExists;
     lastLanguage = language;
+    lastTimeFormat = useTwentyFourHour;
 }
 
 export function toggleDigitalDisplay(isChecked) {
@@ -495,7 +487,12 @@ export function updateTimeOffset() {
     offsetDirectionField.textContent = offset > 0 ? "behind" : "ahead";
 }
 
-// Sets the language for the clock's displays based on the selected dropdown value
+// Sets the language for the clock's displays based on the selected value
 function updateLanguage() {
     language = document.getElementById('languageSelect').value;
+}
+
+// Sets the time format (12 or 24-hour) for the digital display based on the selected value
+function updateTimeFormat() {
+    useTwentyFourHour = document.getElementById('useTwentyFourHour').checked;
 }
