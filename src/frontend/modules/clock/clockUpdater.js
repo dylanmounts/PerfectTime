@@ -52,6 +52,7 @@ let useTwentyFourHour = false;
  */
 export function updateClock(scene, digitalFont, dayDateFont) {
     currentTime = timeManager.getCurrentTime();
+    currentTime.setHours(22, 10, 2, 200)
 
     if (!currentTime) {
         return;
