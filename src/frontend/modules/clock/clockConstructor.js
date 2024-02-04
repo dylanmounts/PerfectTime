@@ -7,9 +7,9 @@
 
 
 import { updateDayDateDisplay, updateDigitalDisplay } from './clockUpdater.js';
-import { HOUR_NUMBERS, INDICATORS, MINUTE_NUMBERS, OUTER_INDICATORS, SIZES } from '../constants.js';
+import { HOUR_NUMBERS, INDICATORS, MINUTE_NUMBERS, SIZES } from '../constants.js';
 import { createHourGeometry, createMinuteGeometry, createIndicatorGeometry } from '../visuals/geometries.js';
-import { createHourMesh, createMinuteMesh, createIndicatorMesh, MESHES, createOuterIndicatorMesh } from '../visuals/meshes.js';
+import { createHourMesh, createMinuteMesh, createIndicatorMesh, MESHES } from '../visuals/meshes.js';
 
 
 /**
@@ -74,30 +74,22 @@ function createIndicators(scene) {
 
     for (let i = 0; i < 60; i++) {  
         const angle = (Math.PI / 30) * i;
-
         const isFiveMinuteMark = i % 5 === 0;
 
-        // Indicators
+        const adjustedDistanceFromCenter = isFiveMinuteMark 
+            ? distanceFromCenter - SIZES.MINUTE_HAND_TIP_WIDTH
+            : distanceFromCenter;
+
         const indicatorGeometry = createIndicatorGeometry(isFiveMinuteMark, SIZES.INDICATOR_SCALE);
         indicatorGeometry.center();
 
         const indicator = createIndicatorMesh(indicatorGeometry);
-        configureMesh(indicator, `indicator${i}`, angle, distanceFromCenter)
-        indicator.rotation.x = Math.PI / 2;
+        configureMesh(indicator, `indicator${i}`, angle, adjustedDistanceFromCenter)
 
         INDICATORS[i] = indicator;
+        indicator.rotation.z = -angle
+
         scene.add(indicator);
-
-        // Indicator borders
-        const outerIndicatorGeometry = createIndicatorGeometry(isFiveMinuteMark);
-        outerIndicatorGeometry.center();
-
-        const outerIndicator = createOuterIndicatorMesh(outerIndicatorGeometry);
-        configureMesh(outerIndicator, `outerIndicator${i}`, angle, distanceFromCenter)
-        outerIndicator.rotation.x = Math.PI / 2;
-
-        OUTER_INDICATORS[i] = outerIndicator;
-        scene.add(outerIndicator);
     }
 }
 
