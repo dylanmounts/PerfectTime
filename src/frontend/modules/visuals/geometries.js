@@ -54,7 +54,7 @@ const post = new THREE.CylinderGeometry(
     CONSTANTS.SIZES.POST_RADIUS,
     CONSTANTS.SIZES.POST_RADIUS,
     CONSTANTS.SIZES.POST_HEIGHT,
-    CONSTANTS.SEGMENTS / 8
+    CONSTANTS.SEGMENTS / 2
 );
 const hourHand = new THREE.ShapeGeometry(
     SHAPES.createClockHand(
@@ -63,7 +63,7 @@ const hourHand = new THREE.ShapeGeometry(
         CONSTANTS.SIZES.HOUR_HAND_BASE_OFFSET,
         CONSTANTS.SIZES.HOUR_HAND_LENGTH_RATIO,
         CONSTANTS.SIZES.HOUR_HAND_SCALE
-    )
+    ), CONSTANTS.SEGMENTS / 2
 );
 const outerHourHand = new THREE.ShapeGeometry(
     SHAPES.createClockHand(
@@ -71,7 +71,7 @@ const outerHourHand = new THREE.ShapeGeometry(
         CONSTANTS.SIZES.HOUR_HAND_BASE_WIDTH,
         CONSTANTS.SIZES.HOUR_HAND_BASE_OFFSET,
         CONSTANTS.SIZES.HOUR_HAND_LENGTH_RATIO
-    )
+    ), CONSTANTS.SEGMENTS / 2
 );
 const minuteHand = new THREE.ShapeGeometry(
     SHAPES.createClockHand(
@@ -80,7 +80,7 @@ const minuteHand = new THREE.ShapeGeometry(
         CONSTANTS.SIZES.MINUTE_HAND_BASE_OFFSET,
         CONSTANTS.SIZES.MINUTE_HAND_LENGTH_RATIO,
         CONSTANTS.SIZES.MINUTE_HAND_SCALE
-    )
+    ), CONSTANTS.SEGMENTS / 2
 );
 const outerMinuteHand = new THREE.ShapeGeometry(
     SHAPES.createClockHand(
@@ -88,7 +88,7 @@ const outerMinuteHand = new THREE.ShapeGeometry(
         CONSTANTS.SIZES.MINUTE_HAND_BASE_WIDTH,
         CONSTANTS.SIZES.MINUTE_HAND_BASE_OFFSET,
         CONSTANTS.SIZES.MINUTE_HAND_LENGTH_RATIO
-    )
+    ), CONSTANTS.SEGMENTS / 2
 );
 const secondHand = new THREE.ShapeGeometry(
     SHAPES.createClockHand(
@@ -97,7 +97,7 @@ const secondHand = new THREE.ShapeGeometry(
         CONSTANTS.SIZES.SECOND_HAND_BASE_OFFSET,
         CONSTANTS.SIZES.SECOND_HAND_LENGTH_RATIO,
         CONSTANTS.SIZES.SECOND_HAND_SCALE
-    )
+    ), CONSTANTS.SEGMENTS / 2
 );
 const outerSecondHand = new THREE.ShapeGeometry(
     SHAPES.createClockHand(
@@ -105,7 +105,7 @@ const outerSecondHand = new THREE.ShapeGeometry(
         CONSTANTS.SIZES.SECOND_HAND_BASE_WIDTH,
         CONSTANTS.SIZES.SECOND_HAND_BASE_OFFSET,
         CONSTANTS.SIZES.SECOND_HAND_LENGTH_RATIO
-    )
+    ), CONSTANTS.SEGMENTS / 2
 );
   
 
