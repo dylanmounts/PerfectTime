@@ -11,7 +11,7 @@
 
 import * as THREE from 'three';
 
-import { DAY_DATE_BOX_RIGHT_X, DAY_DATE_PARTS, DIGITAL_DISPLAY_PARTS, HOUR_NUMBERS, INDICATORS, OUTER_INDICATORS, MINUTE_NUMBERS, SIZES, DAY_DATE_BOX_TOP_Y, DAY_DATE_BOX_BOTTOM_Y, DAY_DATE_FRAME_WIDTH, DIGITAL_DISPLAY_FRAME_WIDTH, DIGITAL_DISPLAY_FRAME_HEIGHT } from '../constants.js';
+import { DAY_DATE_BOX_RIGHT_X, DAY_DATE_PARTS, DIGITAL_DISPLAY_PARTS, HOUR_NUMBERS, INDICATORS, MINUTE_NUMBERS, SIZES, DAY_DATE_BOX_TOP_Y, DAY_DATE_BOX_BOTTOM_Y, DAY_DATE_FRAME_WIDTH, DIGITAL_DISPLAY_FRAME_WIDTH } from '../constants.js';
 import { createDayDateMesh, createDigitalDisplayMesh, removeMeshByGroup, removeMeshByName, MESHES } from '../visuals/meshes.js';
 import { updateCameraSlider } from '../managers/sceneManager.js';
 import { timeManager } from '../managers/timeManager.js';
@@ -328,38 +328,30 @@ export function toggleDigitalDisplay(isChecked) {
 function updateIndicators(scene) {
     for (let i = 0; i < 60; i++) {
         const indicatorName = `indicator${i}`;
-        const outerIndicatorName = `outerIndicator${i}`;
         const indicator = scene.getObjectByName(indicatorName);
-        const outerIndicator = scene.getObjectByName(outerIndicatorName);
 
         // Hours
         if (hourIndicatorsExist && i % 5 === 0) {
             if (i === 15) {
                 if (!dayDateExists && !indicator) {
                     scene.add(INDICATORS[i]);
-                    scene.add(OUTER_INDICATORS[i]);
                 } else if (dayDateExists && indicator) {
                     scene.remove(indicator);
-                    scene.remove(outerIndicator);
                 }
             } else {
                 scene.add(INDICATORS[i]);
-                scene.add(OUTER_INDICATORS[i]);
             }
         } else if (!hourIndicatorsExist && i % 5 === 0 && indicator) {
             scene.remove(indicator);
-            scene.remove(outerIndicator);
         }
 
         // Minutes
         if (minuteIndicatorsExist && i % 5 != 0) {
             if (!indicator) {
                 scene.add(INDICATORS[i]);
-                scene.add(OUTER_INDICATORS[i]);
             }
         } else if (!minuteIndicatorsExist && i % 5 != 0) {
             scene.remove(indicator);
-            scene.remove(outerIndicator);
         }
     }
 }
