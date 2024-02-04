@@ -16,10 +16,10 @@ import { SIZES } from '../constants.js';
  * @returns {number} Length of the clock hand.
  */
 export const calculateHandLength = (handLengthRatio, scale) => {
-    const lengthScale = scale === 1 ? scale : SIZES.OUTER_HAND_LENGTH_SCALE;
+    const lengthScale = scale === 1 ? .0175 : 0;
     const scaledClockRadius = SIZES.CLOCK_RADIUS * handLengthRatio;
-    const totalHandLength = scaledClockRadius + (SIZES.INDICATOR_RADIUS / 2) * SIZES.INDICATOR_SCALE;
-    return totalHandLength * lengthScale;
+    const baseWidth = (SIZES.MINUTE_HAND_TIP_WIDTH * 2) * SIZES.MINUTE_HAND_SCALE;
+    return scaledClockRadius + baseWidth / 2 + lengthScale;
 };
 
 /**
@@ -57,3 +57,26 @@ export const createClockHand = (tipWidth, baseWidth, baseOffset, handLengthRatio
 
     return shape;
 };
+
+/**
+ * Creates the indicators for the perfect clock.
+ * 
+ * @param {boolean} isFiveMinuteMark - Indicates if the indicator is for a five-minute mark.
+ */
+export const createIndicator = (isFiveMinuteMark) => {
+    let baseWidth = (SIZES.MINUTE_HAND_TIP_WIDTH * 2) * SIZES.MINUTE_HAND_SCALE;
+    baseWidth *= isFiveMinuteMark ? 2 : 1;
+
+    const indicatorHeight = baseWidth * Math.PI * SIZES.MINUTE_HAND_SCALE;
+    const stubHeight = indicatorHeight * 3/5;
+    const stubWidth = baseWidth * 3/5;
+
+    const shape = new THREE.Shape();
+    shape.moveTo(-baseWidth / 2, 0);
+    shape.lineTo(-stubWidth / 2, -stubHeight);
+    shape.lineTo(stubWidth / 2, -stubHeight);
+    shape.lineTo(baseWidth / 2, 0);
+    shape.closePath();
+
+    return shape;
+}
