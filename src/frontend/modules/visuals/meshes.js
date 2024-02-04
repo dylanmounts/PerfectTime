@@ -216,10 +216,5 @@ export function createMinuteMesh(minuteGeometry) {
 
 // Mesh used for each indicator (tick mark)
 export function createIndicatorMesh(indicatorGeometry) {
-    return new THREE.Mesh(indicatorGeometry, MATERIALS.indicator)
-}
-
-// Mesh used for each indicator border
-export function createOuterIndicatorMesh(outerIndicatorGeometry) {
-    return new THREE.Mesh(outerIndicatorGeometry, MATERIALS.outerIndicator)
+    return new THREE.Mesh(indicatorGeometry, [MATERIALS.indicator, MATERIALS.outerIndicator]);
 }
