@@ -81,8 +81,8 @@ function createIndicators(scene) {
 
         const indicatorThickness = indicatorGeometry.boundingBox.max.z - indicatorGeometry.boundingBox.min.z
         const adjustedDistanceFromCenter = isFiveMinuteMark 
-        ? distanceFromCenter - indicatorThickness / 2 - 0.02
-            : distanceFromCenter - 0.02;
+            ? distanceFromCenter - indicatorThickness / 2 - SIZES.INDICATOR_BEVEL_SIZE
+            : distanceFromCenter - SIZES.INDICATOR_BEVEL_SIZE;
 
         const indicator = createIndicatorMesh(indicatorGeometry);
         configureMesh(indicator, `indicator${i}`, angle, adjustedDistanceFromCenter)
