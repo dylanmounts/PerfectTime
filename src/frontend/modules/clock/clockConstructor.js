@@ -76,12 +76,13 @@ function createIndicators(scene) {
         const angle = (Math.PI / 30) * i;
         const isFiveMinuteMark = i % 5 === 0;
 
-        const adjustedDistanceFromCenter = isFiveMinuteMark 
-            ? distanceFromCenter - SIZES.MINUTE_HAND_TIP_WIDTH
-            : distanceFromCenter;
-
         const indicatorGeometry = createIndicatorGeometry(isFiveMinuteMark, SIZES.INDICATOR_SCALE);
         indicatorGeometry.center();
+
+        const indicatorThickness = indicatorGeometry.boundingBox.max.z - indicatorGeometry.boundingBox.min.z
+        const adjustedDistanceFromCenter = isFiveMinuteMark 
+        ? distanceFromCenter - indicatorThickness / 2 - 0.02
+            : distanceFromCenter - 0.02;
 
         const indicator = createIndicatorMesh(indicatorGeometry);
         configureMesh(indicator, `indicator${i}`, angle, adjustedDistanceFromCenter)
