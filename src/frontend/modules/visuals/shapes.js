@@ -16,10 +16,11 @@ import { SIZES } from '../constants.js';
  * @returns {number} Length of the clock hand.
  */
 export const calculateHandLength = (handLengthRatio, scale) => {
-    const lengthScale = scale === 1 ? 0 : 0.02;
     const scaledClockRadius = SIZES.CLOCK_RADIUS * handLengthRatio;
-    const indicatorHeight = SIZES.MINUTE_HAND_TIP_WIDTH * SIZES.MINUTE_HAND_SCALE * Math.PI * 0.618
-    return scaledClockRadius + indicatorHeight / 2 - lengthScale;
+    const piScaledIndicatorHeight = SIZES.MINUTE_HAND_TIP_WIDTH * SIZES.MINUTE_HAND_SCALE * Math.PI
+    const bevelScaledIndicatorHeight = piScaledIndicatorHeight - SIZES.INDICATOR_BEVEL_SIZE / 1.25
+    const lengthScale = scale === 1 ? 0 : SIZES.INDICATOR_BEVEL_SIZE;
+    return scaledClockRadius + bevelScaledIndicatorHeight - lengthScale;
 };
 
 /**
@@ -71,11 +72,11 @@ export const createIndicator = (isFiveMinuteMark) => {
     
     if (isFiveMinuteMark) {
         stubWidth = scaledTipWidth;
-        baseWidth = stubWidth * 1.618;
-        indicatorHeight = piScaledTipWidth * 1.618;
+        baseWidth = stubWidth * 2;
+        indicatorHeight = piScaledTipWidth * 2;
     } else {
         baseWidth = scaledTipWidth;
-        stubWidth = baseWidth * 0.618;
+        stubWidth = baseWidth * 0.5;
         indicatorHeight = piScaledTipWidth;
     }
 
