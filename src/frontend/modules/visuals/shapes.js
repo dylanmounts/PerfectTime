@@ -16,10 +16,10 @@ import { SIZES } from '../constants.js';
  * @returns {number} Length of the clock hand.
  */
 export const calculateHandLength = (handLengthRatio, scale) => {
-    const lengthScale = scale === 1 ? .0175 : 0;
+    const lengthScale = scale === 1 ? 0 : 0.02;
     const scaledClockRadius = SIZES.CLOCK_RADIUS * handLengthRatio;
-    const baseWidth = (SIZES.MINUTE_HAND_TIP_WIDTH * 2) * SIZES.MINUTE_HAND_SCALE;
-    return scaledClockRadius + baseWidth / 2 + lengthScale;
+    const indicatorHeight = SIZES.MINUTE_HAND_TIP_WIDTH * SIZES.MINUTE_HAND_SCALE * Math.PI * 0.618
+    return scaledClockRadius + indicatorHeight / 2 - lengthScale;
 };
 
 /**
@@ -64,17 +64,25 @@ export const createClockHand = (tipWidth, baseWidth, baseOffset, handLengthRatio
  * @param {boolean} isFiveMinuteMark - Indicates if the indicator is for a five-minute mark.
  */
 export const createIndicator = (isFiveMinuteMark) => {
-    let baseWidth = (SIZES.MINUTE_HAND_TIP_WIDTH * 2) * SIZES.MINUTE_HAND_SCALE;
-    baseWidth *= isFiveMinuteMark ? 2 : 1;
-
-    const indicatorHeight = baseWidth * Math.PI * SIZES.MINUTE_HAND_SCALE;
-    const stubHeight = indicatorHeight * 3/5;
-    const stubWidth = baseWidth * 3/5;
+    const scaledTipWidth = SIZES.MINUTE_HAND_TIP_WIDTH * 2 * SIZES.MINUTE_HAND_SCALE;
+    const piScaledTipWidth = SIZES.MINUTE_HAND_TIP_WIDTH * Math.PI * SIZES.MINUTE_HAND_SCALE;
+    
+    let stubWidth, baseWidth, indicatorHeight;
+    
+    if (isFiveMinuteMark) {
+        stubWidth = scaledTipWidth;
+        baseWidth = stubWidth * 1.618;
+        indicatorHeight = piScaledTipWidth * 1.618;
+    } else {
+        baseWidth = scaledTipWidth;
+        stubWidth = baseWidth * 0.618;
+        indicatorHeight = piScaledTipWidth;
+    }
 
     const shape = new THREE.Shape();
     shape.moveTo(-baseWidth / 2, 0);
-    shape.lineTo(-stubWidth / 2, -stubHeight);
-    shape.lineTo(stubWidth / 2, -stubHeight);
+    shape.lineTo(-stubWidth / 2, -indicatorHeight);
+    shape.lineTo(stubWidth / 2, -indicatorHeight);
     shape.lineTo(baseWidth / 2, 0);
     shape.closePath();
 
