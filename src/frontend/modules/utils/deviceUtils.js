@@ -121,12 +121,10 @@ export function handleOrientationChange() {
  */
 export function adjustToastsForTouch() {
     if (isTouchDevice()) {
-        const infoToast = document.getElementById('infoToast');
-        infoToast.classList.remove('top-0', 'start-0');
-        infoToast.classList.add('top-50', 'start-50', 'translate-middle');
-
-        const optionsToast = document.getElementById('optionsToast');
-        optionsToast.classList.remove('end-0');
-        optionsToast.classList.add('start-50', 'translate-middle-x');
+        const toastContainers = document.querySelectorAll('.toast-container');
+        toastContainers.forEach(container => {
+            container.classList.remove('top-0', 'start-0', 'end-0');
+            container.classList.add('top-50', 'start-50', 'translate-middle');
+        });
     }
 }
