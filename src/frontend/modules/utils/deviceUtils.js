@@ -8,8 +8,9 @@
 
 
 import { AndroidFullScreen } from '@awesome-cordova-plugins/android-full-screen';
-import { Button } from 'bootstrap';
 import { StatusBar } from '@capacitor/status-bar';
+
+let iOSFullscreen = false;
 
 /**
  * Check if the current device is a touch device.
@@ -18,6 +19,14 @@ import { StatusBar } from '@capacitor/status-bar';
 export function isTouchDevice() {
     const userAgent = navigator.userAgent.toLowerCase();
     return /android|webos|iphone|ipad|ipod|blackberry|iemobile|opera mini/.test(userAgent);
+}
+
+/** Check if the current device is an iOS device.
+* @returns {boolean} True if it's an iIOS device, otherwise false.
+*/
+export function isAppleDevice() {
+   const userAgent = navigator.userAgent.toLowerCase();
+   return /iphone|ipad|ipod/.test(userAgent);
 }
 
 /**
@@ -46,7 +55,9 @@ export function applyTouchDeviceStyles() {
  * Toggle fullscreen mode.
  */
 export function toggleFullscreen() {
-    if (!document.fullscreenElement) {
+    if (isAppleDevice()) {
+        toggleGUI(!iOSFullscreen)
+    } else if (!document.fullscreenElement) {
         document.documentElement.requestFullscreen();
     } else if (document.exitFullscreen) {
         document.exitFullscreen();
@@ -58,25 +69,38 @@ export function toggleFullscreen() {
  * @param {boolean} isFullscreen - Indicates if fullscreen mode is active.
  */
 export function toggleGUI(isFullscreen) {
+    const isPortrait = screen.orientation.angle === 0 || screen.orientation.angle === 180;
     const btnEl = document.getElementById("fullscreenBtn");
-    const btn = Button.getOrCreateInstance(btnEl);
+    const btnColorActive = "#e8e6e3"
+    const btnColorInactive = "#6c757d"
+    const btnBackgroundActive = "#585f63"
+    const btnBackgroundInactive = "transparent"
 
-    btn.toggle();
     if (isFullscreen) {
-        if (isTouchDevice()) {
+        if (isAppleDevice()) {
             StatusBar.hide();
+        } else if (isTouchDevice()) {
             AndroidFullScreen.immersiveMode();
-            btnEl.style.backgroundColor = "#585f63";
-            btnEl.style.color = "#e8e6e3";
         }
+        btnEl.style.backgroundColor = btnBackgroundActive;
+        btnEl.style.color = btnColorActive;
     } else {
-        if (isTouchDevice()) {
-            StatusBar.show();
-            AndroidFullScreen.showSystemUI();
-            btnEl.style.backgroundColor = "transparent";
-            btnEl.style.color = "#6c757d";
+        if (isAppleDevice()) {
+            if (isPortrait && iOSFullscreen) {
+                StatusBar.show();
+                btnEl.style.backgroundColor = btnBackgroundInactive;
+                btnEl.style.color = btnColorInactive;
+            }
+        } else {
+            if (isTouchDevice()) {
+                AndroidFullScreen.showSystemUI();
+            }
+            btnEl.style.backgroundColor = btnBackgroundInactive;
+            btnEl.style.color = btnColorInactive;
         }
     }
+
+    iOSFullscreen = isFullscreen;
 }
 
 /**
@@ -84,7 +108,10 @@ export function toggleGUI(isFullscreen) {
  */
 export function handleOrientationChange() {
     const isPortrait = screen.orientation.angle === 0 || screen.orientation.angle === 180;
-    if (!document.fullscreenElement) {
+
+    if (isAppleDevice) {
+        isPortrait ? toggleGUI(false) : toggleGUI(true);
+    } else if (isTouchDevice() && !document.fullscreenElement) {
         isPortrait ? AndroidFullScreen.showSystemUI() : AndroidFullScreen.showUnderSystemUI();
     }
 }
