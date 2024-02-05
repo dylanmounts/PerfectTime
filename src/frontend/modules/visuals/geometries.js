@@ -188,8 +188,8 @@ export function createIndicatorGeometry(isFiveMinuteMark) {
         steps: 1,
         depth: CONSTANTS.SIZES.INDICATOR_HEIGHT / 2,
         bevelEnabled: true,
-        bevelThickness: 0.001,
-        bevelSize: 0.02,
+        bevelThickness: CONSTANTS.SIZES.INDICATOR_BEVEL_THICKNESS,
+        bevelSize: CONSTANTS.SIZES.INDICATOR_BEVEL_SIZE,
         bevelSegments: 1
     };
     return new THREE.ExtrudeGeometry(shape, extrudeSettings);
