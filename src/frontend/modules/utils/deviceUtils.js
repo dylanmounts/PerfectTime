@@ -109,7 +109,7 @@ export function toggleGUI(isFullscreen) {
 export function handleOrientationChange() {
     const isPortrait = screen.orientation.angle === 0 || screen.orientation.angle === 180;
 
-    if (isAppleDevice) {
+    if (isAppleDevice()) {
         isPortrait ? toggleGUI(false) : toggleGUI(true);
     } else if (isTouchDevice() && !document.fullscreenElement) {
         isPortrait ? AndroidFullScreen.showSystemUI() : AndroidFullScreen.showUnderSystemUI();
