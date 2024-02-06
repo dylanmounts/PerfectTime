@@ -5,7 +5,7 @@
 
 import * as THREE from 'three';
 
-import { DAY_DATE_CENTER_X, DAY_DATE_CENTER_Y, DAY_DATE_BOX_LEFT_X, DAY_DATE_BOX_RIGHT_X, DAY_DATE_BOX_TOP_Y, DAY_DATE_BOX_BOTTOM_Y, SIZES } from '../constants.js';
+import * as CONSTANTS from '../constants.js';
 import { createDayDateGeometry, GEOMETRIES } from './geometries.js'; 
 import { MATERIALS } from './materials.js';
 
@@ -18,76 +18,76 @@ const clockFace = new THREE.Mesh(GEOMETRIES.clockFace, MATERIALS.clockFace);
 clockFace.position.z = 0;
 
 const hourHand = new THREE.Mesh(GEOMETRIES.hourHand, MATERIALS.hourHand);
-hourHand.position.z = SIZES.POST_HEIGHT - .005;
+hourHand.position.z = CONSTANTS.SIZES.POST_HEIGHT - .005;
 hourHand.name = 'hourHand';
 
 const outerHourHand = new THREE.Mesh(GEOMETRIES.outerHourHand, MATERIALS.outerHourHand);
-outerHourHand.position.z = SIZES.POST_HEIGHT - .006;
+outerHourHand.position.z = CONSTANTS.SIZES.POST_HEIGHT - .006;
 outerHourHand.name = 'outerHourHand';
 
 const minuteHand = new THREE.Mesh(GEOMETRIES.minuteHand, MATERIALS.minuteHand);
-minuteHand.position.z = SIZES.POST_HEIGHT - .003;
+minuteHand.position.z = CONSTANTS.SIZES.POST_HEIGHT - .003;
 minuteHand.name = 'minuteHand';
 
 const outerMinuteHand = new THREE.Mesh(GEOMETRIES.outerMinuteHand, MATERIALS.outerMinuteHand);
-outerMinuteHand.position.z = SIZES.POST_HEIGHT - .004;
+outerMinuteHand.position.z = CONSTANTS.SIZES.POST_HEIGHT - .004;
 outerMinuteHand.name = 'outerMinuteHand';
 
 const post = new THREE.Mesh(GEOMETRIES.post, MATERIALS.post);
 post.rotation.x = Math.PI / 2
-post.position.z = SIZES.POST_HEIGHT / 2;
+post.position.z = CONSTANTS.SIZES.POST_HEIGHT / 2;
 
 const secondHand = new THREE.Mesh(GEOMETRIES.secondHand, MATERIALS.secondHand);
-secondHand.position.z = SIZES.POST_HEIGHT - .001;
+secondHand.position.z = CONSTANTS.SIZES.POST_HEIGHT - .001;
 secondHand.name = 'secondHand';
 
 const outerSecondHand = new THREE.Mesh(GEOMETRIES.outerSecondHand, MATERIALS.outerSecondHand);
-outerSecondHand.position.z = SIZES.POST_HEIGHT - .002;
+outerSecondHand.position.z = CONSTANTS.SIZES.POST_HEIGHT - .002;
 outerSecondHand.name = 'outerSecondHand';
 
 const dayDateBox = new THREE.Mesh(GEOMETRIES.dayDateBox, MATERIALS.dayDateBox);
 dayDateBox.name = 'dayDateBox';
-dayDateBox.position.x = DAY_DATE_CENTER_X
-dayDateBox.position.y = DAY_DATE_CENTER_Y
+dayDateBox.position.x = CONSTANTS.DAY_DATE_CENTER_X
+dayDateBox.position.y = CONSTANTS.DAY_DATE_CENTER_Y
 dayDateBox.position.z = 0;
 
 const dayDateTopFrame = new THREE.Mesh(GEOMETRIES.dayDateFrameHorizontal, MATERIALS.complicationFrame);
 dayDateTopFrame.name = 'dayDateTopFrame';
-dayDateTopFrame.position.set(dayDateBox.position.x, DAY_DATE_BOX_TOP_Y, 0);
+dayDateTopFrame.position.set(dayDateBox.position.x, CONSTANTS.DAY_DATE_BOX_TOP_Y, 0);
 
 const dayDateBottomFrame = new THREE.Mesh(GEOMETRIES.dayDateFrameHorizontal, MATERIALS.complicationFrame);
 dayDateBottomFrame.name = 'dayDateBottomFrame';
-dayDateBottomFrame.position.set(dayDateBox.position.x, DAY_DATE_BOX_BOTTOM_Y, 0);
+dayDateBottomFrame.position.set(dayDateBox.position.x, CONSTANTS.DAY_DATE_BOX_BOTTOM_Y, 0);
 
 const dayDateLeftFrame = new THREE.Mesh(GEOMETRIES.dayDateFrameVertical, MATERIALS.complicationFrame);
 dayDateLeftFrame.name = 'dayDateLeftFrame';
-dayDateLeftFrame.position.set(DAY_DATE_BOX_LEFT_X, dayDateBox.position.y, 0);
+dayDateLeftFrame.position.set(CONSTANTS.DAY_DATE_BOX_LEFT_X, dayDateBox.position.y, 0);
 
 const dayDateRightFrame = new THREE.Mesh(GEOMETRIES.dayDateFrameVertical, MATERIALS.complicationFrame);
 dayDateRightFrame.name = 'dayDateRightFrame';
-dayDateRightFrame.position.set(DAY_DATE_BOX_RIGHT_X, dayDateBox.position.y, 0);
+dayDateRightFrame.position.set(CONSTANTS.DAY_DATE_BOX_RIGHT_X, dayDateBox.position.y, 0);
 
 const digitalDisplayBox = new THREE.Mesh(GEOMETRIES.digitalDisplayBox, MATERIALS.digitalDisplayBox);
 digitalDisplayBox.name = 'digitalDisplayBox';
-digitalDisplayBox.position.x = Math.sin(0) * SIZES.CLOCK_RADIUS * 1/3;
-digitalDisplayBox.position.y = Math.cos(0) * SIZES.CLOCK_RADIUS * 1/3;
+digitalDisplayBox.position.x = Math.sin(0) * CONSTANTS.SIZES.CLOCK_RADIUS * 1/3;
+digitalDisplayBox.position.y = Math.cos(0) * CONSTANTS.SIZES.CLOCK_RADIUS * 1/3;
 digitalDisplayBox.position.z = 0;
 
 const digitalDisplayTopFrame = new THREE.Mesh(GEOMETRIES.digitalDisplayFrameHorizontal, MATERIALS.complicationFrame);
 digitalDisplayTopFrame.name = 'digitalDisplayTopFrame';
-digitalDisplayTopFrame.position.set(digitalDisplayBox.position.x, digitalDisplayBox.position.y + SIZES.DIGITAL_DISPLAY_BOX_HEIGHT / 2 + SIZES.DIGITAL_TIME_FRAME_THICKNESS / 2, 0);
+digitalDisplayTopFrame.position.set(digitalDisplayBox.position.x, digitalDisplayBox.position.y + CONSTANTS.SIZES.DIGITAL_DISPLAY_BOX_HEIGHT / 2 + CONSTANTS.SIZES.DIGITAL_TIME_FRAME_THICKNESS / 2, 0);
 
 const digitalDisplayBottomFrame = new THREE.Mesh(GEOMETRIES.digitalDisplayFrameHorizontal, MATERIALS.complicationFrame);
 digitalDisplayBottomFrame.name = 'digitalDisplayBottomFrame';
-digitalDisplayBottomFrame.position.set(digitalDisplayBox.position.x, digitalDisplayBox.position.y - SIZES.DIGITAL_DISPLAY_BOX_HEIGHT/2 - SIZES.DIGITAL_TIME_FRAME_THICKNESS / 2, 0);
+digitalDisplayBottomFrame.position.set(digitalDisplayBox.position.x, digitalDisplayBox.position.y - CONSTANTS.SIZES.DIGITAL_DISPLAY_BOX_HEIGHT/2 - CONSTANTS.SIZES.DIGITAL_TIME_FRAME_THICKNESS / 2, 0);
 
 const digitalDisplayLeftFrame = new THREE.Mesh(GEOMETRIES.digitalDisplayFrameVertical, MATERIALS.complicationFrame);
 digitalDisplayLeftFrame.name = 'digitalDisplayLeftFrame';
-digitalDisplayLeftFrame.position.set(digitalDisplayBox.position.x - SIZES.DIGITAL_DISPLAY_BOX_WIDTH / 2 - SIZES.DIGITAL_TIME_FRAME_THICKNESS / 2, digitalDisplayBox.position.y, 0);
+digitalDisplayLeftFrame.position.set(digitalDisplayBox.position.x - CONSTANTS.SIZES.DIGITAL_DISPLAY_BOX_WIDTH / 2 - CONSTANTS.SIZES.DIGITAL_TIME_FRAME_THICKNESS / 2, digitalDisplayBox.position.y, 0);
 
 const digitalDisplayRightFrame = new THREE.Mesh(GEOMETRIES.digitalDisplayFrameVertical, MATERIALS.complicationFrame);
 digitalDisplayRightFrame.name = 'digitalDisplayRightFrame';
-digitalDisplayRightFrame.position.set(digitalDisplayBox.position.x + SIZES.DIGITAL_DISPLAY_BOX_WIDTH / 2 + SIZES.DIGITAL_TIME_FRAME_THICKNESS / 2, digitalDisplayBox.position.y, 0)
+digitalDisplayRightFrame.position.set(digitalDisplayBox.position.x + CONSTANTS.SIZES.DIGITAL_DISPLAY_BOX_WIDTH / 2 + CONSTANTS.SIZES.DIGITAL_TIME_FRAME_THICKNESS / 2, digitalDisplayBox.position.y, 0)
 
 export const MESHES = {
     clockBezel,
@@ -191,7 +191,7 @@ export function createDayDateMesh(text, font, position, group) {
     mesh.position.z = position.z;
 
     // Update initialPosition for the next mesh, moving left
-    position.x -= (width + SIZES.DAY_DATE_SPACING);
+    position.x -= (width + CONSTANTS.SIZES.DAY_DATE_SPACING);
 
     // Add the mesh to the group
     group.add(mesh)
