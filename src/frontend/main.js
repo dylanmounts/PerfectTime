@@ -81,4 +81,4 @@ DeviceUtils.applyTouchDeviceStyles();
 DeviceUtils.adjustToastsForTouch();
 
 // Tick tock run the clock
-initializeScene();
+window.onload = initializeScene();
