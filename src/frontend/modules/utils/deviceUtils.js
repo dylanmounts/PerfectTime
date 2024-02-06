@@ -10,6 +10,9 @@
 import { AndroidFullScreen } from '@awesome-cordova-plugins/android-full-screen';
 import { StatusBar } from '@capacitor/status-bar';
 
+import { toggleButton } from './uiUtils';
+
+
 let iOSFullscreen = false;
 
 /**
@@ -35,6 +38,22 @@ export function isAppleDevice() {
 export function isiPhone() {
     const userAgent = navigator.userAgent.toLowerCase();
     return /iphone/.test(userAgent);
+ }
+
+ /**
+  * Check if the current device is in portait orientation.
+  * @returns {boolean} True if portrait, false if landscape
+  */
+ export function isPortraitMode() {
+    let isPortrait;
+
+    try {
+        isPortrait = screen.orientation.angle === 0 || screen.orientation.angle === 180;   
+    } catch (error) {
+        isPortrait = true;
+    }
+
+    return isPortrait;
  }
 
 /**
@@ -77,18 +96,8 @@ export function toggleFullscreen() {
  * @param {boolean} isFullscreen - Indicates if fullscreen mode is active.
  */
 export function toggleGUI(isFullscreen) {
-    let isPortrait
-    try {
-        isPortrait = screen.orientation.angle === 0 || screen.orientation.angle === 180;   
-    } catch (error) {
-        isPortrait = true;
-    }
-
+    const isPortrait = isPortraitMode()
     const btnEl = document.getElementById("fullscreenBtn");
-    const btnColorActive = "#e8e6e3"
-    const btnColorInactive = "#6c757d"
-    const btnBackgroundActive = "#585f63"
-    const btnBackgroundInactive = "transparent"
 
     if (isFullscreen) {
         if (isAppleDevice()) {
@@ -96,26 +105,22 @@ export function toggleGUI(isFullscreen) {
         } else if (isTouchDevice()) {
             AndroidFullScreen.immersiveMode();
         }
-        btnEl.style.backgroundColor = btnBackgroundActive;
-        btnEl.style.color = btnColorActive;
+        toggleButton(btnEl, "active");
     } else {
         if (isAppleDevice()) {
             if (!isiPhone()) {
                 StatusBar.show();
-                btnEl.style.backgroundColor = btnBackgroundInactive;
-                btnEl.style.color = btnColorInactive;
+                toggleButton(btnEl, "inactive");
             }
             else if (isPortrait && iOSFullscreen) {
                 StatusBar.show();
-                btnEl.style.backgroundColor = btnBackgroundInactive;
-                btnEl.style.color = btnColorInactive;
+                toggleButton(btnEl, "inactive");
             }
         } else {
             if (isTouchDevice()) {
                 AndroidFullScreen.showSystemUI();
             }
-            btnEl.style.backgroundColor = btnBackgroundInactive;
-            btnEl.style.color = btnColorInactive;
+            toggleButton(btnEl, "inactive");
         }
     }
 
@@ -126,12 +131,8 @@ export function toggleGUI(isFullscreen) {
  * Handle device orientation changes.
  */
 export function handleOrientationChange() {
-    let isPortrait
-    try {
-        isPortrait = screen.orientation.angle === 0 || screen.orientation.angle === 180;   
-    } catch (error) {
-        isPortrait = true;
-    }
+    const isPortrait = isPortraitMode()
+
     if (isiPhone()) {
         isPortrait ? toggleGUI(false) : toggleGUI(true);
     } else if (isTouchDevice() && !document.fullscreenElement) {

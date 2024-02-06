@@ -94,6 +94,9 @@ export function setupZoomControls() {
     });
 }
 
+/**
+ * Initializes the controls for toggling between 12 and 24-hour time.
+ */
 export function setupTimeFormatToggle() {
     const twelveHour = document.getElementById('twelveHour');
     const twentyFourHour = document.getElementById('twentyFourHour');
@@ -123,4 +126,14 @@ export function setLanuage() {
             break;
         }
     }
+}
+
+/**
+ * Toggles a given button to be active or inactive.
+ * @param {HTMLElement} btnEl - The button element to toggle.
+ * @param {string} state - The state to set the button, either 'active' or 'inactive'
+ */
+export function toggleButton(btnEl, state) {
+    btnEl.classList.toggle('active', state === 'active');
+    btnEl.classList.toggle('inactive', state === 'inactive');
 }
