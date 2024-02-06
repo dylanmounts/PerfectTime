@@ -21,19 +21,27 @@ export function isTouchDevice() {
     return /android|webos|iphone|ipad|ipod|blackberry|iemobile|opera mini/.test(userAgent);
 }
 
-/** Check if the current device is an iOS device.
-* @returns {boolean} True if it's an iIOS device, otherwise false.
+/** Check if the current device is an Apple device.
+* @returns {boolean} True if it's an Apple device, otherwise false.
 */
 export function isAppleDevice() {
    const userAgent = navigator.userAgent.toLowerCase();
-   return /iphone|ipad|ipod/.test(userAgent);
+   return /iphone|ipad|ipod|mac|os x/.test(userAgent);
 }
+
+/** Check if the current device is an iPhone.
+* @returns {boolean} True if it's an iPhone, otherwise false.
+*/
+export function isiPhone() {
+    const userAgent = navigator.userAgent.toLowerCase();
+    return /iphone/.test(userAgent);
+ }
 
 /**
  * Apply specific styles for touch devices.
  */
 export function applyTouchDeviceStyles() {
-    if (!isTouchDevice()) return;
+    if (!(isTouchDevice() || isAppleDevice())) return;
 
     const configButtonContainer = document.querySelector('.config-button-container');
     const infoMenuBtn = document.getElementById('infoMenuBtn');
@@ -69,7 +77,13 @@ export function toggleFullscreen() {
  * @param {boolean} isFullscreen - Indicates if fullscreen mode is active.
  */
 export function toggleGUI(isFullscreen) {
-    const isPortrait = screen.orientation.angle === 0 || screen.orientation.angle === 180;
+    let isPortrait
+    try {
+        isPortrait = screen.orientation.angle === 0 || screen.orientation.angle === 180;   
+    } catch (error) {
+        isPortrait = true;
+    }
+
     const btnEl = document.getElementById("fullscreenBtn");
     const btnColorActive = "#e8e6e3"
     const btnColorInactive = "#6c757d"
@@ -86,7 +100,12 @@ export function toggleGUI(isFullscreen) {
         btnEl.style.color = btnColorActive;
     } else {
         if (isAppleDevice()) {
-            if (isPortrait && iOSFullscreen) {
+            if (!isiPhone()) {
+                StatusBar.show();
+                btnEl.style.backgroundColor = btnBackgroundInactive;
+                btnEl.style.color = btnColorInactive;
+            }
+            else if (isPortrait && iOSFullscreen) {
                 StatusBar.show();
                 btnEl.style.backgroundColor = btnBackgroundInactive;
                 btnEl.style.color = btnColorInactive;
@@ -107,9 +126,13 @@ export function toggleGUI(isFullscreen) {
  * Handle device orientation changes.
  */
 export function handleOrientationChange() {
-    const isPortrait = screen.orientation.angle === 0 || screen.orientation.angle === 180;
-
-    if (isAppleDevice()) {
+    let isPortrait
+    try {
+        isPortrait = screen.orientation.angle === 0 || screen.orientation.angle === 180;   
+    } catch (error) {
+        isPortrait = true;
+    }
+    if (isiPhone()) {
         isPortrait ? toggleGUI(false) : toggleGUI(true);
     } else if (isTouchDevice() && !document.fullscreenElement) {
         isPortrait ? AndroidFullScreen.showSystemUI() : AndroidFullScreen.showUnderSystemUI();
@@ -120,7 +143,7 @@ export function handleOrientationChange() {
  * Adjusts toast container positions for touch devices.
  */
 export function adjustToastsForTouch() {
-    if (isTouchDevice()) {
+    if (isTouchDevice() || isAppleDevice()) {
         const toastContainers = document.querySelectorAll('.toast-container');
         toastContainers.forEach(container => {
             container.classList.remove('top-0', 'start-0', 'end-0');
