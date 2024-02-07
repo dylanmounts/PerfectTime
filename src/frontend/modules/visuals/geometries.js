@@ -9,10 +9,10 @@ import { RoundedBoxGeometry } from 'three/examples/jsm/geometries/RoundedBoxGeom
 
 import * as CONSTANTS from '../constants.js';
 import * as SHAPES from './shapes.js';
-import { calculateClockDimensions } from '../managers/sceneManager.js';
+import { calculateClockDimensions, dynamicClockHeight, dynamicClockWidth } from '../managers/sceneManager.js';
 import { scaleValue } from '../utils/uiUtils.js';
 
-
+calculateClockDimensions();
 // Static clock parts
 const clockFace = new THREE.CircleGeometry(
     CONSTANTS.SIZES.CLOCK_RADIUS,
@@ -24,33 +24,33 @@ const clockBezel = new THREE.RingGeometry(
     CONSTANTS.SEGMENTS
 );
 const dayDateFrameHorizontal = new THREE.BoxGeometry(
-    CONSTANTS.DAY_DATE_FRAME_WIDTH,
-    CONSTANTS.SIZES.DAY_DATE_FRAME_THICKNESS,
+    scaleValue(CONSTANTS.DAY_DATE_FRAME_WIDTH),
+    scaleValue(CONSTANTS.SIZES.DAY_DATE_FRAME_THICKNESS),
     CONSTANTS.SIZES.DAY_DATE_FRAME_DEPTH
 );
 const dayDateFrameVertical = new THREE.BoxGeometry(
-    CONSTANTS.SIZES.DAY_DATE_FRAME_THICKNESS,
-    CONSTANTS.DAY_DATE_FRAME_HEIGHT,
+    scaleValue(CONSTANTS.SIZES.DAY_DATE_FRAME_THICKNESS),
+    scaleValue(CONSTANTS.DAY_DATE_FRAME_HEIGHT),
     CONSTANTS.SIZES.DAY_DATE_FRAME_DEPTH
 );
 const digitalDisplayFrameHorizontal = new THREE.BoxGeometry(
-    CONSTANTS.DIGITAL_DISPLAY_FRAME_WIDTH,
-    CONSTANTS.SIZES.DIGITAL_TIME_FRAME_THICKNESS,
+    scaleValue(CONSTANTS.DIGITAL_DISPLAY_FRAME_WIDTH),
+    scaleValue(CONSTANTS.SIZES.DIGITAL_TIME_FRAME_THICKNESS),
     CONSTANTS.SIZES.DIGITAL_TIME_FRAME_DEPTH
 );
 const digitalDisplayFrameVertical = new THREE.BoxGeometry(
-    CONSTANTS.SIZES.DIGITAL_TIME_FRAME_THICKNESS,
-    CONSTANTS.DIGITAL_DISPLAY_FRAME_HEIGHT,
+    scaleValue(CONSTANTS.SIZES.DIGITAL_TIME_FRAME_THICKNESS),
+    scaleValue(CONSTANTS.DIGITAL_DISPLAY_FRAME_HEIGHT),
     CONSTANTS.SIZES.DIGITAL_TIME_FRAME_DEPTH
 );
 const dayDateBox = new THREE.BoxGeometry(
     CONSTANTS.SIZES.DAY_DATE_BOX_WIDTH,
-    CONSTANTS.SIZES.DAY_DATE_BOX_HEIGHT,
+    scaleValue(CONSTANTS.SIZES.DAY_DATE_BOX_HEIGHT),
     CONSTANTS.SIZES.DAY_DATE_BOX_DEPTH
 );
 const digitalDisplayBox = new THREE.BoxGeometry(
     CONSTANTS.SIZES.DIGITAL_DISPLAY_BOX_WIDTH,
-    CONSTANTS.SIZES.DIGITAL_DISPLAY_BOX_HEIGHT,
+    scaleValue(CONSTANTS.SIZES.DIGITAL_DISPLAY_BOX_HEIGHT),
     CONSTANTS.SIZES.DIGITAL_TIME_BOX_DEPTH
 );
 const post = new THREE.CylinderGeometry(
@@ -64,7 +64,7 @@ const hourHand = new THREE.ShapeGeometry(
         CONSTANTS.SIZES.HOUR_HAND_TIP_WIDTH,
         CONSTANTS.SIZES.HOUR_HAND_BASE_WIDTH,
         CONSTANTS.SIZES.HOUR_HAND_BASE_OFFSET,
-        CONSTANTS.SIZES.HOUR_HAND_LENGTH_RATIO,
+        scaleValue(CONSTANTS.SIZES.HOUR_HAND_LENGTH_RATIO),
         CONSTANTS.SIZES.HOUR_HAND_SCALE
     ), CONSTANTS.SEGMENTS / 2
 );
@@ -73,7 +73,7 @@ const outerHourHand = new THREE.ShapeGeometry(
         CONSTANTS.SIZES.HOUR_HAND_TIP_WIDTH,
         CONSTANTS.SIZES.HOUR_HAND_BASE_WIDTH,
         CONSTANTS.SIZES.HOUR_HAND_BASE_OFFSET,
-        CONSTANTS.SIZES.HOUR_HAND_LENGTH_RATIO
+        scaleValue(CONSTANTS.SIZES.HOUR_HAND_LENGTH_RATIO)
     ), CONSTANTS.SEGMENTS / 2
 );
 const minuteHand = new THREE.ShapeGeometry(
@@ -81,7 +81,7 @@ const minuteHand = new THREE.ShapeGeometry(
         CONSTANTS.SIZES.MINUTE_HAND_TIP_WIDTH,
         CONSTANTS.SIZES.MINUTE_HAND_BASE_WIDTH,
         CONSTANTS.SIZES.MINUTE_HAND_BASE_OFFSET,
-        CONSTANTS.SIZES.MINUTE_HAND_LENGTH_RATIO,
+        scaleValue(CONSTANTS.SIZES.MINUTE_HAND_LENGTH_RATIO),
         CONSTANTS.SIZES.MINUTE_HAND_SCALE
     ), CONSTANTS.SEGMENTS / 2
 );
@@ -90,7 +90,7 @@ const outerMinuteHand = new THREE.ShapeGeometry(
         CONSTANTS.SIZES.MINUTE_HAND_TIP_WIDTH,
         CONSTANTS.SIZES.MINUTE_HAND_BASE_WIDTH,
         CONSTANTS.SIZES.MINUTE_HAND_BASE_OFFSET,
-        CONSTANTS.SIZES.MINUTE_HAND_LENGTH_RATIO
+        scaleValue(CONSTANTS.SIZES.MINUTE_HAND_LENGTH_RATIO)
     ), CONSTANTS.SEGMENTS / 2
 );
 const secondHand = new THREE.ShapeGeometry(
@@ -98,7 +98,7 @@ const secondHand = new THREE.ShapeGeometry(
         CONSTANTS.SIZES.SECOND_HAND_TIP_WIDTH,
         CONSTANTS.SIZES.SECOND_HAND_BASE_WIDTH,
         CONSTANTS.SIZES.SECOND_HAND_BASE_OFFSET,
-        CONSTANTS.SIZES.SECOND_HAND_LENGTH_RATIO,
+        scaleValue(CONSTANTS.SIZES.SECOND_HAND_LENGTH_RATIO),
         CONSTANTS.SIZES.SECOND_HAND_SCALE
     ), CONSTANTS.SEGMENTS / 2
 );
@@ -107,22 +107,21 @@ const outerSecondHand = new THREE.ShapeGeometry(
         CONSTANTS.SIZES.SECOND_HAND_TIP_WIDTH,
         CONSTANTS.SIZES.SECOND_HAND_BASE_WIDTH,
         CONSTANTS.SIZES.SECOND_HAND_BASE_OFFSET,
-        CONSTANTS.SIZES.SECOND_HAND_LENGTH_RATIO
+        scaleValue(CONSTANTS.SIZES.SECOND_HAND_LENGTH_RATIO)
     ), CONSTANTS.SEGMENTS / 2
 );
 
 // Dynamic clock parts
-let [width, height] = calculateClockDimensions();
 const dynamicClockFace = new RoundedBoxGeometry(
-    width,
-    height,
+    dynamicClockWidth,
+    dynamicClockHeight,
     CONSTANTS.SIZES.CLOCK_THICKNESS,
     CONSTANTS.SEGMENTS / 8,
     CONSTANTS.SIZES.BEZEL_RADIUS)
 ;
 const dynamicClockBezel = new RoundedBoxGeometry(
-    width + CONSTANTS.SIZES.BEZEL_THICKNESS,
-    height + CONSTANTS.SIZES.BEZEL_THICKNESS,
+    dynamicClockWidth + CONSTANTS.SIZES.BEZEL_THICKNESS,
+    dynamicClockHeight + CONSTANTS.SIZES.BEZEL_THICKNESS,
     CONSTANTS.SIZES.CLOCK_THICKNESS,
     CONSTANTS.SEGMENTS / 8,
     CONSTANTS.SIZES.BEZEL_RADIUS
@@ -155,12 +154,12 @@ export const DYNAMIC_GEOMETRIES = {
 export function createDayDateGeometry(dayDateStr, font) {
     const textGeometry = new TextGeometry(String(dayDateStr), {
         font: font,
-        size: CONSTANTS.SIZES.DAY_DATE_SIZE,
+        size: scaleValue(CONSTANTS.SIZES.DAY_DATE_SIZE),
         height: CONSTANTS.SIZES.DAY_DATE_NUMBER_HEIGHT,
         curveSegments: CONSTANTS.SEGMENTS / 8,
         bevelEnabled: false
     });
-    textGeometry.computeBoundingBox();
+    textGeometry.center();
     return textGeometry;
 }
 
@@ -168,7 +167,7 @@ export function createDayDateGeometry(dayDateStr, font) {
 export function createDigitalTimeGeometry(dayDateStr, font) {
     const textGeometry = new TextGeometry(String(dayDateStr), {
         font: font,
-        size: CONSTANTS.SIZES.DIGITAL_TIME_SIZE,
+        size: scaleValue(CONSTANTS.SIZES.DIGITAL_TIME_SIZE),
         height: CONSTANTS.SIZES.DIGITAL_TIME_NUMBER_HEIGHT,
         curveSegments: CONSTANTS.SEGMENTS / 8,
         bevelEnabled: false
