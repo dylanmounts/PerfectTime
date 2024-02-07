@@ -11,12 +11,12 @@
 
 import * as THREE from 'three';
 
-import { DAY_DATE_PARTS, DIGITAL_DISPLAY_PARTS, DAY_DATE_FRAME_WIDTH, DIGITAL_DISPLAY_FRAME_WIDTH, HOUR_NUMBERS, INDICATORS, MINUTE_NUMBERS, SIZES } from '../constants.js';
-import { createDayDateMesh, createDigitalDisplayMesh, removeMeshByName, MESHES } from '../visuals/meshes.js';
+import * as constantsJs from '../constants.js';
+import * as meshesJs from '../visuals/meshes.js';
 import { dynamicClockRatio, updateCameraSlider } from '../managers/sceneManager.js';
 import { timeManager } from '../managers/timeManager.js';
 import { createDayDateGeometry, createDigitalTimeGeometry } from '../visuals/geometries.js';
-import { scaleValue } from '../utils/uiUtils.js';
+import { distanceToEdge, scaleValue } from '../utils/sizeUtils.js';
 
 
 // State variables for the visibility of clock components.
@@ -81,13 +81,6 @@ export function updateClock(scene, digitalFont, dayDateFont) {
         ? calculateSweepingSecondAngle(seconds, milliseconds)
         : calculateSecondAngle(seconds);
 
-    MESHES.hourHand.rotation.z = -hourAngle;
-    MESHES.outerHourHand.rotation.z = -hourAngle;
-    MESHES.minuteHand.rotation.z = -minuteAngle;
-    MESHES.outerMinuteHand.rotation.z = -minuteAngle;
-    MESHES.secondHand.rotation.z = -secondAngle;
-    MESHES.outerSecondHand.rotation.z = -secondAngle;
-
     updateLanguage();
     updateTimeFormat();
     updateCameraSlider();
@@ -96,9 +89,9 @@ export function updateClock(scene, digitalFont, dayDateFont) {
     updateDayDateDisplay(scene, dayDateFont);
     updateIndicators(scene);
     updateNumbers(scene);
-    updateHourHand(scene);
-    updateMinuteHand(scene);
-    updateSecondHand(scene);
+    updateHourHand(scene, hourAngle);
+    updateMinuteHand(scene, minuteAngle);
+    updateSecondHand(scene, secondAngle);
 }
 
 // Helper functions for calculating clock hand angles
@@ -157,11 +150,11 @@ export function updateDayDateDisplay(scene, font) {
         return;
     }
 
-    removeMeshByName(scene, 'dayDateDisplay');
+    meshesJs.removeMeshByName(scene, 'dayDateDisplay');
 
     // Remove the associated complication box if it exists and the day/date doesn't
     if (!dayDateExists) {
-        for (const part of DAY_DATE_PARTS) {
+        for (const part of constantsJs.DAY_DATE_PARTS) {
             const prevPart = scene.getObjectByName(part);
             if (prevPart) {
                 scene.remove(prevPart);
@@ -177,10 +170,10 @@ export function updateDayDateDisplay(scene, font) {
     }
     
     // Add complication box if necessary
-    for (const part of DAY_DATE_PARTS) {
+    for (const part of constantsJs.DAY_DATE_PARTS) {
         if (!scene.getObjectByName(part)) {
-            scene.add(MESHES[part]);
-            MESHES[part].position.z = SIZES.CLOCK_THICKNESS / 2 - SIZES.DAY_DATE_BOX_DEPTH / 2 + 0.001; 
+            scene.add(meshesJs.MESHES[part]);
+            meshesJs.MESHES[part].position.z = constantsJs.SIZES.CLOCK_THICKNESS / 2 - constantsJs.SIZES.DAY_DATE_BOX_DEPTH / 2 + 0.001; 
         }
     }
 
@@ -189,31 +182,31 @@ export function updateDayDateDisplay(scene, font) {
 
     // Create and add the Day/Date display
     const dayDateGeometry = createDayDateGeometry(dayDateStr, font);
-    const dayDateMesh = createDayDateMesh(dayDateGeometry);
+    const dayDateMesh = meshesJs.createDayDateMesh(dayDateGeometry);
     scene.add(dayDateMesh);
 
     // Position the display
     dayDateMesh.name = 'dayDateDisplay';
     dayDateMesh.position.x = 0;
-    dayDateMesh.position.y = MESHES.dayDateBox.position.y - scaleValue(SIZES.DAY_DATE_FRAME_THICKNESS) * 2
-    dayDateMesh.position.z = SIZES.CLOCK_THICKNESS / 2  + SIZES.DAY_DATE_BOX_DEPTH / 2 - SIZES.DAY_DATE_NUMBER_HEIGHT / 2;
+    dayDateMesh.position.y = meshesJs.MESHES.dayDateBox.position.y - scaleValue(constantsJs.SIZES.DAY_DATE_FRAME_THICKNESS) * 2
+    dayDateMesh.position.z = constantsJs.SIZES.CLOCK_THICKNESS / 2  + constantsJs.SIZES.DAY_DATE_BOX_DEPTH / 2 - constantsJs.SIZES.DAY_DATE_NUMBER_HEIGHT / 2;
 
     // Find the new dimensions and scale for the display
-    const newLeftX = dayDateMesh.geometry.boundingBox.min.x + scaleValue(SIZES.DAY_DATE_FRAME_THICKNESS) / 2;
-    const newRightX = dayDateMesh.geometry.boundingBox.max.x - scaleValue(SIZES.DAY_DATE_FRAME_THICKNESS) / 2;
-    const newScaleX = (newRightX - newLeftX + scaleValue(SIZES.DAY_DATE_FRAME_THICKNESS)) / DAY_DATE_FRAME_WIDTH;
+    const newLeftX = dayDateMesh.geometry.boundingBox.min.x + scaleValue(constantsJs.SIZES.DAY_DATE_FRAME_THICKNESS) / 2;
+    const newRightX = dayDateMesh.geometry.boundingBox.max.x - scaleValue(constantsJs.SIZES.DAY_DATE_FRAME_THICKNESS) / 2;
+    const newScaleX = (newRightX - newLeftX + scaleValue(constantsJs.SIZES.DAY_DATE_FRAME_THICKNESS)) / constantsJs.DAY_DATE_FRAME_WIDTH;
 
     // Adjust the box to fit
-    MESHES.dayDateBox.scale.x = newScaleX;
+    meshesJs.MESHES.dayDateBox.scale.x = newScaleX;
 
     // Adjust the Day/Date frames to fit
-    MESHES.dayDateLeftFrame.position.x = newLeftX;
-    MESHES.dayDateRightFrame.position.x = newRightX;
+    meshesJs.MESHES.dayDateLeftFrame.position.x = newLeftX;
+    meshesJs.MESHES.dayDateRightFrame.position.x = newRightX;
     ['dayDateTopFrame', 'dayDateBottomFrame'].forEach(frame => {
         if (dynamicClockRatio > 1) {
-            MESHES[frame].scale.x = newScaleX * dynamicClockRatio;
+            meshesJs.MESHES[frame].scale.x = newScaleX * dynamicClockRatio;
         } else {
-            MESHES[frame].scale.x = newScaleX / dynamicClockRatio;
+            meshesJs.MESHES[frame].scale.x = newScaleX / dynamicClockRatio;
         }
     });
 
@@ -259,11 +252,11 @@ export function updateDigitalDisplay(scene, font) {
         return;
     }
 
-    removeMeshByName(scene, 'digitalDisplay');
+    meshesJs.removeMeshByName(scene, 'digitalDisplay');
 
     // Remove associated complication box if it exists and the digital time doesn't
     if (!digitalDisplayExists) {
-        for (const part of DIGITAL_DISPLAY_PARTS) {
+        for (const part of constantsJs.DIGITAL_DISPLAY_PARTS) {
             const prevPart = scene.getObjectByName(part);
             if (prevPart) {
                 scene.remove(prevPart);
@@ -281,40 +274,40 @@ export function updateDigitalDisplay(scene, font) {
     }
 
     // Add complication box if necessary
-    for (const part of DIGITAL_DISPLAY_PARTS) {
+    for (const part of constantsJs.DIGITAL_DISPLAY_PARTS) {
         if (!scene.getObjectByName(part)) {
-            scene.add(MESHES[part]);
-            MESHES[part].position.z = SIZES.CLOCK_THICKNESS / 2 - SIZES.DIGITAL_TIME_BOX_DEPTH / 2 + 0.001; 
+            scene.add(meshesJs.MESHES[part]);
+            meshesJs.MESHES[part].position.z = constantsJs.SIZES.CLOCK_THICKNESS / 2 - constantsJs.SIZES.DIGITAL_TIME_BOX_DEPTH / 2 + 0.001; 
         }
     }
 
     // Create and add new digital time display
     const digitalTimeGeometry = createDigitalTimeGeometry(digitalTimeStr, font);
-    const digitalDisplayMesh = createDigitalDisplayMesh(digitalTimeGeometry);
+    const digitalDisplayMesh = meshesJs.createDigitalDisplayMesh(digitalTimeGeometry);
     scene.add(digitalDisplayMesh);
 
     // Position the dispaly
     digitalDisplayMesh.name = 'digitalDisplay';
     digitalDisplayMesh.position.x = 0;
-    digitalDisplayMesh.position.y = MESHES.digitalDisplayBox.position.y - scaleValue(SIZES.DIGITAL_TIME_FRAME_THICKNESS) * 2
-    digitalDisplayMesh.position.z = SIZES.CLOCK_THICKNESS / 2  + SIZES.DIGITAL_TIME_BOX_DEPTH / 2 - SIZES.DIGITAL_TIME_NUMBER_HEIGHT / 2;
+    digitalDisplayMesh.position.y = meshesJs.MESHES.digitalDisplayBox.position.y - scaleValue(constantsJs.SIZES.DIGITAL_TIME_FRAME_THICKNESS) * 2
+    digitalDisplayMesh.position.z = constantsJs.SIZES.CLOCK_THICKNESS / 2  + constantsJs.SIZES.DIGITAL_TIME_BOX_DEPTH / 2 - constantsJs.SIZES.DIGITAL_TIME_NUMBER_HEIGHT / 2;
 
     // Find the new dimensions and scale for the display
-    const newLeftX = digitalDisplayMesh.geometry.boundingBox.min.x + scaleValue(SIZES.DIGITAL_TIME_FRAME_THICKNESS) / 2;
-    const newRightX = digitalDisplayMesh.geometry.boundingBox.max.x - scaleValue(SIZES.DIGITAL_TIME_FRAME_THICKNESS) / 2;
-    const newScaleX = (newRightX - newLeftX + scaleValue(SIZES.DIGITAL_TIME_FRAME_THICKNESS)) / DIGITAL_DISPLAY_FRAME_WIDTH;
+    const newLeftX = digitalDisplayMesh.geometry.boundingBox.min.x + scaleValue(constantsJs.SIZES.DIGITAL_TIME_FRAME_THICKNESS) / 2;
+    const newRightX = digitalDisplayMesh.geometry.boundingBox.max.x - scaleValue(constantsJs.SIZES.DIGITAL_TIME_FRAME_THICKNESS) / 2;
+    const newScaleX = (newRightX - newLeftX + scaleValue(constantsJs.SIZES.DIGITAL_TIME_FRAME_THICKNESS)) / constantsJs.DIGITAL_DISPLAY_FRAME_WIDTH;
 
     // Adjust the digital display box to fit
-    MESHES.digitalDisplayBox.scale.x = newScaleX;
+    meshesJs.MESHES.digitalDisplayBox.scale.x = newScaleX;
 
     // Adjust the digital display frames to fit
-    MESHES.digitalDisplayLeftFrame.position.x = newLeftX
-    MESHES.digitalDisplayRightFrame.position.x = newRightX;
+    meshesJs.MESHES.digitalDisplayLeftFrame.position.x = newLeftX
+    meshesJs.MESHES.digitalDisplayRightFrame.position.x = newRightX;
     ['digitalDisplayTopFrame', 'digitalDisplayBottomFrame'].forEach(frame => {
         if (dynamicClockRatio > 1) {
-            MESHES[frame].scale.x = newScaleX * dynamicClockRatio;
+            meshesJs.MESHES[frame].scale.x = newScaleX * dynamicClockRatio;
         } else {
-            MESHES[frame].scale.x = newScaleX / dynamicClockRatio;
+            meshesJs.MESHES[frame].scale.x = newScaleX / dynamicClockRatio;
         }
     });
 
@@ -341,7 +334,7 @@ function updateIndicators(scene) {
 
         // Hours
         if (hourIndicatorsExist && i % 5 === 0) {
-            scene.add(INDICATORS[i]);
+            scene.add(constantsJs.INDICATORS[i]);
         } else if (!hourIndicatorsExist && i % 5 === 0) {
             scene.remove(indicator);
         }
@@ -349,7 +342,7 @@ function updateIndicators(scene) {
         // Minutes
         if (minuteIndicatorsExist && i % 5 != 0) {
             if (!indicator) {
-                scene.add(INDICATORS[i]);
+                scene.add(constantsJs.INDICATORS[i]);
             }
         } else if (!minuteIndicatorsExist && i % 5 != 0) {
             scene.remove(indicator);
@@ -372,8 +365,8 @@ export function toggleMinuteIndicators(isChecked) {
  */
 function updateNumbers(scene) {
     for (let i = 1; i <= 12; i++) {
-        updateNumber(scene, i, HOUR_NUMBERS, 'hour', hourNumbersExist);
-        updateNumber(scene, i, MINUTE_NUMBERS, 'minute', minuteNumbersExist, 5);
+        updateNumber(scene, i, constantsJs.HOUR_NUMBERS, 'hour', hourNumbersExist);
+        updateNumber(scene, i, constantsJs.MINUTE_NUMBERS, 'minute', minuteNumbersExist, 5);
     }
 }
 
@@ -407,42 +400,78 @@ export function toggleMinuteNumbers(isChecked) {
 }
 
 // Adds or removes the hour hand from the scene based user configurations
-export function updateHourHand(scene) {
+export function updateHourHand(scene, angle) {
     const hourHand = scene.getObjectByName('hourHand');
     const outerHourHand = scene.getObjectByName('outerHourHand');
-    if (hourHandExists && !hourHand) {
-        scene.add(MESHES.hourHand);
-        scene.add(MESHES.outerHourHand);
-    } else if (!hourHandExists && hourHand) {
-        scene.remove(hourHand);
-        scene.remove(outerHourHand);
-    }
+
+    [hourHand, outerHourHand].forEach(hand => {
+        if (hand) {
+            hand.geometry.dispose();
+            scene.remove(hand);
+        }
+    });
+
+    if (!hourHandExists) return;
+
+    const handLength = distanceToEdge(angle) * 3/5
+
+    meshesJs.MESHES.hourHand = meshesJs.createHourHand(handLength);
+    meshesJs.MESHES.outerHourHand = meshesJs.createOuterHourHand(handLength);
+    meshesJs.MESHES.hourHand.rotation.z = -angle;
+    meshesJs.MESHES.outerHourHand.rotation.z = -angle;
+
+    scene.add(meshesJs.MESHES['hourHand']);
+    scene.add(meshesJs.MESHES['outerHourHand']);
 }
 
 // Adds or removes the minute hand from the scene based user configurations
-export function updateMinuteHand(scene) {
+export function updateMinuteHand(scene, angle) {
     const minuteHand = scene.getObjectByName('minuteHand');
     const outerMinuteHand = scene.getObjectByName('outerMinuteHand');
-    if (minuteHandExists && !minuteHand) {
-        scene.add(MESHES.minuteHand);
-        scene.add(MESHES.outerMinuteHand);
-    } else if (!minuteHandExists && minuteHand) {
-        scene.remove(minuteHand);
-        scene.remove(outerMinuteHand);
-    }
+
+    [minuteHand, outerMinuteHand].forEach(hand => {
+        if (hand) {
+            hand.geometry.dispose();
+            scene.remove(hand);
+        }
+    });
+
+    if (!minuteHandExists) return;
+
+    const handLength = distanceToEdge(angle)
+
+    meshesJs.MESHES.minuteHand = meshesJs.createMinuteHand(handLength);
+    meshesJs.MESHES.outerMinuteHand = meshesJs.createOuterMinuteHand(handLength);
+    meshesJs.MESHES.minuteHand.rotation.z = -angle;
+    meshesJs.MESHES.outerMinuteHand.rotation.z = -angle;
+
+    scene.add(meshesJs.MESHES['minuteHand']);
+    scene.add(meshesJs.MESHES['outerMinuteHand']);
 }
 
 // Adds or removes the second hand from the scene based user configurations
-export function updateSecondHand(scene) {
+export function updateSecondHand(scene, angle) {
     const secondHand = scene.getObjectByName('secondHand');
     const outerSecondHand = scene.getObjectByName('outerSecondHand');
-    if (secondHandExists && !secondHand) {
-        scene.add(MESHES.secondHand);
-        scene.add(MESHES.outerSecondHand);
-    } else if (!secondHandExists && secondHand) {
-        scene.remove(secondHand);
-        scene.remove(outerSecondHand);
-    }
+
+    [secondHand, outerSecondHand].forEach(hand => {
+        if (hand) {
+            hand.geometry.dispose();
+            scene.remove(hand);
+        }
+    });
+
+    if (!secondHandExists) return;
+
+    const handLength = distanceToEdge(angle)
+
+    meshesJs.MESHES.secondHand = meshesJs.createSecondHand(handLength);
+    meshesJs.MESHES.outerSecondHand = meshesJs.createOuterSecondHand(handLength);
+    meshesJs.MESHES.secondHand.rotation.z = -angle;
+    meshesJs.MESHES.outerSecondHand.rotation.z = -angle;
+
+    scene.add(meshesJs.MESHES['secondHand']);
+    scene.add(meshesJs.MESHES['outerSecondHand']);
 }
 
 export function toggleHourHand(isChecked) {
