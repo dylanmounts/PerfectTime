@@ -6,6 +6,7 @@
 import * as THREE from 'three';
 
 import { SIZES } from '../constants.js';
+import { scaleValue } from '../utils/uiUtils.js';
 
 
 /**
@@ -71,13 +72,13 @@ export const createIndicator = (isFiveMinuteMark) => {
     let stubWidth, baseWidth, indicatorHeight;
     
     if (isFiveMinuteMark) {
-        stubWidth = scaledTipWidth;
+        stubWidth = scaleValue(scaledTipWidth);
         baseWidth = stubWidth * 2;
-        indicatorHeight = piScaledTipWidth * 2;
+        indicatorHeight = scaleValue(piScaledTipWidth * 2);
     } else {
-        baseWidth = scaledTipWidth;
+        baseWidth = scaleValue(scaledTipWidth);
         stubWidth = baseWidth * 0.5;
-        indicatorHeight = piScaledTipWidth;
+        indicatorHeight = scaleValue(piScaledTipWidth);
     }
 
     const shape = new THREE.Shape();
