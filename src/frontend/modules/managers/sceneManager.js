@@ -11,9 +11,9 @@ import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 import { MINIMUM_ZOOM, PERFECT_TIME_SYNC_SECONDS, SIZES } from '../constants';
 import { dayDateFontManager, digitalFontManager, hoursFontManager, minutesFontManager } from './fontManager';
 import { timeManager } from './timeManager';
-import { addClock, addDynamicClock } from '../clock/clockConstructor';
+import { addDynamicClock } from '../clock/clockConstructor';
 import { updateClock } from '../clock/clockUpdater';
-import { DYNAMIC_MESHES, MESHES } from '../visuals/meshes';
+import { DYNAMIC_MESHES } from '../visuals/meshes';
 
 
 const scene = new THREE.Scene();
@@ -227,7 +227,7 @@ export function onWindowResize() {
  * Primary animation loop. Keeps the clock running.
  */
 function animate() {
-    // updateClock(scene, digitalFont, dayDateFont);
+    updateClock(scene, digitalFont, dayDateFont);
 
     controls.update();
     requestAnimationFrame(animate);

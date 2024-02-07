@@ -11,11 +11,12 @@
 
 import * as THREE from 'three';
 
-import { DAY_DATE_BOX_RIGHT_X, DAY_DATE_PARTS, DIGITAL_DISPLAY_PARTS, HOUR_NUMBERS, INDICATORS, MINUTE_NUMBERS, SIZES, DAY_DATE_BOX_TOP_Y, DAY_DATE_BOX_BOTTOM_Y, DAY_DATE_FRAME_WIDTH, DIGITAL_DISPLAY_FRAME_WIDTH } from '../constants.js';
-import { createDayDateMesh, createDigitalDisplayMesh, removeMeshByGroup, removeMeshByName, MESHES } from '../visuals/meshes.js';
-import { updateCameraSlider } from '../managers/sceneManager.js';
+import { DAY_DATE_PARTS, DIGITAL_DISPLAY_PARTS, DAY_DATE_FRAME_WIDTH, DIGITAL_DISPLAY_FRAME_WIDTH, HOUR_NUMBERS, INDICATORS, MINUTE_NUMBERS, SIZES } from '../constants.js';
+import { createDayDateMesh, createDigitalDisplayMesh, removeMeshByName, MESHES } from '../visuals/meshes.js';
+import { dynamicClockRatio, updateCameraSlider } from '../managers/sceneManager.js';
 import { timeManager } from '../managers/timeManager.js';
-import { createDigitalTimeGeometry } from '../visuals/geometries.js';
+import { createDayDateGeometry, createDigitalTimeGeometry } from '../visuals/geometries.js';
+import { scaleValue } from '../utils/uiUtils.js';
 
 
 // State variables for the visibility of clock components.
@@ -148,7 +149,7 @@ export function updateDayDateDisplay(scene, font) {
     const day = currentTime.toLocaleString(language, { weekday: 'short' }).toUpperCase();
     const month = currentTime.toLocaleString(language, { month: 'short' });
     const date = currentTime.toLocaleString(language, { day: 'numeric' });
-    const dayDateStr = `${day.toUpperCase()} ${month} ${date}`;
+    const dayDateStr = `\u007C\u200B${day.toUpperCase()} ${month} ${date}\u200B\u007C`;
 
     const shouldUpdate = dayDateStr !== lastDayDate || dayDateExists !== lastDayDateExists;
 
@@ -156,7 +157,7 @@ export function updateDayDateDisplay(scene, font) {
         return;
     }
 
-    removeMeshByGroup(scene, 'dayDateDisplay');
+    removeMeshByName(scene, 'dayDateDisplay');
 
     // Remove the associated complication box if it exists and the day/date doesn't
     if (!dayDateExists) {
@@ -179,38 +180,41 @@ export function updateDayDateDisplay(scene, font) {
     for (const part of DAY_DATE_PARTS) {
         if (!scene.getObjectByName(part)) {
             scene.add(MESHES[part]);
+            MESHES[part].position.z = SIZES.CLOCK_THICKNESS / 2 - SIZES.DAY_DATE_BOX_DEPTH / 2 + 0.001; 
         }
     }
-
-    // Initial position for the day mesh
-    let currentPosition = {
-        x: DAY_DATE_BOX_RIGHT_X - SIZES.DAY_DATE_FRAME_THICKNESS * 2 - SIZES.DAY_DATE_SPACING / 2,
-        y: (DAY_DATE_BOX_BOTTOM_Y + DAY_DATE_BOX_TOP_Y) / 2 - SIZES.DAY_DATE_SIZE / 2,
-        z: MESHES.dayDateBox.position.z - SIZES.DAY_DATE_NUMBER_HEIGHT / 2
-    };    
 
     const dayDateGroup = new THREE.Group();
     dayDateGroup.name = 'dayDateDisplay';
 
-    // Create the Day/Date parts and add them to the scene
-    createDayDateMesh(date.toString(), font, currentPosition, dayDateGroup);
-    createDayDateMesh(month, font, currentPosition, dayDateGroup);
-    const lastMeshX = createDayDateMesh(day, font, currentPosition, dayDateGroup);
-    scene.add(dayDateGroup);
+    // Create and add the Day/Date display
+    const dayDateGeometry = createDayDateGeometry(dayDateStr, font);
+    const dayDateMesh = createDayDateMesh(dayDateGeometry);
+    scene.add(dayDateMesh);
 
-    // Adjust the Day/Date box to fit
-    const newLeftX = lastMeshX - SIZES.DAY_DATE_SPACING / 2;
-    const newWidth = DAY_DATE_BOX_RIGHT_X - newLeftX;
-    const newScale = newWidth / DAY_DATE_FRAME_WIDTH;
+    // Position the display
+    dayDateMesh.name = 'dayDateDisplay';
+    dayDateMesh.position.x = 0;
+    dayDateMesh.position.y = MESHES.dayDateBox.position.y - scaleValue(SIZES.DAY_DATE_FRAME_THICKNESS) * 2
+    dayDateMesh.position.z = SIZES.CLOCK_THICKNESS / 2  + SIZES.DAY_DATE_BOX_DEPTH / 2 - SIZES.DAY_DATE_NUMBER_HEIGHT / 2;
 
-    MESHES.dayDateBox.scale.x = newScale;
-    MESHES.dayDateBox.position.x = (DAY_DATE_BOX_RIGHT_X + newLeftX) / 2;
+    // Find the new dimensions and scale for the display
+    const newLeftX = dayDateMesh.geometry.boundingBox.min.x + scaleValue(SIZES.DAY_DATE_FRAME_THICKNESS) / 2;
+    const newRightX = dayDateMesh.geometry.boundingBox.max.x - scaleValue(SIZES.DAY_DATE_FRAME_THICKNESS) / 2;
+    const newScaleX = (newRightX - newLeftX + scaleValue(SIZES.DAY_DATE_FRAME_THICKNESS)) / DAY_DATE_FRAME_WIDTH;
+
+    // Adjust the box to fit
+    MESHES.dayDateBox.scale.x = newScaleX;
 
     // Adjust the Day/Date frames to fit
     MESHES.dayDateLeftFrame.position.x = newLeftX;
+    MESHES.dayDateRightFrame.position.x = newRightX;
     ['dayDateTopFrame', 'dayDateBottomFrame'].forEach(frame => {
-        MESHES[frame].position.x = MESHES.dayDateBox.position.x;
-        MESHES[frame].scale.x = newScale;
+        if (dynamicClockRatio > 1) {
+            MESHES[frame].scale.x = newScaleX * dynamicClockRatio;
+        } else {
+            MESHES[frame].scale.x = newScaleX / dynamicClockRatio;
+        }
     });
 
     lastDayDate = dayDateStr;
@@ -280,6 +284,7 @@ export function updateDigitalDisplay(scene, font) {
     for (const part of DIGITAL_DISPLAY_PARTS) {
         if (!scene.getObjectByName(part)) {
             scene.add(MESHES[part]);
+            MESHES[part].position.z = SIZES.CLOCK_THICKNESS / 2 - SIZES.DIGITAL_TIME_BOX_DEPTH / 2 + 0.001; 
         }
     }
 
@@ -291,13 +296,13 @@ export function updateDigitalDisplay(scene, font) {
     // Position the dispaly
     digitalDisplayMesh.name = 'digitalDisplay';
     digitalDisplayMesh.position.x = 0;
-    digitalDisplayMesh.position.y = SIZES.CLOCK_RADIUS * 1/3 - SIZES.DIGITAL_TIME_FRAME_THICKNESS * 2
-    digitalDisplayMesh.position.z = 0;
+    digitalDisplayMesh.position.y = MESHES.digitalDisplayBox.position.y - scaleValue(SIZES.DIGITAL_TIME_FRAME_THICKNESS) * 2
+    digitalDisplayMesh.position.z = SIZES.CLOCK_THICKNESS / 2  + SIZES.DIGITAL_TIME_BOX_DEPTH / 2 - SIZES.DIGITAL_TIME_NUMBER_HEIGHT / 2;
 
     // Find the new dimensions and scale for the display
-    const newLeftX = digitalDisplayMesh.geometry.boundingBox.min.x + SIZES.DIGITAL_TIME_FRAME_THICKNESS / 2;
-    const newRightX = digitalDisplayMesh.geometry.boundingBox.max.x - SIZES.DIGITAL_TIME_FRAME_THICKNESS / 2;
-    const newScaleX = (newRightX - newLeftX + SIZES.DIGITAL_TIME_FRAME_THICKNESS) / DIGITAL_DISPLAY_FRAME_WIDTH;
+    const newLeftX = digitalDisplayMesh.geometry.boundingBox.min.x + scaleValue(SIZES.DIGITAL_TIME_FRAME_THICKNESS) / 2;
+    const newRightX = digitalDisplayMesh.geometry.boundingBox.max.x - scaleValue(SIZES.DIGITAL_TIME_FRAME_THICKNESS) / 2;
+    const newScaleX = (newRightX - newLeftX + scaleValue(SIZES.DIGITAL_TIME_FRAME_THICKNESS)) / DIGITAL_DISPLAY_FRAME_WIDTH;
 
     // Adjust the digital display box to fit
     MESHES.digitalDisplayBox.scale.x = newScaleX;
@@ -306,7 +311,11 @@ export function updateDigitalDisplay(scene, font) {
     MESHES.digitalDisplayLeftFrame.position.x = newLeftX
     MESHES.digitalDisplayRightFrame.position.x = newRightX;
     ['digitalDisplayTopFrame', 'digitalDisplayBottomFrame'].forEach(frame => {
-        MESHES[frame].scale.x = newScaleX;
+        if (dynamicClockRatio > 1) {
+            MESHES[frame].scale.x = newScaleX * dynamicClockRatio;
+        } else {
+            MESHES[frame].scale.x = newScaleX / dynamicClockRatio;
+        }
     });
 
     lastSecond = currentSecond;
@@ -332,16 +341,8 @@ function updateIndicators(scene) {
 
         // Hours
         if (hourIndicatorsExist && i % 5 === 0) {
-            if (i === 15) {
-                if (!dayDateExists && !indicator) {
-                    scene.add(INDICATORS[i]);
-                } else if (dayDateExists && indicator) {
-                    scene.remove(indicator);
-                }
-            } else {
-                scene.add(INDICATORS[i]);
-            }
-        } else if (!hourIndicatorsExist && i % 5 === 0 && indicator) {
+            scene.add(INDICATORS[i]);
+        } else if (!hourIndicatorsExist && i % 5 === 0) {
             scene.remove(indicator);
         }
 
@@ -379,9 +380,6 @@ function updateNumbers(scene) {
 /**
  * Updates a single number on the clock, either hour or minute.
  *
- * Due to the design choice of having the day/date window cover the
- * 3 o'clock position, the logic here is particularly complex.
- *
  * @param {Object} scene - The Three.js scene object.
  * @param {number} index - The index of the number to be updated.
  * @param {Array} numbersArray - The array containing the numbers.
@@ -394,15 +392,7 @@ function updateNumber(scene, index, numbersArray, namePrefix, numbersExist, mult
     const numberObject = scene.getObjectByName(name);
 
     if (numbersExist) {
-        if (index === 3) {
-            if (!dayDateExists && !numberObject) {
-                scene.add(numbersArray[index * multiplier]);
-            } else if (dayDateExists && numberObject) {
-                scene.remove(numberObject);
-            }
-        } else {
-            scene.add(numbersArray[index * multiplier]);
-        }
+        scene.add(numbersArray[index * multiplier]);
     } else {
         scene.remove(numberObject);
     }
