@@ -134,6 +134,11 @@ export function setLanuage() {
  * @param {string} state - The state to set the button, either 'active' or 'inactive'
  */
 export function toggleButton(btnEl, state) {
-    btnEl.classList.toggle('active', state === 'active');
-    btnEl.classList.toggle('inactive', state === 'inactive');
+    if (state === 'active') {
+        btnEl.style.backgroundColor = '#585f63'
+        btnEl.style.color = '#e8e6e3'
+    } else {
+        btnEl.style.backgroundColor = 'transparent'
+        btnEl.style.color = '#6c757d'
+    }
 }
