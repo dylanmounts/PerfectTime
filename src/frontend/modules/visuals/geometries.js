@@ -5,9 +5,12 @@
 
 import * as THREE from 'three';
 import { TextGeometry } from 'three/addons/geometries/TextGeometry.js';
+import { RoundedBoxGeometry } from 'three/examples/jsm/geometries/RoundedBoxGeometry.js';
 
 import * as CONSTANTS from '../constants.js';
 import * as SHAPES from './shapes.js';
+import { calculateClockDimensions } from '../managers/sceneManager.js';
+import { scaleValue } from '../utils/uiUtils.js';
 
 
 // Static clock parts
@@ -107,7 +110,23 @@ const outerSecondHand = new THREE.ShapeGeometry(
         CONSTANTS.SIZES.SECOND_HAND_LENGTH_RATIO
     ), CONSTANTS.SEGMENTS / 2
 );
-  
+
+// Dynamic clock parts
+let [width, height] = calculateClockDimensions();
+const dynamicClockFace = new RoundedBoxGeometry(
+    width,
+    height,
+    CONSTANTS.SIZES.CLOCK_THICKNESS,
+    CONSTANTS.SEGMENTS / 8,
+    CONSTANTS.SIZES.BEZEL_RADIUS)
+;
+const dynamicClockBezel = new RoundedBoxGeometry(
+    width + CONSTANTS.SIZES.BEZEL_THICKNESS,
+    height + CONSTANTS.SIZES.BEZEL_THICKNESS,
+    CONSTANTS.SIZES.CLOCK_THICKNESS,
+    CONSTANTS.SEGMENTS / 8,
+    CONSTANTS.SIZES.BEZEL_RADIUS
+);
 
 export const GEOMETRIES = {
     clockFace,
@@ -125,6 +144,11 @@ export const GEOMETRIES = {
     post,
     secondHand,
     outerSecondHand,
+}
+
+export const DYNAMIC_GEOMETRIES = {
+    dynamicClockFace,
+    dynamicClockBezel
 }
 
 // Text geometry for the day/date display
@@ -153,16 +177,15 @@ export function createDigitalTimeGeometry(dayDateStr, font) {
     return textGeometry;
 }
 
-// Text geometries for each hour number
 export function createHourGeometry(hour, font) {
     return new TextGeometry(String(hour), {
         font: font,
-        size: CONSTANTS.SIZES.NUMBER_SIZE,
-        height: CONSTANTS.SIZES.NUMBER_HEIGHT,
+        size: scaleValue(CONSTANTS.SIZES.NUMBER_SIZE),
+        height: scaleValue(CONSTANTS.SIZES.NUMBER_HEIGHT),
         curveSegments: CONSTANTS.SEGMENTS / 8,
         bevelEnabled: true,
-        bevelThickness: CONSTANTS.SIZES.NUMBER_BEVEL_THICKNESS,
-        bevelSize: CONSTANTS.SIZES.NUMBER_BEVEL_SIZE,
+        bevelThickness: scaleValue(CONSTANTS.SIZES.NUMBER_BEVEL_THICKNESS),
+        bevelSize: scaleValue(CONSTANTS.SIZES.NUMBER_BEVEL_SIZE),
         bevelSegments: 1
     });
 }
@@ -171,12 +194,12 @@ export function createHourGeometry(hour, font) {
 export function createMinuteGeometry(minute, font) {
     return new TextGeometry(String(minute), {
         font: font,
-        size: CONSTANTS.SIZES.NUMBER_SIZE / 2,
-        height: CONSTANTS.SIZES.NUMBER_HEIGHT / 2,
+        size: scaleValue(CONSTANTS.SIZES.NUMBER_SIZE / 2),
+        height: scaleValue(CONSTANTS.SIZES.NUMBER_HEIGHT / 2),
         curveSegments: CONSTANTS.SEGMENTS / 8,
         bevelEnabled: true,
-        bevelThickness: CONSTANTS.SIZES.NUMBER_BEVEL_THICKNESS / 2,
-        bevelSize: CONSTANTS.SIZES.NUMBER_BEVEL_SIZE * 5/6,
+        bevelThickness: scaleValue(CONSTANTS.SIZES.NUMBER_BEVEL_THICKNESS / 2),
+        bevelSize: scaleValue(CONSTANTS.SIZES.NUMBER_BEVEL_SIZE * 5/6),
         bevelSegments: 1
     });
 }
