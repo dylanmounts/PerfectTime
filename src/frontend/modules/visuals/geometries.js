@@ -113,21 +113,20 @@ export const createOuterSecondHandGeometry = (handLength) => new THREE.ShapeGeom
 );
 
 // Dynamic clock parts
-const dynamicClockFace = new RoundedBoxGeometry(
+export const createDynamicClockFaceGeometry = () => new RoundedBoxGeometry(
     dynamicClockWidth,
     dynamicClockHeight,
     CONSTANTS.SIZES.CLOCK_THICKNESS,
     CONSTANTS.SEGMENTS / 8,
-    CONSTANTS.SIZES.BEZEL_RADIUS)
-;
-const dynamicClockBezel = new RoundedBoxGeometry(
+    CONSTANTS.SIZES.BEZEL_RADIUS
+);
+export const createDynamicClockBezelGeometry = () => new RoundedBoxGeometry(
     dynamicClockWidth + CONSTANTS.SIZES.BEZEL_THICKNESS,
     dynamicClockHeight + CONSTANTS.SIZES.BEZEL_THICKNESS,
     CONSTANTS.SIZES.CLOCK_THICKNESS,
     CONSTANTS.SEGMENTS / 8,
     CONSTANTS.SIZES.BEZEL_RADIUS
 );
-
 export const GEOMETRIES = {
     clockFace,
     clockBezel,
@@ -138,11 +137,6 @@ export const GEOMETRIES = {
     dayDateBox,
     digitalDisplayBox,
     post,
-}
-
-export const DYNAMIC_GEOMETRIES = {
-    dynamicClockFace,
-    dynamicClockBezel
 }
 
 // Text geometry for the day/date display
