@@ -6,7 +6,7 @@
 import * as THREE from 'three';
 
 import { SIZES } from '../constants.js';
-import { scaleValue } from '../utils/uiUtils.js';
+import { scaleValue } from '../utils/sizeUtils.js';
 
 
 /**
@@ -25,17 +25,30 @@ export const calculateHandLength = (handLengthRatio, scale) => {
 };
 
 /**
+ * Adjusts the initial length of a clock hand.
+ * 
+ * @param {number} initialLength - The initial length of the clock hand before adjustment.
+ * @param {number} scale - Scaling factor to further adjust the hand's length.
+ * @returns {number} The adjusted length of the clock hand.
+ */
+export const adjustHandLength = (initialLength, scale) => {
+    const adjustedLength = initialLength - SIZES.INDICATOR_BEVEL_SIZE;
+    const lengthScale = scale === 1 ? 0 : SIZES.INDICATOR_BEVEL_SIZE;
+    return adjustedLength - lengthScale;
+}
+
+/**
  * Creates the clock hands for the perfect clock.
  * 
  * @param {number} tipWidth - Width of the tip of the clock hand.
  * @param {number} baseWidth - Width of the base of the clock hand.
  * @param {number} baseOffset - Offset of the base of the clock hand from the clock's center.
- * @param {number} handLengthRatio - Proportional length of the clock hand relative to the clock's radius.
+ * @param {number} handLength - Length of the clock hand.
  * @param {number} [scale=1] - Optional scaling factor to adjust the overall size of the clock hand.
  * @returns {THREE.Shape} A THREE.Shape object representing the clock hand.
  */
-export const createClockHand = (tipWidth, baseWidth, baseOffset, handLengthRatio, scale = 1) => {
-    const handLength = calculateHandLength(handLengthRatio, scale);
+export const createClockHand = (tipWidth, baseWidth, baseOffset, handLength, scale = 1) => {
+    const adjustedLength = adjustHandLength(handLength, scale);
     const triangleHeight = tipWidth * Math.PI;
 
     baseWidth *= scale;
@@ -47,11 +60,11 @@ export const createClockHand = (tipWidth, baseWidth, baseOffset, handLengthRatio
     shape.lineTo(-baseWidth / 2, 0);
 
     // Start of triangle base
-    shape.lineTo(-tipWidth, handLength - triangleHeight);
+    shape.lineTo(-tipWidth, adjustedLength - triangleHeight);
 
     // Triangle tip
-    shape.lineTo(0, handLength); // Point of the triangle
-    shape.lineTo(tipWidth, handLength - triangleHeight);
+    shape.lineTo(0, adjustedLength); // Point of the triangle
+    shape.lineTo(tipWidth, adjustedLength - triangleHeight);
 
     // End of triangle base and back to the start
     shape.lineTo(baseWidth / 2, 0);
