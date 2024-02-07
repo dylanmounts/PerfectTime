@@ -10,7 +10,7 @@ import { updateDayDateDisplay, updateDigitalDisplay } from './clockUpdater.js';
 import * as CONSTANTS from '../constants.js';
 import { createHourGeometry, createMinuteGeometry, createIndicatorGeometry } from '../visuals/geometries.js';
 import { createHourMesh, createMinuteMesh, createIndicatorMesh, DYNAMIC_MESHES, MESHES } from '../visuals/meshes.js';
-import { distanceToEdge } from '../utils/uiUtils.js';
+import { distanceToEdge } from '../utils/sizeUtils.js';
 
 /**
  * Configures the position and name of a mesh object in the scene.
@@ -28,11 +28,12 @@ function configureMesh(mesh, meshName, meshAngle, centerDistance) {
 }
 
 /**
- * 
- * @param {*} mesh 
- * @param {*} meshName 
- * @param {*} meshAngle 
- * @param {*} centerDistance 
+ * Configures the position and name of a mesh object in the scene.
+ *
+ * @param {THREE.Mesh} mesh - The mesh object to configure.
+ * @param {string} meshName - The name to assign to the mesh.
+ * @param {number} meshAngle - The angle used to calculate the mesh's x and y positions.
+ * @param {number} centerDistance - The distance from the center of the scene to the mesh.
  */
 function configureDynamicMesh(mesh, meshName, meshAngle, centerDistance) {
     mesh.position.x = Math.sin(meshAngle) * centerDistance;
@@ -152,10 +153,11 @@ export async function addClock(scene, hoursFont, minutesFont) {
 }
 
 /**
+ * Adds the dynamic clock to the scene.
  * 
- * @param {*} scene 
- * @param {*} hoursFont 
- * @param {*} minutesFont 
+ * @param {Object} scene - The Three.js scene object.
+ * @param {Object} hoursFont - The serif font used for the hours. 
+ * @param {Object} minutesFont - The sans font used for the minutes.
  */
 export async function addDynamicClock(scene, hoursFont, minutesFont) {
     for (const mesh in DYNAMIC_MESHES) {
