@@ -82,64 +82,6 @@ export const createOuterSecondHand = (handLength) => {
     return outerSecondHand;
 };
 
-const dayDateBox = new THREE.Mesh(geometriesJs.GEOMETRIES.dayDateBox, MATERIALS.dayDateBox);
-dayDateBox.name = 'dayDateBox';
-dayDateBox.position.set(0, -CONSTANTS.SIZES.CLOCK_RADIUS * 1/6, 0)
-
-const dayDateTopFrame = new THREE.Mesh(geometriesJs.GEOMETRIES.dayDateFrameHorizontal, MATERIALS.complicationFrame);
-dayDateTopFrame.name = 'dayDateTopFrame';
-dayDateTopFrame.position.set(
-    dayDateBox.position.x,
-    dayDateBox.position.y + scaleValue(CONSTANTS.SIZES.DAY_DATE_BOX_HEIGHT) / 2 + scaleValue(CONSTANTS.SIZES.DAY_DATE_FRAME_THICKNESS) / 2,
-    0
-);
-const dayDateBottomFrame = new THREE.Mesh(geometriesJs.GEOMETRIES.dayDateFrameHorizontal, MATERIALS.complicationFrame);
-dayDateBottomFrame.name = 'dayDateBottomFrame';
-dayDateBottomFrame.position.set(
-    dayDateBox.position.x,
-    dayDateBox.position.y - scaleValue(CONSTANTS.SIZES.DAY_DATE_BOX_HEIGHT) / 2 - scaleValue(CONSTANTS.SIZES.DAY_DATE_FRAME_THICKNESS) / 2,
-    0
-);
-const dayDateLeftFrame = new THREE.Mesh(geometriesJs.GEOMETRIES.dayDateFrameVertical, MATERIALS.complicationFrame);
-dayDateLeftFrame.name = 'dayDateLeftFrame';
-dayDateLeftFrame.position.set(CONSTANTS.DAY_DATE_BOX_LEFT_X, dayDateBox.position.y, 0);
-
-const dayDateRightFrame = new THREE.Mesh(geometriesJs.GEOMETRIES.dayDateFrameVertical, MATERIALS.complicationFrame);
-dayDateRightFrame.name = 'dayDateRightFrame';
-dayDateRightFrame.position.set(scaleValue(CONSTANTS.DAY_DATE_BOX_RIGHT_X), dayDateBox.position.y, 0);
-
-const digitalDisplayBox = new THREE.Mesh(geometriesJs.GEOMETRIES.digitalDisplayBox, MATERIALS.digitalDisplayBox);
-digitalDisplayBox.name = 'digitalDisplayBox';
-digitalDisplayBox.position.set(0, CONSTANTS.SIZES.CLOCK_RADIUS * 1/6, 0)
-
-const digitalDisplayTopFrame = new THREE.Mesh(geometriesJs.GEOMETRIES.digitalDisplayFrameHorizontal, MATERIALS.complicationFrame);
-digitalDisplayTopFrame.name = 'digitalDisplayTopFrame';
-digitalDisplayTopFrame.position.set(
-    digitalDisplayBox.position.x,
-    digitalDisplayBox.position.y + scaleValue(CONSTANTS.SIZES.DIGITAL_DISPLAY_BOX_HEIGHT) / 2 + scaleValue(CONSTANTS.SIZES.DIGITAL_TIME_FRAME_THICKNESS) / 2,
-    0
-);
-const digitalDisplayBottomFrame = new THREE.Mesh(geometriesJs.GEOMETRIES.digitalDisplayFrameHorizontal, MATERIALS.complicationFrame);
-digitalDisplayBottomFrame.name = 'digitalDisplayBottomFrame';
-digitalDisplayBottomFrame.position.set(
-    digitalDisplayBox.position.x,
-    digitalDisplayBox.position.y - scaleValue(CONSTANTS.SIZES.DIGITAL_DISPLAY_BOX_HEIGHT) / 2 - scaleValue(CONSTANTS.SIZES.DIGITAL_TIME_FRAME_THICKNESS) / 2,
-    0
-);
-const digitalDisplayLeftFrame = new THREE.Mesh(geometriesJs.GEOMETRIES.digitalDisplayFrameVertical, MATERIALS.complicationFrame);
-digitalDisplayLeftFrame.name = 'digitalDisplayLeftFrame';
-digitalDisplayLeftFrame.position.set(
-    digitalDisplayBox.position.x - CONSTANTS.SIZES.DIGITAL_DISPLAY_BOX_WIDTH / 2 - CONSTANTS.SIZES.DIGITAL_TIME_FRAME_THICKNESS / 2,
-    digitalDisplayBox.position.y,
-    0
-);
-const digitalDisplayRightFrame = new THREE.Mesh(geometriesJs.GEOMETRIES.digitalDisplayFrameVertical, MATERIALS.complicationFrame);
-digitalDisplayRightFrame.name = 'digitalDisplayRightFrame';
-digitalDisplayRightFrame.position.set(
-    digitalDisplayBox.position.x + CONSTANTS.SIZES.DIGITAL_DISPLAY_BOX_WIDTH / 2 + CONSTANTS.SIZES.DIGITAL_TIME_FRAME_THICKNESS / 2,
-    digitalDisplayBox.position.y,
-    0
-)
 
 // Dynamic clock parts
 export const createDynamicClockFace = () => {
@@ -159,20 +101,42 @@ export const createDynamicClockBezel = () => {
     return dynamicClockBezel;
 };
 
+export const createDigitalTimeBox = () => {
+    const digitalTimeBox = new THREE.Mesh(
+        geometriesJs.createDigitalTimeBoxGeometry(), MATERIALS.digitalTimeBox
+    );
+    digitalTimeBox.name = "digitalTimeBox";
+    return digitalTimeBox;
+};
+
+export const createDigitalTimeFrame = () => {
+    const digitalTimeFrame = new THREE.Mesh(
+        geometriesJs.createDigitalTimeFrameGeometry(), MATERIALS.digitalTimeFrame
+    );
+    digitalTimeFrame.name = "digitalTimeFrame";
+    return digitalTimeFrame;
+};
+
+export const createDayDateBox = () => {
+    const dayDateBox = new THREE.Mesh(
+        geometriesJs.createDayDateBoxGeometry(), MATERIALS.dayDateBox
+    );
+    dayDateBox.name = "dayDateBox";
+    return dayDateBox;
+};
+
+export const createDayDateFrame = () => {
+    const dayDateFrame = new THREE.Mesh(
+        geometriesJs.createDayDateFrameGeometry(), MATERIALS.dayDateFrame
+    );
+    dayDateFrame.name = "dayDateFrame";
+    return dayDateFrame;
+};
+
 export const MESHES = {
     clockBezel,
     clockFace,
-    dayDateBox,
-    digitalDisplayBox,
     post,
-    dayDateTopFrame,
-    dayDateBottomFrame,
-    dayDateLeftFrame,
-    dayDateRightFrame,
-    digitalDisplayTopFrame,
-    digitalDisplayBottomFrame,
-    digitalDisplayLeftFrame,
-    digitalDisplayRightFrame,
 }
 
 /**

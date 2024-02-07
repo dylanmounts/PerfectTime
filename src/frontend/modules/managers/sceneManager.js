@@ -11,9 +11,8 @@ import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 import { MINIMUM_ZOOM, PERFECT_TIME_SYNC_SECONDS, SIZES } from '../constants';
 import { dayDateFontManager, digitalFontManager, hoursFontManager, minutesFontManager } from './fontManager';
 import { timeManager } from './timeManager';
-import { addDynamicClock } from '../clock/clockConstructor';
-import { updateClock } from '../clock/clockUpdater';
-import { DYNAMIC_MESHES } from '../visuals/meshes';
+import { addDynamicClock, rebuildDynamicClock } from '../clock/clockConstructor';
+import { toggleResizeHandled, updateClock } from '../clock/clockUpdater';
 
 
 const scene = new THREE.Scene();
@@ -62,7 +61,7 @@ export function calculateClockDimensions() {
  * Initializes and sets up the scene with lighting, renderer, and controls.
  */
 function setupScene() {
-    controls.enableDamping = true;
+    /**controls.enableDamping = true;
     controls.dampingFactor = 0.04;
     controls.enableRotate = false;
     controls.minPolarAngle = Math.PI / 2;
@@ -78,13 +77,13 @@ function setupScene() {
     controls.touches = {
         ONE: THREE.TOUCH.PAN,
         TWO: THREE.TOUCH.DOLLY_PAN
-    }
+    }*/
 
     const originalUpdate = controls.update.bind(controls);
     controls.update = function() {
         originalUpdate();
-        updatePanLimits();
-        this.target.clamp(minPan, maxPan);
+        // updatePanLimits();
+        // this.target.clamp(minPan, maxPan);
     };
 
     const ambientLight = new THREE.AmbientLight(0xffffff, 5);
@@ -98,15 +97,13 @@ function setupScene() {
  * Dynamically updates the panning limits of the camera based on its current zoom level.
  */
 function updatePanLimits() {
-    // Find the clock's bounding box
-    const boundingBox = new THREE.Box3().setFromObject(DYNAMIC_MESHES.dynamicClockFace);
-    const center = boundingBox.getCenter(new THREE.Vector3());
-    const size = boundingBox.getSize(new THREE.Vector3());
+    const center = new THREE.Vector3(0, 0, 0);
+    const size = Math.max(dynamicClockWidth, dynamicClockHeight);
 
     // Scale the clock size based on the screen size
     const paddingFactor = SIZES.CLOCK_RADIUS / (maxZoom * maxZoom)
     const scalingFactor = maxZoom * paddingFactor;
-    const adjustedSize = size.clone().multiplyScalar(scalingFactor);
+    const adjustedSize = size * scalingFactor;
 
     // Calculate the ratio of current zoom level to the maximum zoom level
     const zoomRatio = controls.maxDistance / camera.position.distanceTo(center);
@@ -144,7 +141,7 @@ function updateCamera() {
     controls.maxDistance = camera.position.z;
     controls.target = center;
 
-    updatePanLimits();
+    // updatePanLimits();
 }
 
 /**
@@ -213,6 +210,9 @@ export function updateCameraSlider() {
  * Handles window resize events to keep the clock centered and full screen.
  */
 export function onWindowResize() {
+    calculateClockDimensions();
+    toggleResizeHandled(false);
+    rebuildDynamicClock(scene, hoursFont, minutesFont);
     camera.aspect = container.clientWidth / container.clientHeight;
     renderer.setSize(container.clientWidth, container.clientHeight);
 
@@ -252,4 +252,5 @@ export async function initializeScene() {
     addDynamicClock(scene, hoursFont, minutesFont);
     animate();
     updateCamera();
+    onWindowResize();
 }

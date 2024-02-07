@@ -24,26 +24,6 @@ const clockBezel = new THREE.RingGeometry(
     CONSTANTS.CLOCK_OUTER_RADIUS,
     CONSTANTS.SEGMENTS
 );
-const dayDateFrameHorizontal = new THREE.BoxGeometry(
-    scaleValue(CONSTANTS.DAY_DATE_FRAME_WIDTH),
-    scaleValue(CONSTANTS.SIZES.DAY_DATE_FRAME_THICKNESS),
-    CONSTANTS.SIZES.DAY_DATE_FRAME_DEPTH
-);
-const dayDateFrameVertical = new THREE.BoxGeometry(
-    scaleValue(CONSTANTS.SIZES.DAY_DATE_FRAME_THICKNESS),
-    scaleValue(CONSTANTS.DAY_DATE_FRAME_HEIGHT),
-    CONSTANTS.SIZES.DAY_DATE_FRAME_DEPTH
-);
-const digitalDisplayFrameHorizontal = new THREE.BoxGeometry(
-    scaleValue(CONSTANTS.DIGITAL_DISPLAY_FRAME_WIDTH),
-    scaleValue(CONSTANTS.SIZES.DIGITAL_TIME_FRAME_THICKNESS),
-    CONSTANTS.SIZES.DIGITAL_TIME_FRAME_DEPTH
-);
-const digitalDisplayFrameVertical = new THREE.BoxGeometry(
-    scaleValue(CONSTANTS.SIZES.DIGITAL_TIME_FRAME_THICKNESS),
-    scaleValue(CONSTANTS.DIGITAL_DISPLAY_FRAME_HEIGHT),
-    CONSTANTS.SIZES.DIGITAL_TIME_FRAME_DEPTH
-);
 const dayDateBox = new THREE.BoxGeometry(
     CONSTANTS.SIZES.DAY_DATE_BOX_WIDTH,
     scaleValue(CONSTANTS.SIZES.DAY_DATE_BOX_HEIGHT),
@@ -120,6 +100,7 @@ export const createDynamicClockFaceGeometry = () => new RoundedBoxGeometry(
     CONSTANTS.SEGMENTS / 8,
     CONSTANTS.SIZES.BEZEL_RADIUS
 );
+
 export const createDynamicClockBezelGeometry = () => new RoundedBoxGeometry(
     dynamicClockWidth + CONSTANTS.SIZES.BEZEL_THICKNESS,
     dynamicClockHeight + CONSTANTS.SIZES.BEZEL_THICKNESS,
@@ -127,13 +108,42 @@ export const createDynamicClockBezelGeometry = () => new RoundedBoxGeometry(
     CONSTANTS.SEGMENTS / 8,
     CONSTANTS.SIZES.BEZEL_RADIUS
 );
+
+export const createDigitalTimeBoxGeometry = () => new RoundedBoxGeometry(
+    CONSTANTS.SIZES.DIGITAL_DISPLAY_BOX_WIDTH,
+    CONSTANTS.SIZES.DIGITAL_DISPLAY_BOX_HEIGHT,
+    CONSTANTS.SIZES.DIGITAL_TIME_BOX_DEPTH,
+    CONSTANTS.SEGMENTS / 8,
+    CONSTANTS.SIZES.BEZEL_RADIUS
+);
+
+export const createDigitalTimeFrameGeometry = () => new RoundedBoxGeometry(
+    CONSTANTS.SIZES.DIGITAL_DISPLAY_BOX_WIDTH + CONSTANTS.SIZES.BEZEL_THICKNESS,
+    CONSTANTS.SIZES.DIGITAL_DISPLAY_BOX_HEIGHT + CONSTANTS.SIZES.BEZEL_THICKNESS,
+    CONSTANTS.SIZES.DIGITAL_TIME_BOX_DEPTH,
+    CONSTANTS.SEGMENTS / 8,
+    CONSTANTS.SIZES.BEZEL_RADIUS
+);
+
+export const createDayDateBoxGeometry = () => new RoundedBoxGeometry(
+    CONSTANTS.SIZES.DAY_DATE_BOX_WIDTH,
+    CONSTANTS.SIZES.DAY_DATE_BOX_HEIGHT,
+    CONSTANTS.SIZES.DAY_DATE_BOX_DEPTH,
+    CONSTANTS.SEGMENTS / 8,
+    CONSTANTS.SIZES.BEZEL_RADIUS
+);
+
+export const createDayDateFrameGeometry = () => new RoundedBoxGeometry(
+    CONSTANTS.SIZES.DAY_DATE_BOX_WIDTH + CONSTANTS.SIZES.BEZEL_THICKNESS,
+    CONSTANTS.SIZES.DAY_DATE_BOX_HEIGHT + CONSTANTS.SIZES.BEZEL_THICKNESS,
+    CONSTANTS.SIZES.DAY_DATE_BOX_DEPTH,
+    CONSTANTS.SEGMENTS / 8,
+    CONSTANTS.SIZES.BEZEL_RADIUS
+);
+
 export const GEOMETRIES = {
     clockFace,
     clockBezel,
-    dayDateFrameHorizontal,
-    dayDateFrameVertical,
-    digitalDisplayFrameHorizontal,
-    digitalDisplayFrameVertical,
     dayDateBox,
     digitalDisplayBox,
     post,
