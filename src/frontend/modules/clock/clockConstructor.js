@@ -7,10 +7,31 @@
 
 
 import { updateDayDateDisplay, updateDigitalDisplay } from './clockUpdater.js';
-import { HOUR_NUMBERS, INDICATORS, MINUTE_NUMBERS, SIZES } from '../constants.js';
+import * as CONSTANTS from '../constants.js';
 import { createHourGeometry, createMinuteGeometry, createIndicatorGeometry } from '../visuals/geometries.js';
-import { createHourMesh, createMinuteMesh, createIndicatorMesh, MESHES } from '../visuals/meshes.js';
+import { createHourMesh, createMinuteMesh, createIndicatorMesh, DYNAMIC_MESHES, MESHES } from '../visuals/meshes.js';
+import { dynamicClockHeight, dynamicClockWidth } from '../managers/sceneManager.js';
 
+
+/**
+ * 
+ * @param {*} angle 
+ * @returns 
+ */
+function distanceToEdge(angle) {
+    const adjustedWidth = dynamicClockWidth - CONSTANTS.SIZES.BEZEL_RADIUS;
+    const adjustedHeight = dynamicClockHeight - CONSTANTS.SIZES.BEZEL_RADIUS;
+  
+    const halfWidth = adjustedWidth / 2;
+    const halfHeight = adjustedHeight / 2;
+  
+    const absSin = Math.abs(Math.sin(angle));
+    const absCos = Math.abs(Math.cos(angle));
+
+    const distance = Math.min(halfWidth / absSin, halfHeight / absCos);
+
+    return distance;
+}
 
 /**
  * Configures the position and name of a mesh object in the scene.
@@ -24,6 +45,20 @@ function configureMesh(mesh, meshName, meshAngle, centerDistance) {
     mesh.position.x = Math.sin(meshAngle) * centerDistance;
     mesh.position.y = Math.cos(meshAngle) * centerDistance;
     mesh.position.z = 0;
+    mesh.name = meshName;
+}
+
+/**
+ * 
+ * @param {*} mesh 
+ * @param {*} meshName 
+ * @param {*} meshAngle 
+ * @param {*} centerDistance 
+ */
+function configureDynamicMesh(mesh, meshName, meshAngle, centerDistance) {
+    mesh.position.x = Math.sin(meshAngle) * centerDistance;
+    mesh.position.y = Math.cos(meshAngle) * centerDistance;
+    mesh.position.z = DYNAMIC_MESHES.dynamicClockFace.position.z + CONSTANTS.SIZES.BEZEL_RADIUS / 2
     mesh.name = meshName;
 }
 
@@ -43,10 +78,10 @@ function createNumbers(scene, hoursFont, minutesFont) {
         hourGeometry.center();
 
         const hourMesh = createHourMesh(hourGeometry)
-        const distanceFromCenter = SIZES.CLOCK_RADIUS * 5/6;
+        const distanceFromCenter = distanceToEdge(angle) * 3/4
 
-        configureMesh(hourMesh, `hour${i}`, angle, distanceFromCenter)
-        HOUR_NUMBERS[i] = hourMesh;
+        configureDynamicMesh(hourMesh, `hour${i}`, angle, distanceFromCenter)
+        CONSTANTS.HOUR_NUMBERS[i] = hourMesh;
         scene.add(hourMesh);
 
         // Minutes
@@ -56,10 +91,10 @@ function createNumbers(scene, hoursFont, minutesFont) {
         minuteGeometry.center();
 
         const minuteMesh = createMinuteMesh(minuteGeometry);
-        const minuteDistanceFromCenter = SIZES.CLOCK_RADIUS * 2/3;
+        const minuteDistanceFromCenter = distanceToEdge(angle) * 23/40
 
-        configureMesh(minuteMesh, `minute${minuteNumber}`, angle, minuteDistanceFromCenter);
-        MINUTE_NUMBERS[minuteNumber] = minuteMesh;
+        configureDynamicMesh(minuteMesh, `minute${minuteNumber}`, angle, minuteDistanceFromCenter);
+        CONSTANTS.MINUTE_NUMBERS[minuteNumber] = minuteMesh;
         scene.add(minuteMesh);
     }
 }
@@ -76,7 +111,7 @@ function createIndicators(scene) {
         const angle = (Math.PI / 30) * i;
         const isFiveMinuteMark = i % 5 === 0;
 
-        const indicatorGeometry = createIndicatorGeometry(isFiveMinuteMark, SIZES.INDICATOR_SCALE);
+        const indicatorGeometry = createIndicatorGeometry(isFiveMinuteMark, CONSTANTS.SIZES.INDICATOR_SCALE);
         indicatorGeometry.center();
 
         const indicatorThickness = indicatorGeometry.boundingBox.max.z - indicatorGeometry.boundingBox.min.z
@@ -87,8 +122,33 @@ function createIndicators(scene) {
         const indicator = createIndicatorMesh(indicatorGeometry);
         configureMesh(indicator, `indicator${i}`, angle, adjustedDistanceFromCenter)
 
-        INDICATORS[i] = indicator;
+        CONSTANTS.INDICATORS[i] = indicator;
         indicator.rotation.z = -angle
+
+        scene.add(indicator);
+    }
+}
+
+/**
+ * 
+ * @param {Object} scene - The Three.js scene object.
+ */
+function createDynamicIndicators(scene) {
+    for (let i = 0; i < 60; i++) {  
+        const angle = (Math.PI / 30) * i;
+        const isFiveMinuteMark = i % 5 === 0;
+
+        const indicatorGeometry = createIndicatorGeometry(isFiveMinuteMark, CONSTANTS.SIZES.INDICATOR_SCALE);
+        indicatorGeometry.center();
+
+        const indicator = createIndicatorMesh(indicatorGeometry);
+        const distanceFromCenter = distanceToEdge(angle);
+        const indicatorThickness = indicatorGeometry.boundingBox.max.y - indicatorGeometry.boundingBox.min.y;
+        const adjustedDistanceFromCenter = distanceFromCenter - indicatorThickness / 2
+
+        configureDynamicMesh(indicator, `indicator${i}`, angle, adjustedDistanceFromCenter)
+        indicator.rotation.z = -angle
+        CONSTANTS.INDICATORS[i] = indicator;
 
         scene.add(indicator);
     }
@@ -110,4 +170,19 @@ export async function addClock(scene, hoursFont, minutesFont) {
     for (const mesh in MESHES) {
         scene.add(MESHES[mesh]);
     }
+}
+
+/**
+ * 
+ * @param {*} scene 
+ * @param {*} hoursFont 
+ * @param {*} minutesFont 
+ */
+export async function addDynamicClock(scene, hoursFont, minutesFont) {
+    for (const mesh in DYNAMIC_MESHES) {
+        scene.add(DYNAMIC_MESHES[mesh]);
+    }
+
+    createDynamicIndicators(scene);
+    createNumbers(scene, hoursFont, minutesFont);
 }

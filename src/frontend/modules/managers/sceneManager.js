@@ -11,9 +11,9 @@ import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 import { MINIMUM_ZOOM, PERFECT_TIME_SYNC_SECONDS, SIZES } from '../constants';
 import { dayDateFontManager, digitalFontManager, hoursFontManager, minutesFontManager } from './fontManager';
 import { timeManager } from './timeManager';
-import { addClock } from '../clock/clockConstructor';
+import { addClock, addDynamicClock } from '../clock/clockConstructor';
 import { updateClock } from '../clock/clockUpdater';
-import { MESHES } from '../visuals/meshes';
+import { DYNAMIC_MESHES, MESHES } from '../visuals/meshes';
 
 
 const scene = new THREE.Scene();
@@ -24,15 +24,42 @@ const renderer = new THREE.WebGLRenderer({ antialias: true });
 const controls = new OrbitControls(camera, renderer.domElement);
 const minPan = new THREE.Vector3();
 const maxPan = new THREE.Vector3();
-let maxZoom = null;
+let maxZoom = 5;
 
 let hoursFont = null;
 let minutesFont = null;
 let dayDateFont = null;
 let digitalFont = null;
 
+export let dynamicClockWidth;
+export let dynamicClockHeight;
+export let dynamicClockRatio;
+
+function setClockDimensions(width, height) {
+    dynamicClockWidth = width;
+    dynamicClockHeight = height;
+    dynamicClockRatio = width / height;
+}
+
+export function calculateClockDimensions() {
+    const aspectRatio = window.innerWidth / window.innerHeight;
+    let width, height;
+
+    if (aspectRatio >= 1) {
+        // Width is longer, set width to 10
+        width = 10;
+        height = 10 / aspectRatio; // Scale height to maintain aspect ratio
+    } else {
+        // Height is longer, set height to 10
+        height = 10;
+        width = 10 * aspectRatio; // Scale width to maintain aspect ratio
+    }
+    setClockDimensions(width, height);
+    return [width, height];
+}
+
 /**
- * Initializes and sets up the scene with lighting and renderer.
+ * Initializes and sets up the scene with lighting, renderer, and controls.
  */
 function setupScene() {
     controls.enableDamping = true;
@@ -72,7 +99,7 @@ function setupScene() {
  */
 function updatePanLimits() {
     // Find the clock's bounding box
-    const boundingBox = new THREE.Box3().setFromObject(MESHES.clockBezel);
+    const boundingBox = new THREE.Box3().setFromObject(DYNAMIC_MESHES.dynamicClockFace);
     const center = boundingBox.getCenter(new THREE.Vector3());
     const size = boundingBox.getSize(new THREE.Vector3());
 
@@ -94,10 +121,37 @@ function updatePanLimits() {
 }
 
 /**
- * Updates the camera's position so that the clock takes up the full screen.
+ * Updates the camera's position so that the clock face fills the entire screen.
  */
 function updateCamera() {
-    const boundingBox = new THREE.Box3().setFromObject(MESHES.clockBezel);
+    const fov = camera.fov * (Math.PI / 180); // Convert fov to radians
+    const center = new THREE.Vector3(0, 0, 0); // Assuming the clock face is at the origin
+
+    let cameraZ;
+    if (dynamicClockRatio >= 1) {
+        // For wider screens, use the height to determine the camera distance
+        cameraZ = (dynamicClockHeight / 2) / Math.tan(fov / 2);
+    } else {
+        // For taller screens, adjust the camera distance based on the adjusted width and the aspect ratio
+        cameraZ = (dynamicClockWidth / 2) / Math.tan(fov / 2) / dynamicClockRatio;
+    }
+
+    camera.position.z = cameraZ + SIZES.BEZEL_THICKNESS * 1.5;
+    if (maxZoom === null) maxZoom = cameraZ;
+    camera.lookAt(center);
+    
+    // Set outer limits for camera controls
+    controls.maxDistance = camera.position.z;
+    controls.target = center;
+
+    updatePanLimits();
+}
+
+/**
+ * Updates the camera's position so that the clock takes up the full screen.
+ */
+function updateCamerav1() {
+    const boundingBox = new THREE.Box3().setFromObject(DYNAMIC_MESHES.dynamicClockFace);
     const center = boundingBox.getCenter(new THREE.Vector3());
     const size = boundingBox.getSize(new THREE.Vector3());
 
@@ -173,7 +227,7 @@ export function onWindowResize() {
  * Primary animation loop. Keeps the clock running.
  */
 function animate() {
-    updateClock(scene, digitalFont, dayDateFont);
+    // updateClock(scene, digitalFont, dayDateFont);
 
     controls.update();
     requestAnimationFrame(animate);
@@ -195,7 +249,7 @@ export async function initializeScene() {
     digitalFont = await digitalFontManager.getLoadedFont();
     dayDateFont = await dayDateFontManager.getLoadedFont();
 
-    addClock(scene, hoursFont, minutesFont);
+    addDynamicClock(scene, hoursFont, minutesFont);
     animate();
     updateCamera();
 }
