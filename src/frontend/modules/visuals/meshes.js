@@ -6,7 +6,7 @@
 import * as THREE from 'three';
 
 import * as CONSTANTS from '../constants.js';
-import { createDayDateGeometry, GEOMETRIES } from './geometries.js'; 
+import { createDayDateGeometry, DYNAMIC_GEOMETRIES, GEOMETRIES } from './geometries.js'; 
 import { MATERIALS } from './materials.js';
 
 
@@ -89,6 +89,11 @@ const digitalDisplayRightFrame = new THREE.Mesh(GEOMETRIES.digitalDisplayFrameVe
 digitalDisplayRightFrame.name = 'digitalDisplayRightFrame';
 digitalDisplayRightFrame.position.set(digitalDisplayBox.position.x + CONSTANTS.SIZES.DIGITAL_DISPLAY_BOX_WIDTH / 2 + CONSTANTS.SIZES.DIGITAL_TIME_FRAME_THICKNESS / 2, digitalDisplayBox.position.y, 0)
 
+// Dynamic clock parts
+const dynamicClockFace = new THREE.Mesh(DYNAMIC_GEOMETRIES.dynamicClockFace, MATERIALS.clockFace);
+const dynamicClockBezel = new THREE.Mesh(DYNAMIC_GEOMETRIES.dynamicClockBezel, MATERIALS.clockBezel);
+dynamicClockBezel.position.z = dynamicClockFace.position.z - 0.01
+
 export const MESHES = {
     clockBezel,
     clockFace,
@@ -109,6 +114,11 @@ export const MESHES = {
     digitalDisplayBottomFrame,
     digitalDisplayLeftFrame,
     digitalDisplayRightFrame,
+}
+
+export const DYNAMIC_MESHES = {
+    dynamicClockFace,
+    dynamicClockBezel
 }
 
 /**
