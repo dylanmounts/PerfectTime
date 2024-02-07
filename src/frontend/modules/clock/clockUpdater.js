@@ -42,6 +42,7 @@ let lastLanguage = null;
 let language = 'en-US';
 let lastTimeFormat = null;
 let useTwentyFourHour = false;
+let minuteHandLength = null;
 
 /**
  * Main function to update the clock based on the current time retrieved from the
@@ -89,9 +90,9 @@ export function updateClock(scene, digitalFont, dayDateFont) {
     updateDayDateDisplay(scene, dayDateFont);
     updateIndicators(scene);
     updateNumbers(scene);
-    updateHourHand(scene, hourAngle);
-    updateMinuteHand(scene, minuteAngle);
     updateSecondHand(scene, secondAngle);
+    updateMinuteHand(scene, minuteAngle);
+    updateHourHand(scene, hourAngle);
 }
 
 // Helper functions for calculating clock hand angles
@@ -413,7 +414,9 @@ export function updateHourHand(scene, angle) {
 
     if (!hourHandExists) return;
 
-    const handLength = distanceToEdge(angle) * 3/5
+    const edgeScaledLength = distanceToEdge(angle) * 2/3
+    const minuteScaledLength = minuteHandLength * 2/3
+    const handLength = Math.min(edgeScaledLength, minuteScaledLength)
 
     meshesJs.MESHES.hourHand = meshesJs.createHourHand(handLength);
     meshesJs.MESHES.outerHourHand = meshesJs.createOuterHourHand(handLength);
@@ -439,6 +442,7 @@ export function updateMinuteHand(scene, angle) {
     if (!minuteHandExists) return;
 
     const handLength = distanceToEdge(angle)
+    minuteHandLength = handLength;
 
     meshesJs.MESHES.minuteHand = meshesJs.createMinuteHand(handLength);
     meshesJs.MESHES.outerMinuteHand = meshesJs.createOuterMinuteHand(handLength);
