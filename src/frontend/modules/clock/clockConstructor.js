@@ -101,7 +101,7 @@ function createIndicators(scene) {
  * @param {Object} hoursFont - The serif font used for the hours.
  * @param {Object} minutesFont - The sans font used for the minutes.
  */
-export async function addClock(scene, hoursFont, minutesFont) {
+export function addClock(scene, hoursFont, minutesFont) {
     createIndicators(scene);
     createNumbers(scene, hoursFont, minutesFont);
     updateDayDateDisplay(scene, hoursFont);
