@@ -10,9 +10,10 @@ import { RoundedBoxGeometry } from 'three/examples/jsm/geometries/RoundedBoxGeom
 import * as CONSTANTS from '../constants.js';
 import * as SHAPES from './shapes.js';
 import { calculateClockDimensions, dynamicClockHeight, dynamicClockWidth } from '../managers/sceneManager.js';
-import { scaleValue } from '../utils/uiUtils.js';
+import { scaleValue } from '../utils/sizeUtils.js';
 
 calculateClockDimensions();
+
 // Static clock parts
 const clockFace = new THREE.CircleGeometry(
     CONSTANTS.SIZES.CLOCK_RADIUS,
@@ -59,55 +60,55 @@ const post = new THREE.CylinderGeometry(
     CONSTANTS.SIZES.POST_HEIGHT,
     CONSTANTS.SEGMENTS / 2
 );
-const hourHand = new THREE.ShapeGeometry(
+export const createHourHandGeometry = (handLength) => new THREE.ShapeGeometry(
     SHAPES.createClockHand(
         CONSTANTS.SIZES.HOUR_HAND_TIP_WIDTH,
         CONSTANTS.SIZES.HOUR_HAND_BASE_WIDTH,
         CONSTANTS.SIZES.HOUR_HAND_BASE_OFFSET,
-        scaleValue(CONSTANTS.SIZES.HOUR_HAND_LENGTH_RATIO),
+        handLength,
         CONSTANTS.SIZES.HOUR_HAND_SCALE
     ), CONSTANTS.SEGMENTS / 2
 );
-const outerHourHand = new THREE.ShapeGeometry(
+export const createOuterHourHandGeometry = (handLength) => new THREE.ShapeGeometry(
     SHAPES.createClockHand(
         CONSTANTS.SIZES.HOUR_HAND_TIP_WIDTH,
         CONSTANTS.SIZES.HOUR_HAND_BASE_WIDTH,
         CONSTANTS.SIZES.HOUR_HAND_BASE_OFFSET,
-        scaleValue(CONSTANTS.SIZES.HOUR_HAND_LENGTH_RATIO)
+        handLength
     ), CONSTANTS.SEGMENTS / 2
 );
-const minuteHand = new THREE.ShapeGeometry(
+export const createMinuteHandGeometry = (handLength) => new THREE.ShapeGeometry(
     SHAPES.createClockHand(
         CONSTANTS.SIZES.MINUTE_HAND_TIP_WIDTH,
         CONSTANTS.SIZES.MINUTE_HAND_BASE_WIDTH,
         CONSTANTS.SIZES.MINUTE_HAND_BASE_OFFSET,
-        scaleValue(CONSTANTS.SIZES.MINUTE_HAND_LENGTH_RATIO),
+        handLength,
         CONSTANTS.SIZES.MINUTE_HAND_SCALE
     ), CONSTANTS.SEGMENTS / 2
 );
-const outerMinuteHand = new THREE.ShapeGeometry(
+export const createOuterMinuteHandGeometry = (handLength) => new THREE.ShapeGeometry(
     SHAPES.createClockHand(
         CONSTANTS.SIZES.MINUTE_HAND_TIP_WIDTH,
         CONSTANTS.SIZES.MINUTE_HAND_BASE_WIDTH,
         CONSTANTS.SIZES.MINUTE_HAND_BASE_OFFSET,
-        scaleValue(CONSTANTS.SIZES.MINUTE_HAND_LENGTH_RATIO)
+        handLength,
     ), CONSTANTS.SEGMENTS / 2
 );
-const secondHand = new THREE.ShapeGeometry(
+export const createSecondHandGeometry = (handLength) => new THREE.ShapeGeometry(
     SHAPES.createClockHand(
         CONSTANTS.SIZES.SECOND_HAND_TIP_WIDTH,
         CONSTANTS.SIZES.SECOND_HAND_BASE_WIDTH,
         CONSTANTS.SIZES.SECOND_HAND_BASE_OFFSET,
-        scaleValue(CONSTANTS.SIZES.SECOND_HAND_LENGTH_RATIO),
+        handLength,
         CONSTANTS.SIZES.SECOND_HAND_SCALE
     ), CONSTANTS.SEGMENTS / 2
 );
-const outerSecondHand = new THREE.ShapeGeometry(
+export const createOuterSecondHandGeometry = (handLength) => new THREE.ShapeGeometry(
     SHAPES.createClockHand(
         CONSTANTS.SIZES.SECOND_HAND_TIP_WIDTH,
         CONSTANTS.SIZES.SECOND_HAND_BASE_WIDTH,
         CONSTANTS.SIZES.SECOND_HAND_BASE_OFFSET,
-        scaleValue(CONSTANTS.SIZES.SECOND_HAND_LENGTH_RATIO)
+        handLength,
     ), CONSTANTS.SEGMENTS / 2
 );
 
@@ -136,13 +137,7 @@ export const GEOMETRIES = {
     digitalDisplayFrameVertical,
     dayDateBox,
     digitalDisplayBox,
-    hourHand,
-    outerHourHand,
-    minuteHand,
-    outerMinuteHand,
     post,
-    secondHand,
-    outerSecondHand,
 }
 
 export const DYNAMIC_GEOMETRIES = {
