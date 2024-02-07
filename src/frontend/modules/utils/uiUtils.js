@@ -9,7 +9,7 @@
 
 import { Button, Toast } from 'bootstrap';
 
-import { updateCameraZoom } from '../managers/sceneManager';
+import { dynamicClockRatio, updateCameraZoom } from '../managers/sceneManager';
 
 /**
  * Sets up a toggle for a Bootstrap toast element and manages button styles.
@@ -137,3 +137,11 @@ export function toggleButton(btnEl, state) {
     btnEl.classList.toggle('active', state === 'active');
     btnEl.classList.toggle('inactive', state === 'inactive');
 }
+
+// Function to scale values based on dynamicClockRatio
+export function scaleValue(value) {
+    return dynamicClockRatio < 1
+        ? value * dynamicClockRatio
+        : value / dynamicClockRatio;
+}
+
