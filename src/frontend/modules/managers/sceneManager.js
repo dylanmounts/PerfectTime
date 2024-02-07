@@ -197,5 +197,5 @@ export async function initializeScene() {
 
     addClock(scene, hoursFont, minutesFont);
     animate();
-    updateCamera();
+    onWindowResize(); // To update the camera and renderer
 }
