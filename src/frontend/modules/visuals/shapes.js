@@ -17,7 +17,7 @@ import { scaleValue } from '../utils/uiUtils.js';
  * @returns {number} Length of the clock hand.
  */
 export const calculateHandLength = (handLengthRatio, scale) => {
-    const scaledClockRadius = SIZES.CLOCK_RADIUS * handLengthRatio;
+    const scaledClockRadius = (SIZES.CLOCK_RADIUS - SIZES.BEZEL_RADIUS / 2) * handLengthRatio;
     const piScaledIndicatorHeight = SIZES.MINUTE_HAND_TIP_WIDTH * SIZES.MINUTE_HAND_SCALE * Math.PI
     const bevelScaledIndicatorHeight = piScaledIndicatorHeight - SIZES.INDICATOR_BEVEL_SIZE / 1.25
     const lengthScale = scale === 1 ? 0 : SIZES.INDICATOR_BEVEL_SIZE;
