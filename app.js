@@ -1,6 +1,7 @@
 const express = require('express');
 const path = require('path');
 const app = express();
+const rateLimit = require('express-rate-limit');
 const port = process.env.PORT || 8100;
 const hostname = process.env.HOSTNAME || '127.0.0.1';
 const isWebApp = process.env.IS_WEB_APP === 'true';
@@ -10,7 +11,7 @@ if (isWebApp) {
     const timeServer = require('./src/backend/timeServer');
 
     const apiLimiter = rateLimit({
-        windowMs: 1 * 60 * 1000, // 15 minutes
+        windowMs: 1 * 60 * 1000, // 1 minute
         max: 10,
         standardHeaders: true,
         legacyHeaders: false,
