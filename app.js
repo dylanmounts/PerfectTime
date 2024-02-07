@@ -9,8 +9,15 @@ const allowedOrigins = ['https://perfecttime.org', 'https://www.perfecttime.org'
 if (isWebApp) {
     const timeServer = require('./src/backend/timeServer');
 
+    const apiLimiter = rateLimit({
+        windowMs: 1 * 60 * 1000, // 15 minutes
+        max: 10,
+        standardHeaders: true,
+        legacyHeaders: false,
+    });
+
     // Endpoint to get the perfect time
-    app.use('/api/time', (req, res) => {
+    app.use('/api/time', apiLimiter, (req, res) => {
         let sourceOrigin = req.headers.origin;
 
         // Fallback to Referer if Origin is not present
