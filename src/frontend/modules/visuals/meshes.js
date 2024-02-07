@@ -142,9 +142,22 @@ digitalDisplayRightFrame.position.set(
 )
 
 // Dynamic clock parts
-const dynamicClockFace = new THREE.Mesh(geometriesJs.DYNAMIC_GEOMETRIES.dynamicClockFace, MATERIALS.clockFace);
-const dynamicClockBezel = new THREE.Mesh(geometriesJs.DYNAMIC_GEOMETRIES.dynamicClockBezel, MATERIALS.clockBezel);
-dynamicClockBezel.position.z = dynamicClockFace.position.z - 0.01
+export const createDynamicClockFace = () => {
+    const dynamicClockFace = new THREE.Mesh(
+        geometriesJs.createDynamicClockFaceGeometry(), MATERIALS.clockFace
+    );
+    dynamicClockFace.name = "dynamicClockFace";
+    return dynamicClockFace;
+};
+
+export const createDynamicClockBezel = () => {
+    const dynamicClockBezel = new THREE.Mesh(
+        geometriesJs.createDynamicClockBezelGeometry(), MATERIALS.clockBezel
+    );
+    dynamicClockBezel.name = "dynamicClockBezel";
+    dynamicClockBezel.position.z = -0.01
+    return dynamicClockBezel;
+};
 
 export const MESHES = {
     clockBezel,
@@ -160,12 +173,6 @@ export const MESHES = {
     digitalDisplayBottomFrame,
     digitalDisplayLeftFrame,
     digitalDisplayRightFrame,
-}
-
-export const DYNAMIC_MESHES = {
-    dynamicClockFace,
-    dynamicClockBezel,
-    post
 }
 
 /**
