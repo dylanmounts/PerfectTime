@@ -10,28 +10,7 @@ import { updateDayDateDisplay, updateDigitalDisplay } from './clockUpdater.js';
 import * as CONSTANTS from '../constants.js';
 import { createHourGeometry, createMinuteGeometry, createIndicatorGeometry } from '../visuals/geometries.js';
 import { createHourMesh, createMinuteMesh, createIndicatorMesh, DYNAMIC_MESHES, MESHES } from '../visuals/meshes.js';
-import { dynamicClockHeight, dynamicClockWidth } from '../managers/sceneManager.js';
-
-
-/**
- * 
- * @param {*} angle 
- * @returns 
- */
-function distanceToEdge(angle) {
-    const adjustedWidth = dynamicClockWidth - CONSTANTS.SIZES.BEZEL_RADIUS;
-    const adjustedHeight = dynamicClockHeight - CONSTANTS.SIZES.BEZEL_RADIUS;
-  
-    const halfWidth = adjustedWidth / 2;
-    const halfHeight = adjustedHeight / 2;
-  
-    const absSin = Math.abs(Math.sin(angle));
-    const absCos = Math.abs(Math.cos(angle));
-
-    const distance = Math.min(halfWidth / absSin, halfHeight / absCos);
-
-    return distance;
-}
+import { distanceToEdge } from '../utils/uiUtils.js';
 
 /**
  * Configures the position and name of a mesh object in the scene.
