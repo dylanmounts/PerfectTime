@@ -13,10 +13,11 @@ import * as THREE from 'three';
 
 import * as constantsJs from '../constants.js';
 import * as meshesJs from '../visuals/meshes.js';
-import { updateCameraSlider } from '../managers/sceneManager.js';
+import { updateCamera, updateCameraSlider } from '../managers/sceneManager.js';
 import { timeManager } from '../managers/timeManager.js';
 import * as geometriesJs from '../visuals/geometries.js';
 import { distanceToEdge, scaleValue } from '../utils/sizeUtils.js';
+import { addClassicClock, addDynamicClock, destroyClock } from './clockConstructor.js';
 
 
 // State variables for the visibility of clock components.
@@ -32,6 +33,7 @@ let secondHandExists = document.getElementById('secondHandOption').checked;
 let sweepingSeconds = document.getElementById('sweepingSecondsOption').checked;
 
 // State variables for tracking the perfect time and its displays.
+export let useDynamicClock = false;
 let currentTime = null;
 let lastTime = new Date;
 let lastSecond = null;
@@ -41,8 +43,9 @@ let lastDigitalDisplayExists = null;
 let lastLanguage = null;
 let language = 'en-US';
 let lastTimeFormat = null;
-let useTwentyFourHour = false;
+let lastClockShape = null;
 let minuteHandLength = null;
+let useTwentyFourHour = false;
 let resizeHandled = false;
 
 /**
@@ -53,7 +56,7 @@ let resizeHandled = false;
  * @param {Object} digitalFont - The font used for the digital display
  * @param {Object} dayDateFont - The font used for the day/date display
  */
-export function updateClock(scene, digitalFont, dayDateFont) {
+export function updateClock(scene, digitalFont, dayDateFont, hoursFont, minutesFont) {
     currentTime = timeManager.getCurrentTime();
 
     if (!currentTime) {
@@ -83,6 +86,7 @@ export function updateClock(scene, digitalFont, dayDateFont) {
         ? calculateSweepingSecondAngle(seconds, milliseconds)
         : calculateSecondAngle(seconds);
 
+    updateClockShape(scene, hoursFont, minutesFont);
     updateLanguage();
     updateTimeFormat();
     updateCameraSlider();
@@ -130,6 +134,25 @@ function calculateSweepingMinuteAngle(minutes, seconds, milliseconds) {
 function calculateSweepingSecondAngle(seconds, milliseconds) {
     return (Math.PI / 30) * seconds + 
            (Math.PI / 30000) * milliseconds;
+}
+
+function updateClockShape(scene, hoursFont, minutesFont) {
+    useDynamicClock = document.getElementById('useDynamicClock').checked;
+
+    if (useDynamicClock === lastClockShape) {
+        return;
+    }
+
+    destroyClock(scene);
+
+    if (useDynamicClock) {
+        addDynamicClock(scene, hoursFont, minutesFont);
+    } else {
+        addClassicClock(scene, hoursFont, minutesFont);
+    }
+
+    updateCamera(useDynamicClock);
+    lastClockShape = useDynamicClock;
 }
 
 /**
