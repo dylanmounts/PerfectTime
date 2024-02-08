@@ -114,9 +114,9 @@ export const createDynamicClockBezel = () => {
     return dynamicClockBezel;
 };
 
-export const createDigitalDisplayBox = (width, height) => {
+export const createDigitalDisplayBox = (width, height, isDynamic) => {
     const digitalDisplayBox = new THREE.Mesh(
-        geometriesJs.createDigitalDisplayBoxGeometry(width, height),
+        geometriesJs.createDigitalDisplayBoxGeometry(width, height, isDynamic),
         [MATERIALS.digitalDisplayBox, MATERIALS.complicationFrame]
     );
     digitalDisplayBox.name = "digitalDisplayBox";

@@ -91,7 +91,7 @@ export function updateClock(scene, digitalFont, dayDateFont, hoursFont, minutesF
     updateTimeFormat();
     updateCameraSlider();
     updateTimeOffset();
-    updateDigitalDisplay(scene, digitalFont);
+    updateDigitalDisplay(scene, digitalFont, useDynamicClock);
     updateDayDateDisplay(scene, dayDateFont);
     updateIndicators(scene);
     updateNumbers(scene);
@@ -143,6 +143,7 @@ function updateClockShape(scene, hoursFont, minutesFont) {
         return;
     }
 
+    resizeHandled = false;
     destroyClock(scene);
 
     if (useDynamicClock) {
@@ -232,8 +233,9 @@ export function toggleDayDate(isChecked) {
  * 
  * @param {Object} scene - The Three.js scene object.
  * @param {Object} font - The font used for the day-date display.
+ * @param {boolean} [isDynamic=true] - Optional parameter to specify if clock is currently dynamic.
  */
-export function updateDigitalDisplay(scene, font) {
+export function updateDigitalDisplay(scene, font, isDynamic = true) {
     if (!currentTime) {
         return;
     }
@@ -275,8 +277,7 @@ export function updateDigitalDisplay(scene, font) {
     }
 
     // Create and add new digital time display
-    const digitalDisplayGeometry = geometriesJs.createDigitalDisplayGeometry(digitalDisplayStr, font);
-    digitalDisplayGeometry.center();
+    const digitalDisplayGeometry = geometriesJs.createDigitalDisplayGeometry(digitalDisplayStr, font, isDynamic);
     const digitalDisplayMesh = meshesJs.createDigitalDisplayMesh(digitalDisplayGeometry);
     scene.add(digitalDisplayMesh);
 
@@ -291,10 +292,18 @@ export function updateDigitalDisplay(scene, font) {
     // Put it in its box
     const width = digitalDisplayMesh.geometry.boundingBox.max.x - digitalDisplayMesh.geometry.boundingBox.min.x
     const height = digitalDisplayMesh.geometry.boundingBox.max.y - digitalDisplayMesh.geometry.boundingBox.min.y
-    const digitalDisplayBox = meshesJs.createDigitalDisplayBox(width - scaleValue(0.051), height + scaleValue(0.15));
+    let digitalDisplayBox;
+    let digitalDisplayY;
+    if (isDynamic) {
+        digitalDisplayBox = meshesJs.createDigitalDisplayBox(width - scaleValue(0.051), height + scaleValue(0.15), isDynamic);
+        digitalDisplayY = constantsJs.DIGITAL_DISPLAY_CENTER_Y + scaleValue(constantsJs.SIZES.DIGITAL_DISPLAY_BEVEL_SIZE)
+    } else {
+        digitalDisplayBox = meshesJs.createDigitalDisplayBox(width - 0.051, height + 0.15, isDynamic);
+        digitalDisplayY = constantsJs.DIGITAL_DISPLAY_CENTER_Y + constantsJs.SIZES.DIGITAL_DISPLAY_BEVEL_SIZE
+    }
     digitalDisplayBox.position.set(
         0,
-        constantsJs.DIGITAL_DISPLAY_CENTER_Y + scaleValue(constantsJs.SIZES.DIGITAL_DISPLAY_BEVEL_SIZE),
+        digitalDisplayY,
         constantsJs.SIZES.CLOCK_THICKNESS / 2 - 0.01
     )
     scene.add(digitalDisplayBox);
