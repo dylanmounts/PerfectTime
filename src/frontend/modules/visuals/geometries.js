@@ -35,8 +35,8 @@ const digitalDisplayBox = new THREE.BoxGeometry(
     CONSTANTS.SIZES.DIGITAL_TIME_BOX_DEPTH
 );
 const post = new THREE.CylinderGeometry(
-    CONSTANTS.SIZES.POST_RADIUS,
-    CONSTANTS.SIZES.POST_RADIUS,
+    scaleValue(CONSTANTS.SIZES.POST_RADIUS),
+    scaleValue(CONSTANTS.SIZES.POST_RADIUS),
     CONSTANTS.SIZES.POST_HEIGHT,
     CONSTANTS.SEGMENTS / 2
 );
@@ -109,37 +109,31 @@ export const createDynamicClockBezelGeometry = () => new RoundedBoxGeometry(
     CONSTANTS.SIZES.BEZEL_RADIUS
 );
 
-export const createDigitalTimeBoxGeometry = () => new RoundedBoxGeometry(
-    CONSTANTS.SIZES.DIGITAL_DISPLAY_BOX_WIDTH,
-    CONSTANTS.SIZES.DIGITAL_DISPLAY_BOX_HEIGHT,
-    CONSTANTS.SIZES.DIGITAL_TIME_BOX_DEPTH,
-    CONSTANTS.SEGMENTS / 8,
-    CONSTANTS.SIZES.BEZEL_RADIUS
-);
+export const createDigitalDisplayBoxGeometry = (width, height) => {
+    const shape = SHAPES.createComplicationFrame(width, height)
+    const extrudeSettings = {
+        steps: 1,
+        depth: CONSTANTS.SIZES.DIGITAL_DISPLAY_BOX_DEPTH / 2,
+        bevelEnabled: true,
+        bevelThickness: CONSTANTS.SIZES.DIGITAL_DISPLAY_BEVEL_THICKNESS,
+        bevelSize: scaleValue(CONSTANTS.SIZES.DIGITAL_DISPLAY_BEVEL_SIZE),
+        bevelSegments: 1
+    };
+    return new THREE.ExtrudeGeometry(shape, extrudeSettings).center();
+};
 
-export const createDigitalTimeFrameGeometry = () => new RoundedBoxGeometry(
-    CONSTANTS.SIZES.DIGITAL_DISPLAY_BOX_WIDTH + CONSTANTS.SIZES.BEZEL_THICKNESS,
-    CONSTANTS.SIZES.DIGITAL_DISPLAY_BOX_HEIGHT + CONSTANTS.SIZES.BEZEL_THICKNESS,
-    CONSTANTS.SIZES.DIGITAL_TIME_BOX_DEPTH,
-    CONSTANTS.SEGMENTS / 8,
-    CONSTANTS.SIZES.BEZEL_RADIUS
-);
-
-export const createDayDateBoxGeometry = () => new RoundedBoxGeometry(
-    CONSTANTS.SIZES.DAY_DATE_BOX_WIDTH,
-    CONSTANTS.SIZES.DAY_DATE_BOX_HEIGHT,
-    CONSTANTS.SIZES.DAY_DATE_BOX_DEPTH,
-    CONSTANTS.SEGMENTS / 8,
-    CONSTANTS.SIZES.BEZEL_RADIUS
-);
-
-export const createDayDateFrameGeometry = () => new RoundedBoxGeometry(
-    CONSTANTS.SIZES.DAY_DATE_BOX_WIDTH + CONSTANTS.SIZES.BEZEL_THICKNESS,
-    CONSTANTS.SIZES.DAY_DATE_BOX_HEIGHT + CONSTANTS.SIZES.BEZEL_THICKNESS,
-    CONSTANTS.SIZES.DAY_DATE_BOX_DEPTH,
-    CONSTANTS.SEGMENTS / 8,
-    CONSTANTS.SIZES.BEZEL_RADIUS
-);
+export const createDayDateBoxGeometry = (width, height) => {
+    const shape = SHAPES.createComplicationFrame(width, height)
+    const extrudeSettings = {
+        steps: 1,
+        depth: CONSTANTS.SIZES.DAY_DATE_BOX_DEPTH / 2,
+        bevelEnabled: true,
+        bevelThickness: CONSTANTS.SIZES.DAY_DATE_BEVEL_THICKNESS,
+        bevelSize: scaleValue(CONSTANTS.SIZES.DAY_DATE_BEVEL_SIZE),
+        bevelSegments: 1
+    };
+    return new THREE.ExtrudeGeometry(shape, extrudeSettings).center();
+};
 
 export const GEOMETRIES = {
     clockFace,
@@ -163,11 +157,11 @@ export function createDayDateGeometry(dayDateStr, font) {
 }
 
 // Text geometry for the digital time display
-export function createDigitalTimeGeometry(dayDateStr, font) {
+export function createDigitalDisplayGeometry(dayDateStr, font) {
     const textGeometry = new TextGeometry(String(dayDateStr), {
         font: font,
-        size: scaleValue(CONSTANTS.SIZES.DIGITAL_TIME_SIZE),
-        height: CONSTANTS.SIZES.DIGITAL_TIME_NUMBER_HEIGHT,
+        size: scaleValue(CONSTANTS.SIZES.DIGITAL_DISPLAY_SIZE),
+        height: CONSTANTS.SIZES.DIGITAL_DISPLAY_NUMBER_HEIGHT,
         curveSegments: CONSTANTS.SEGMENTS / 8,
         bevelEnabled: false
     });
@@ -210,7 +204,7 @@ export function createIndicatorGeometry(isFiveMinuteMark) {
         depth: CONSTANTS.SIZES.INDICATOR_HEIGHT / 2,
         bevelEnabled: true,
         bevelThickness: CONSTANTS.SIZES.INDICATOR_BEVEL_THICKNESS,
-        bevelSize: CONSTANTS.SIZES.INDICATOR_BEVEL_SIZE,
+        bevelSize: scaleValue(CONSTANTS.SIZES.INDICATOR_BEVEL_SIZE),
         bevelSegments: 1
     };
     return new THREE.ExtrudeGeometry(shape, extrudeSettings);
