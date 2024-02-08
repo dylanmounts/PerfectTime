@@ -8,15 +8,28 @@ import * as THREE from 'three';
 import * as CONSTANTS from '../constants.js';
 import * as geometriesJs from './geometries.js'; 
 import { MATERIALS } from './materials.js';
-import { scaleValue } from '../utils/sizeUtils.js';
 
 
 // Static clock parts
-const clockBezel = new THREE.Mesh(geometriesJs.GEOMETRIES.clockBezel, MATERIALS.clockBezel);
-clockBezel.position.z = 0;
+export const createClockBezel = () => {
+    const clockBezel = new THREE.Mesh(
+        geometriesJs.createClockBezel(),
+        MATERIALS.clockBezel
+    );
+    clockBezel.name = 'clockBezel';
+    clockBezel.position.z = CONSTANTS.SIZES.CLOCK_THICKNESS / 2;
+    return clockBezel;
+}
 
-const clockFace = new THREE.Mesh(geometriesJs.GEOMETRIES.clockFace, MATERIALS.clockFace);
-clockFace.position.z = 0;
+export const createClockFace = () => {
+    const clockFace = new THREE.Mesh(
+        geometriesJs.createClockFace(),
+        MATERIALS.clockFace
+    );
+    clockFace.name = 'clockFace';
+    clockFace.rotateX(Math.PI / 2);
+    return clockFace;
+}
 
 export const createHourHand = (handLength) => {
     const hourHand = new THREE.Mesh(
@@ -58,7 +71,7 @@ export const createOuterMinuteHand = (handLength) => {
     return outerMinuteHand;
 };
 
-export const post = new THREE.Mesh(geometriesJs.GEOMETRIES.post, MATERIALS.post);
+export const post = new THREE.Mesh(geometriesJs.createPost(), MATERIALS.post);
 post.rotation.x = Math.PI / 2
 post.position.z = CONSTANTS.SIZES.CLOCK_THICKNESS / 2 + CONSTANTS.SIZES.POST_HEIGHT / 2;
 

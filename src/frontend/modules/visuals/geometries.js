@@ -15,15 +15,25 @@ import { scaleValue } from '../utils/sizeUtils.js';
 calculateClockDimensions();
 
 // Static clock parts
-const clockFace = new THREE.CircleGeometry(
-    CONSTANTS.SIZES.CLOCK_RADIUS,
-    CONSTANTS.SEGMENTS
-);
-const clockBezel = new THREE.RingGeometry(
-    CONSTANTS.SIZES.CLOCK_RADIUS,
-    CONSTANTS.CLOCK_OUTER_RADIUS,
-    CONSTANTS.SEGMENTS
-);
+export const createClockFace = () => {
+    const clockFaceGeometry = new THREE.CylinderGeometry(
+        CONSTANTS.SIZES.CLOCK_RADIUS,
+        CONSTANTS.SIZES.CLOCK_RADIUS,
+        CONSTANTS.SIZES.CLOCK_THICKNESS,
+        CONSTANTS.SEGMENTS
+    );
+    clockFaceGeometry.center();
+    return clockFaceGeometry;
+}
+export const createClockBezel = () => {
+    const clockBezelGeometry = new THREE.RingGeometry(
+        CONSTANTS.SIZES.CLOCK_RADIUS,
+        CONSTANTS.CLOCK_OUTER_RADIUS,
+        CONSTANTS.SEGMENTS
+    );
+    clockBezelGeometry.center();
+    return clockBezelGeometry;
+};
 const dayDateBox = new THREE.BoxGeometry(
     CONSTANTS.SIZES.DAY_DATE_BOX_WIDTH,
     scaleValue(CONSTANTS.SIZES.DAY_DATE_BOX_HEIGHT),
@@ -34,7 +44,7 @@ const digitalDisplayBox = new THREE.BoxGeometry(
     scaleValue(CONSTANTS.SIZES.DIGITAL_DISPLAY_BOX_HEIGHT),
     CONSTANTS.SIZES.DIGITAL_TIME_BOX_DEPTH
 );
-const post = new THREE.CylinderGeometry(
+export const createPost = () => new THREE.CylinderGeometry(
     scaleValue(CONSTANTS.SIZES.POST_RADIUS),
     scaleValue(CONSTANTS.SIZES.POST_RADIUS),
     CONSTANTS.SIZES.POST_HEIGHT,
@@ -110,7 +120,7 @@ export const createDynamicClockBezelGeometry = () => new RoundedBoxGeometry(
 );
 
 export const createDigitalDisplayBoxGeometry = (width, height) => {
-    const shape = SHAPES.createComplicationFrame(width, height)
+    const shape = SHAPES.createComplicationBox(width, height)
     const extrudeSettings = {
         steps: 1,
         depth: CONSTANTS.SIZES.DIGITAL_DISPLAY_BOX_DEPTH / 2,
@@ -123,7 +133,7 @@ export const createDigitalDisplayBoxGeometry = (width, height) => {
 };
 
 export const createDayDateBoxGeometry = (width, height) => {
-    const shape = SHAPES.createComplicationFrame(width, height)
+    const shape = SHAPES.createComplicationBox(width, height)
     const extrudeSettings = {
         steps: 1,
         depth: CONSTANTS.SIZES.DAY_DATE_BOX_DEPTH / 2,
@@ -134,14 +144,6 @@ export const createDayDateBoxGeometry = (width, height) => {
     };
     return new THREE.ExtrudeGeometry(shape, extrudeSettings).center();
 };
-
-export const GEOMETRIES = {
-    clockFace,
-    clockBezel,
-    dayDateBox,
-    digitalDisplayBox,
-    post,
-}
 
 // Text geometry for the day/date display
 export function createDayDateGeometry(dayDateStr, font) {
@@ -197,14 +199,16 @@ export function createMinuteGeometry(minute, font) {
 }
 
 // Triangle geometries for each indicator (tick mark)
-export function createIndicatorGeometry(isFiveMinuteMark) {
-    const shape = SHAPES.createIndicator(isFiveMinuteMark);
+export const createIndicatorGeometry = (isFiveMinuteMark, isDynamic = true) => {
+    const shape = SHAPES.createIndicator(isFiveMinuteMark, isDynamic);
     const extrudeSettings = {
         steps: 1,
         depth: CONSTANTS.SIZES.INDICATOR_HEIGHT / 2,
         bevelEnabled: true,
         bevelThickness: CONSTANTS.SIZES.INDICATOR_BEVEL_THICKNESS,
-        bevelSize: scaleValue(CONSTANTS.SIZES.INDICATOR_BEVEL_SIZE),
+        bevelSize: isDynamic 
+            ? scaleValue(CONSTANTS.SIZES.INDICATOR_BEVEL_SIZE)
+            : CONSTANTS.SIZES.INDICATOR_BEVEL_SIZE,
         bevelSegments: 1
     };
     return new THREE.ExtrudeGeometry(shape, extrudeSettings);
