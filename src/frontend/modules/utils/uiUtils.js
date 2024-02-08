@@ -112,6 +112,23 @@ export function setupTimeFormatToggle() {
 }
 
 /**
+ * Initializes the controls for toggling between classic and dynamic clock shapes.
+ */
+export function setupDynamicClockToggle() {
+    const roundClock = document.getElementById('roundClock');
+    const dynamicClock = document.getElementById('dynamicClock');
+    const useDynamicClock = document.getElementById('useDynamicClock');
+
+    roundClock.addEventListener('click', () => {
+        useDynamicClock.checked = false;
+    })
+
+    dynamicClock.addEventListener('click', () => {
+        useDynamicClock.checked = true;
+    })
+}
+
+/**
  * Sets the language based on the user's browser settings.
  */
 export function setLanuage() {

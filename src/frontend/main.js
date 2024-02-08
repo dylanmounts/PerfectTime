@@ -45,6 +45,7 @@ UIUtils.setupToastToggle('optionsMenuBtn', 'optionsMenu', styleButtonForToastVis
 UIUtils.setupToastToggle('infoMenuBtn', 'infoMenu', styleButtonForToastVisible, styleButtonForToastHidden);
 UIUtils.setLanuage();
 UIUtils.setupTimeFormatToggle();
+UIUtils.setupDynamicClockToggle();
 UIUtils.setupZoomControls();
 
 // Create checkbox event listeners for clock features
