@@ -32,9 +32,8 @@ export const calculateHandLength = (handLengthRatio, scale) => {
  * @returns {number} The adjusted length of the clock hand.
  */
 export const adjustHandLength = (initialLength, scale) => {
-    const adjustedLength = initialLength - SIZES.INDICATOR_BEVEL_SIZE;
-    const lengthScale = scale === 1 ? 0 : SIZES.INDICATOR_BEVEL_SIZE;
-    return adjustedLength - lengthScale;
+    const lengthScale = scale === 1 ? 0 : SIZES.INDICATOR_BEVEL_SIZE / 2;
+    return initialLength - lengthScale;
 }
 
 /**
@@ -48,13 +47,12 @@ export const adjustHandLength = (initialLength, scale) => {
  * @returns {THREE.Shape} A THREE.Shape object representing the clock hand.
  */
 export const createClockHand = (tipWidth, baseWidth, baseOffset, handLength, scale = 1) => {
+    baseWidth = scaleValue(baseWidth * scale);
+    baseOffset = scaleValue(baseOffset * scale);
+    tipWidth = scaleValue(tipWidth * scale);
+
     const adjustedLength = adjustHandLength(handLength, scale);
     const triangleHeight = tipWidth * Math.PI;
-
-    baseWidth *= scale;
-    baseOffset *= scale;
-    tipWidth *= scale;
-
     const shape = new THREE.Shape();
     shape.moveTo(0, -baseOffset);
     shape.lineTo(-baseWidth / 2, 0);
@@ -100,6 +98,18 @@ export const createIndicator = (isFiveMinuteMark) => {
     shape.lineTo(stubWidth / 2, -indicatorHeight);
     shape.lineTo(baseWidth / 2, 0);
     shape.closePath();
+
+    return shape;
+}
+
+export const createComplicationFrame = (length, width) => {
+
+    const shape = new THREE.Shape();
+    shape.moveTo( 0,0 );
+    shape.lineTo( 0, width );
+    shape.lineTo( length, width );
+    shape.lineTo( length, 0 );
+    shape.lineTo( 0, 0 );
 
     return shape;
 }
