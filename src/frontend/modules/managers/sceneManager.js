@@ -11,8 +11,8 @@ import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 import { MINIMUM_ZOOM, PERFECT_TIME_SYNC_SECONDS, SIZES } from '../constants';
 import { dayDateFontManager, digitalFontManager, hoursFontManager, minutesFontManager } from './fontManager';
 import { timeManager } from './timeManager';
-import { addDynamicClock, rebuildDynamicClock } from '../clock/clockConstructor';
-import { toggleResizeHandled, updateClock } from '../clock/clockUpdater';
+import { addClassicClock, addDynamicClock, destroyClock } from '../clock/clockConstructor';
+import { useDynamicClock, toggleResizeHandled, updateClock } from '../clock/clockUpdater';
 
 
 const scene = new THREE.Scene();
@@ -97,7 +97,7 @@ function setupScene() {
  * Dynamically updates the panning limits of the camera based on its current zoom level.
  */
 function updatePanLimits() {
-    const target = scene.getObjectByName('dynamicClockFace')
+    const target = scene.getObjectByName('clockFace')
     const center = target.geometry.boundingBox.getCenter(new THREE.Vector3());
     const size = target.geometry.boundingBox.getSize(new THREE.Vector3());
 
@@ -119,52 +119,40 @@ function updatePanLimits() {
 }
 
 /**
- * Updates the camera's position so that the clock face fills the entire screen.
+ * Updates the camera's position to ensure the clock is appropriately framed on screen.
+ * 
+ @param {boolean} [isDynamic=true] - Optional parameter to specify if clock is currently dynamic..
  */
-function updateCamera() {
-    const fov = camera.fov * (Math.PI / 180); // Convert fov to radians
-    const center = new THREE.Vector3(0, 0, 0); // Assuming the clock face is at the origin
-
+export function updateCamera(isDynamic = true) {
+    const target = scene.getObjectByName('clockFace');
+    const center = target.geometry.boundingBox.getCenter(new THREE.Vector3());
+    const size = target.geometry.boundingBox.getSize(new THREE.Vector3());
+    const fov = camera.fov * (Math.PI / 180);
     let cameraZ;
-    if (dynamicClockRatio >= 1) {
-        // For wider screens, use the height to determine the camera distance
-        cameraZ = (dynamicClockHeight / 2) / Math.tan(fov / 2) * 1.075;
+
+    if (isDynamic) {
+        if (dynamicClockRatio >= 1) {
+            cameraZ = (dynamicClockHeight / 2) / Math.tan(fov / 2) * 1.075;
+        } else {
+            cameraZ = (dynamicClockWidth / 2) / Math.tan(fov / 2) / dynamicClockRatio * 1.01;
+        }
     } else {
-        // For taller screens, adjust the camera distance based on the adjusted width and the aspect ratio
-        cameraZ = (dynamicClockWidth / 2) / Math.tan(fov / 2) / dynamicClockRatio * 1.01;
+        const maxDim = Math.max(size.x, size.y, size.z);
+
+        if (dynamicClockRatio >= 1) {
+            cameraZ = Math.abs(maxDim / 2 * Math.tan(fov / 2) * 1.9);
+        } else {
+            cameraZ = Math.abs(maxDim / 2 * Math.tan(fov / 2) * 1.86);
+        }
+
+        if (camera.aspect < 1) cameraZ = cameraZ / camera.aspect;
     }
 
     camera.position.z = cameraZ + SIZES.BEZEL_THICKNESS * 1.5;
     if (maxZoom === null) maxZoom = cameraZ;
     camera.lookAt(center);
     camera.position.set(center.x, center.y, center.z + cameraZ);
-    
-    // Set outer limits for camera controls
-    controls.maxDistance = camera.position.z;
-    controls.target = center;
 
-    updatePanLimits();
-}
-
-/**
- * Updates the camera's position so that the clock takes up the full screen.
- */
-function updateCamerav1() {
-    const boundingBox = new THREE.Box3().setFromObject(DYNAMIC_MESHES.dynamicClockFace);
-    const center = boundingBox.getCenter(new THREE.Vector3());
-    const size = boundingBox.getSize(new THREE.Vector3());
-
-    // Calculations for camera position
-    const maxDim = Math.max(size.x, size.y, size.z);
-    const fov = camera.fov * (Math.PI / 180);
-    let cameraZ = Math.abs(maxDim / 1.175 * Math.tan(fov / 2));
-    if (camera.aspect < 1) cameraZ = cameraZ / camera.aspect;
-    if (maxZoom === null) maxZoom = cameraZ;
-
-    camera.position.set(center.x, center.y, center.z + cameraZ);
-    camera.lookAt(center);
-
-    // Set outer limits for camera controls
     controls.maxDistance = camera.position.z;
     controls.target = center;
 
@@ -212,16 +200,23 @@ export function updateCameraSlider() {
  * Handles window resize events to keep the clock centered and full screen.
  */
 export function onWindowResize() {
-    calculateClockDimensions();
     toggleResizeHandled(false);
-    rebuildDynamicClock(scene, hoursFont, minutesFont);
+    calculateClockDimensions();
+
     camera.aspect = container.clientWidth / container.clientHeight;
     renderer.setSize(container.clientWidth, container.clientHeight);
 
-    updateCamera();
+    destroyClock(scene);
+    if (useDynamicClock) {
+        addDynamicClock(scene, hoursFont, minutesFont);
+    } else {
+        addClassicClock(scene, hoursFont, minutesFont);
+    }
+
     maxZoom = camera.position.z;
 
     controls.update();
+    updateCamera(useDynamicClock);
     camera.updateProjectionMatrix();
 }
 
@@ -229,7 +224,7 @@ export function onWindowResize() {
  * Primary animation loop. Keeps the clock running.
  */
 function animate() {
-    updateClock(scene, digitalFont, dayDateFont);
+    updateClock(scene, digitalFont, dayDateFont, hoursFont, minutesFont);
 
     controls.update();
     requestAnimationFrame(animate);
