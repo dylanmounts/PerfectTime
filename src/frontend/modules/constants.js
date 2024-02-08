@@ -73,10 +73,10 @@ export const SIZES = {
     OUTER_HAND_LENGTH_SCALE: 0.9925
 };
 
-export const CLOCK_HOURS_FONT = 'dist/fonts/noto_serif_regular.typeface.json';
-export const CLOCK_MINUTES_FONT = 'dist/fonts/noto_sans_regular.typeface.json';
-export const CLOCK_DAY_DATE_FONT = 'dist/fonts/noto_serif_light_regular.typeface.json';
-export const CLOCK_DIGITAL_FONT = 'dist/fonts/noto_sans_light_regular.typeface.json';
+export const CLOCK_HOURS_FONT = 'fonts/noto_serif_regular.typeface.json';
+export const CLOCK_MINUTES_FONT = 'fonts/noto_sans_regular.typeface.json';
+export const CLOCK_DAY_DATE_FONT = 'fonts/noto_serif_light_regular.typeface.json';
+export const CLOCK_DIGITAL_FONT = 'fonts/noto_sans_light_regular.typeface.json';
 export const CLOCK_OUTER_RADIUS = SIZES.CLOCK_RADIUS + SIZES.BEZEL_THICKNESS;
 export const DAY_DATE_FRAME_HEIGHT = SIZES.DAY_DATE_BOX_HEIGHT + 2 * SIZES.DAY_DATE_FRAME_THICKNESS;
 export const DAY_DATE_FRAME_WIDTH = SIZES.DAY_DATE_BOX_WIDTH + 2 * SIZES.DAY_DATE_FRAME_THICKNESS;
