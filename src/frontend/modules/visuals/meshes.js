@@ -88,7 +88,7 @@ export const createDynamicClockFace = () => {
     const dynamicClockFace = new THREE.Mesh(
         geometriesJs.createDynamicClockFaceGeometry().center(), MATERIALS.clockFace
     );
-    dynamicClockFace.name = "dynamicClockFace";
+    dynamicClockFace.name = "clockFace";
     return dynamicClockFace;
 };
 
@@ -96,7 +96,7 @@ export const createDynamicClockBezel = () => {
     const dynamicClockBezel = new THREE.Mesh(
         geometriesJs.createDynamicClockBezelGeometry().center(), MATERIALS.clockBezel
     );
-    dynamicClockBezel.name = "dynamicClockBezel";
+    dynamicClockBezel.name = "clockBezel";
     dynamicClockBezel.position.z = -0.01
     return dynamicClockBezel;
 };
