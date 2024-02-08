@@ -61,7 +61,7 @@ export function calculateClockDimensions() {
  * Initializes and sets up the scene with lighting, renderer, and controls.
  */
 function setupScene() {
-    /**controls.enableDamping = true;
+    controls.enableDamping = true;
     controls.dampingFactor = 0.04;
     controls.enableRotate = false;
     controls.minPolarAngle = Math.PI / 2;
@@ -77,13 +77,13 @@ function setupScene() {
     controls.touches = {
         ONE: THREE.TOUCH.PAN,
         TWO: THREE.TOUCH.DOLLY_PAN
-    }*/
+    }
 
     const originalUpdate = controls.update.bind(controls);
     controls.update = function() {
         originalUpdate();
-        // updatePanLimits();
-        // this.target.clamp(minPan, maxPan);
+        updatePanLimits();
+        this.target.clamp(minPan, maxPan);
     };
 
     const ambientLight = new THREE.AmbientLight(0xffffff, 5);
@@ -97,13 +97,14 @@ function setupScene() {
  * Dynamically updates the panning limits of the camera based on its current zoom level.
  */
 function updatePanLimits() {
-    const center = new THREE.Vector3(0, 0, 0);
-    const size = Math.max(dynamicClockWidth, dynamicClockHeight);
+    const target = scene.getObjectByName('dynamicClockFace')
+    const center = target.geometry.boundingBox.getCenter(new THREE.Vector3());
+    const size = target.geometry.boundingBox.getSize(new THREE.Vector3());
 
     // Scale the clock size based on the screen size
     const paddingFactor = SIZES.CLOCK_RADIUS / (maxZoom * maxZoom)
     const scalingFactor = maxZoom * paddingFactor;
-    const adjustedSize = size * scalingFactor;
+    const adjustedSize = size.clone().multiplyScalar(scalingFactor);
 
     // Calculate the ratio of current zoom level to the maximum zoom level
     const zoomRatio = controls.maxDistance / camera.position.distanceTo(center);
@@ -127,21 +128,22 @@ function updateCamera() {
     let cameraZ;
     if (dynamicClockRatio >= 1) {
         // For wider screens, use the height to determine the camera distance
-        cameraZ = (dynamicClockHeight / 2) / Math.tan(fov / 2);
+        cameraZ = (dynamicClockHeight / 2) / Math.tan(fov / 2) * 1.075;
     } else {
         // For taller screens, adjust the camera distance based on the adjusted width and the aspect ratio
-        cameraZ = (dynamicClockWidth / 2) / Math.tan(fov / 2) / dynamicClockRatio;
+        cameraZ = (dynamicClockWidth / 2) / Math.tan(fov / 2) / dynamicClockRatio * 1.01;
     }
 
     camera.position.z = cameraZ + SIZES.BEZEL_THICKNESS * 1.5;
     if (maxZoom === null) maxZoom = cameraZ;
     camera.lookAt(center);
+    camera.position.set(center.x, center.y, center.z + cameraZ);
     
     // Set outer limits for camera controls
     controls.maxDistance = camera.position.z;
     controls.target = center;
 
-    // updatePanLimits();
+    updatePanLimits();
 }
 
 /**
