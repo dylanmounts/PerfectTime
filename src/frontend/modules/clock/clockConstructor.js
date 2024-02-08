@@ -71,7 +71,7 @@ function createNumbers(scene, hoursFont, minutesFont) {
  * @param {boolean} [isDynamic=true] - Optional parameter to specify if clock is currently dynamic.
  */
 function createIndicators(scene, isDynamic = true) {
-    const baseDistanceFromCenter = CONSTANTS.SIZES.CLOCK_RADIUS * 23 / 24;
+    const baseDistanceFromCenter = CONSTANTS.SIZES.CLOCK_RADIUS * 47 / 48;
 
     for (let i = 0; i < 60; i++) {  
         const angle = (Math.PI / 30) * i;
@@ -81,18 +81,13 @@ function createIndicators(scene, isDynamic = true) {
 
         const indicatorGeometry = createIndicatorGeometry(isFiveMinuteMark, isDynamic);
         indicatorGeometry.center();
+        const indicatorThickness = indicatorGeometry.boundingBox.max.y - indicatorGeometry.boundingBox.min.y;
 
         if (isDynamic) {
-            // For dynamic indicators
             distanceFromCenter = distanceToEdge(angle);
-            const indicatorThickness = indicatorGeometry.boundingBox.max.y - indicatorGeometry.boundingBox.min.y;
             adjustedDistanceFromCenter = distanceFromCenter - indicatorThickness / 2;
         } else {
-            // For static indicators
-            const indicatorThickness = indicatorGeometry.boundingBox.max.z - indicatorGeometry.boundingBox.min.z;
-            adjustedDistanceFromCenter = isFiveMinuteMark 
-                ? baseDistanceFromCenter - indicatorThickness / 2
-                : baseDistanceFromCenter + indicatorThickness / 2;
+            adjustedDistanceFromCenter = baseDistanceFromCenter - indicatorThickness / 2;
         }
 
         const indicator = meshesJs.createIndicatorMesh(indicatorGeometry);
