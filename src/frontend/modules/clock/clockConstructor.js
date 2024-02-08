@@ -12,20 +12,6 @@ import { createHourGeometry, createMinuteGeometry, createIndicatorGeometry } fro
 import * as meshesJs from '../visuals/meshes.js';
 import { distanceToEdge } from '../utils/sizeUtils.js';
 
-/**
- * Configures the position and name of a mesh object in the scene.
- *
- * @param {THREE.Mesh} mesh - The mesh object to configure.
- * @param {string} meshName - The name to assign to the mesh.
- * @param {number} meshAngle - The angle used to calculate the mesh's x and y positions.
- * @param {number} centerDistance - The distance from the center of the scene to the mesh.
- */
-function configureMesh(mesh, meshName, meshAngle, centerDistance) {
-    mesh.position.x = Math.sin(meshAngle) * centerDistance;
-    mesh.position.y = Math.cos(meshAngle) * centerDistance;
-    mesh.position.z = 0;
-    mesh.name = meshName;
-}
 
 /**
  * Configures the position and name of a mesh object in the scene.
@@ -160,11 +146,12 @@ export function addClock(scene, hoursFont, minutesFont) {
  * @param {Object} minutesFont - The sans font used for the minutes.
  */
 export function addDynamicClock(scene, hoursFont, minutesFont) {
-    let clockFace = meshesJs.createDynamicClockFace()
-    let clockBezel = meshesJs.createDynamicClockBezel()
+    let clockFace = meshesJs.createDynamicClockFace();
+    let clockBezel = meshesJs.createDynamicClockBezel();
 
-    scene.add(clockFace)
-    scene.add(clockBezel)
+    scene.add(clockFace);
+    scene.add(clockBezel);
+    scene.add(meshesJs.post);
 
     createDynamicIndicators(scene);
     createNumbers(scene, hoursFont, minutesFont);

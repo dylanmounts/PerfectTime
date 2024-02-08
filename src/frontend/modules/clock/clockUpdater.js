@@ -13,7 +13,7 @@ import * as THREE from 'three';
 
 import * as constantsJs from '../constants.js';
 import * as meshesJs from '../visuals/meshes.js';
-import { dynamicClockRatio, updateCameraSlider } from '../managers/sceneManager.js';
+import { updateCameraSlider } from '../managers/sceneManager.js';
 import { timeManager } from '../managers/timeManager.js';
 import * as geometriesJs from '../visuals/geometries.js';
 import { distanceToEdge, scaleValue } from '../utils/sizeUtils.js';
@@ -158,6 +158,7 @@ export function updateDayDateDisplay(scene, font) {
     }
 
     meshesJs.removeMeshByName(scene, 'dayDateDisplay');
+    meshesJs.removeMeshByName(scene, 'dayDateBox');
 
     // If the Date/Date isn't showing, we don't need to update it
     // TODO: Certainly don't need this anymore.
@@ -172,14 +173,28 @@ export function updateDayDateDisplay(scene, font) {
 
     // Create and add the Day/Date display
     const dayDateGeometry = geometriesJs.createDayDateGeometry(dayDateStr, font);
+    dayDateGeometry.center();
     const dayDateMesh = meshesJs.createDayDateMesh(dayDateGeometry);
     scene.add(dayDateMesh);
 
     // Position the display
     dayDateMesh.name = 'dayDateDisplay';
-    dayDateMesh.position.x = 0;
-    dayDateMesh.position.y = -constantsJs.DIGITAL_DISPLAY_CENTER_Y;
-    dayDateMesh.position.z = constantsJs.SIZES.CLOCK_THICKNESS / 2;
+    dayDateMesh.position.set(
+        0,
+        -constantsJs.DIGITAL_DISPLAY_CENTER_Y,
+        constantsJs.SIZES.CLOCK_THICKNESS / 2
+    )
+
+    // Put it in its box
+    const width = dayDateMesh.geometry.boundingBox.max.x - dayDateMesh.geometry.boundingBox.min.x
+    const height = dayDateMesh.geometry.boundingBox.max.y - dayDateMesh.geometry.boundingBox.min.y
+    const dayDateBox = meshesJs.createDayDateBox(width - scaleValue(0.039), height + scaleValue(0.1));
+    dayDateBox.position.set(
+        0,
+        -constantsJs.DIGITAL_DISPLAY_CENTER_Y + scaleValue(constantsJs.SIZES.DIGITAL_DISPLAY_BEVEL_SIZE),
+        constantsJs.SIZES.CLOCK_THICKNESS / 2 - 0.01
+    )
+    scene.add(dayDateBox);
 
     lastDayDate = dayDateStr;
     lastDayDateExists = dayDateExists;
@@ -211,7 +226,7 @@ export function updateDigitalDisplay(scene, font) {
     // These sneaky unicode characters are hidden by the digital time frame. They exist so
     // the time remains centered within its frame and doesn't shift slightly as the seconds tick.
     // It's either this or monospace fonts, and monospace fonts are gross.
-    const digitalTimeStr = `(\u200B${digitalTime}\u200B)`;
+    const digitalDisplayStr = `\u007C\u200B${digitalTime}\u200B\u007C`;
 
     const currentSecond = currentTime.getSeconds();
     const shouldUpdate = (
@@ -224,6 +239,7 @@ export function updateDigitalDisplay(scene, font) {
     }
 
     meshesJs.removeMeshByName(scene, 'digitalDisplay');
+    meshesJs.removeMeshByName(scene, 'digitalDisplayBox');
 
     // If the digital display isn't showing, we don't need to update it
     // TODO: This probably doesn't need to be here any more
@@ -236,26 +252,28 @@ export function updateDigitalDisplay(scene, font) {
     }
 
     // Create and add new digital time display
-    const digitalTimeGeometry = geometriesJs.createDigitalTimeGeometry(digitalTimeStr, font);
-    const digitalDisplayMesh = meshesJs.createDigitalDisplayMesh(digitalTimeGeometry);
+    const digitalDisplayGeometry = geometriesJs.createDigitalDisplayGeometry(digitalDisplayStr, font);
+    digitalDisplayGeometry.center();
+    const digitalDisplayMesh = meshesJs.createDigitalDisplayMesh(digitalDisplayGeometry);
     scene.add(digitalDisplayMesh);
 
     // Position the display
     digitalDisplayMesh.name = 'digitalDisplay';
-    digitalDisplayMesh.position.x = 0;
-    digitalDisplayMesh.position.y = constantsJs.DIGITAL_DISPLAY_CENTER_Y;
-    digitalDisplayMesh.position.z = constantsJs.SIZES.CLOCK_THICKNESS / 2;
+    digitalDisplayMesh.position.set(
+        0,
+        constantsJs.DIGITAL_DISPLAY_CENTER_Y,
+        constantsJs.SIZES.CLOCK_THICKNESS / 2
+    )
 
-    // Frame it
-    const newLeftX = digitalDisplayMesh.geometry.boundingBox.min.x;
-    const newRightX = digitalDisplayMesh.geometry.boundingBox.max.x;
-    const newScaleX = (newRightX - newLeftX) / constantsJs.DIGITAL_DISPLAY_FRAME_WIDTH;
-
-    const digitalDisplayBox = meshesJs.createDigitalTimeBox();
-    digitalDisplayBox.position.set(0, constantsJs.DIGITAL_DISPLAY_CENTER_Y, constantsJs.SIZES.CLOCK_THICKNESS / 2 - .01)
-    digitalDisplayBox.scale.x = newScaleX;
-
-    // console.log(digitalDisplayBox.geometry.boundingBox.getSize(new THREE.Vector3));
+    // Put it in its box
+    const width = digitalDisplayMesh.geometry.boundingBox.max.x - digitalDisplayMesh.geometry.boundingBox.min.x
+    const height = digitalDisplayMesh.geometry.boundingBox.max.y - digitalDisplayMesh.geometry.boundingBox.min.y
+    const digitalDisplayBox = meshesJs.createDigitalDisplayBox(width - scaleValue(0.051), height + scaleValue(0.15));
+    digitalDisplayBox.position.set(
+        0,
+        constantsJs.DIGITAL_DISPLAY_CENTER_Y + scaleValue(constantsJs.SIZES.DIGITAL_DISPLAY_BEVEL_SIZE),
+        constantsJs.SIZES.CLOCK_THICKNESS / 2 - 0.01
+    )
     scene.add(digitalDisplayBox);
 
     lastSecond = currentSecond;
@@ -364,13 +382,13 @@ export function updateHourHand(scene, angle) {
     const minuteScaledLength = minuteHandLength * 2/3
     const handLength = Math.min(edgeScaledLength, minuteScaledLength)
 
-    meshesJs.MESHES.hourHand = meshesJs.createHourHand(handLength);
-    meshesJs.MESHES.outerHourHand = meshesJs.createOuterHourHand(handLength);
-    meshesJs.MESHES.hourHand.rotation.z = -angle;
-    meshesJs.MESHES.outerHourHand.rotation.z = -angle;
+    const hourHandMesh = meshesJs.createHourHand(handLength);
+    const outerHourHandMesh = meshesJs.createOuterHourHand(handLength);
+    hourHandMesh.rotation.z = -angle;
+    outerHourHandMesh.rotation.z = -angle;
 
-    scene.add(meshesJs.MESHES['hourHand']);
-    scene.add(meshesJs.MESHES['outerHourHand']);
+    scene.add(hourHandMesh);
+    scene.add(outerHourHandMesh);
 }
 
 // Adds or removes the minute hand from the scene based user configurations
@@ -390,13 +408,13 @@ export function updateMinuteHand(scene, angle) {
     const handLength = distanceToEdge(angle)
     minuteHandLength = handLength;
 
-    meshesJs.MESHES.minuteHand = meshesJs.createMinuteHand(handLength);
-    meshesJs.MESHES.outerMinuteHand = meshesJs.createOuterMinuteHand(handLength);
-    meshesJs.MESHES.minuteHand.rotation.z = -angle;
-    meshesJs.MESHES.outerMinuteHand.rotation.z = -angle;
+    const minuteHandMesh = meshesJs.createMinuteHand(handLength);
+    const outerMinuteHandMesh = meshesJs.createOuterMinuteHand(handLength);
+    minuteHandMesh.rotation.z = -angle;
+    outerMinuteHandMesh.rotation.z = -angle;
 
-    scene.add(meshesJs.MESHES['minuteHand']);
-    scene.add(meshesJs.MESHES['outerMinuteHand']);
+    scene.add(minuteHandMesh);
+    scene.add(outerMinuteHandMesh);
 }
 
 // Adds or removes the second hand from the scene based user configurations
@@ -415,13 +433,13 @@ export function updateSecondHand(scene, angle) {
 
     const handLength = distanceToEdge(angle)
 
-    meshesJs.MESHES.secondHand = meshesJs.createSecondHand(handLength);
-    meshesJs.MESHES.outerSecondHand = meshesJs.createOuterSecondHand(handLength);
-    meshesJs.MESHES.secondHand.rotation.z = -angle;
-    meshesJs.MESHES.outerSecondHand.rotation.z = -angle;
+    const secondHandMesh = meshesJs.createSecondHand(handLength);
+    const outerSecondHandMesh = meshesJs.createOuterSecondHand(handLength);
+    secondHandMesh.rotation.z = -angle;
+    outerSecondHandMesh.rotation.z = -angle;
 
-    scene.add(meshesJs.MESHES['secondHand']);
-    scene.add(meshesJs.MESHES['outerSecondHand']);
+    scene.add(secondHandMesh);
+    scene.add(outerSecondHandMesh);
 }
 
 export function toggleHourHand(isChecked) {
