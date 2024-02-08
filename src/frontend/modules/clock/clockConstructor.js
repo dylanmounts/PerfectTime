@@ -6,7 +6,6 @@
  */
 
 
-import { updateDayDateDisplay, updateDigitalDisplay } from './clockUpdater.js';
 import * as CONSTANTS from '../constants.js';
 import { createHourGeometry, createMinuteGeometry, createIndicatorGeometry } from '../visuals/geometries.js';
 import * as meshesJs from '../visuals/meshes.js';
@@ -66,54 +65,39 @@ function createNumbers(scene, hoursFont, minutesFont) {
 }
 
 /**
- * Creates and places clock indicators (tick marks) in the scene.
+ * Creates and places clock indicators (tick marks) in the scene
  * 
  * @param {Object} scene - The Three.js scene object.
+ * @param {boolean} [isDynamic=true] - Optional parameter to specify if clock is currently dynamic.
  */
-function createIndicators(scene) {
-    const distanceFromCenter = SIZES.CLOCK_RADIUS * 23/24;
+function createIndicators(scene, isDynamic = true) {
+    const baseDistanceFromCenter = CONSTANTS.SIZES.CLOCK_RADIUS * 23 / 24;
 
     for (let i = 0; i < 60; i++) {  
         const angle = (Math.PI / 30) * i;
         const isFiveMinuteMark = i % 5 === 0;
+        let distanceFromCenter;
+        let adjustedDistanceFromCenter;
 
-        const indicatorGeometry = createIndicatorGeometry(isFiveMinuteMark, CONSTANTS.SIZES.INDICATOR_SCALE);
+        const indicatorGeometry = createIndicatorGeometry(isFiveMinuteMark, isDynamic);
         indicatorGeometry.center();
 
-        const indicatorThickness = indicatorGeometry.boundingBox.max.z - indicatorGeometry.boundingBox.min.z
-        const adjustedDistanceFromCenter = isFiveMinuteMark 
-            ? distanceFromCenter - indicatorThickness / 2
-            : distanceFromCenter + indicatorThickness / 2;
+        if (isDynamic) {
+            // For dynamic indicators
+            distanceFromCenter = distanceToEdge(angle);
+            const indicatorThickness = indicatorGeometry.boundingBox.max.y - indicatorGeometry.boundingBox.min.y;
+            adjustedDistanceFromCenter = distanceFromCenter - indicatorThickness / 2;
+        } else {
+            // For static indicators
+            const indicatorThickness = indicatorGeometry.boundingBox.max.z - indicatorGeometry.boundingBox.min.z;
+            adjustedDistanceFromCenter = isFiveMinuteMark 
+                ? baseDistanceFromCenter - indicatorThickness / 2
+                : baseDistanceFromCenter + indicatorThickness / 2;
+        }
 
         const indicator = meshesJs.createIndicatorMesh(indicatorGeometry);
-        configureDynamicMesh(indicator, `indicator${i}`, angle, adjustedDistanceFromCenter)
-
-        CONSTANTS.INDICATORS[i] = indicator;
-        indicator.rotation.z = -angle
-
-        scene.add(indicator);
-    }
-}
-
-/**
- * 
- * @param {Object} scene - The Three.js scene object.
- */
-function createDynamicIndicators(scene) {
-    for (let i = 0; i < 60; i++) {  
-        const angle = (Math.PI / 30) * i;
-        const isFiveMinuteMark = i % 5 === 0;
-
-        const indicatorGeometry = createIndicatorGeometry(isFiveMinuteMark, CONSTANTS.SIZES.INDICATOR_SCALE);
-        indicatorGeometry.center();
-
-        const indicator = meshesJs.createIndicatorMesh(indicatorGeometry);
-        const distanceFromCenter = distanceToEdge(angle);
-        const indicatorThickness = indicatorGeometry.boundingBox.max.y - indicatorGeometry.boundingBox.min.y;
-        const adjustedDistanceFromCenter = distanceFromCenter - indicatorThickness / 2
-
-        configureDynamicMesh(indicator, `indicator${i}`, angle, adjustedDistanceFromCenter)
-        indicator.rotation.z = -angle
+        configureDynamicMesh(indicator, `indicator${i}`, angle, adjustedDistanceFromCenter);
+        indicator.rotation.z = -angle;
         CONSTANTS.INDICATORS[i] = indicator;
 
         scene.add(indicator);
@@ -127,15 +111,16 @@ function createDynamicIndicators(scene) {
  * @param {Object} hoursFont - The serif font used for the hours.
  * @param {Object} minutesFont - The sans font used for the minutes.
  */
-export function addClock(scene, hoursFont, minutesFont) {
-    createIndicators(scene);
-    createNumbers(scene, hoursFont, minutesFont);
-    updateDayDateDisplay(scene, hoursFont);
-    updateDigitalDisplay(scene, hoursFont);
+export function addClassicClock(scene, hoursFont, minutesFont) {
+    let clockFace = meshesJs.createClockFace();
+    let clockBezel = meshesJs.createClockBezel();
 
-    for (const mesh in meshesJs.MESHES) {
-        scene.add(meshesJs.MESHES[mesh]);
-    }
+    scene.add(clockFace);
+    scene.add(clockBezel);
+    scene.add(meshesJs.post);
+
+    createIndicators(scene, false);
+    createNumbers(scene, hoursFont, minutesFont);
 }
 
 /**
@@ -153,12 +138,12 @@ export function addDynamicClock(scene, hoursFont, minutesFont) {
     scene.add(clockBezel);
     scene.add(meshesJs.post);
 
-    createDynamicIndicators(scene);
+    createIndicators(scene);
     createNumbers(scene, hoursFont, minutesFont);
 }
 
-export function rebuildDynamicClock(scene, hoursFont, minutesFont) {
-    ['dynamicClockFace', 'dynamicClockBezel'].forEach(meshName => {
+export function destroyClock(scene) {
+    ['clockFace', 'clockBezel'].forEach(meshName => {
         const mesh = scene.getObjectByName(meshName)
         if (mesh) {
             mesh.geometry.dispose();
@@ -180,6 +165,4 @@ export function rebuildDynamicClock(scene, hoursFont, minutesFont) {
         CONSTANTS.MINUTE_NUMBERS[number].geometry.dispose();
         scene.remove(CONSTANTS.MINUTE_NUMBERS[number]);
     }
-
-    addDynamicClock(scene, hoursFont, minutesFont);
 }
