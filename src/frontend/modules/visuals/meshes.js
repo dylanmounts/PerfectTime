@@ -86,7 +86,7 @@ export const createOuterSecondHand = (handLength) => {
 // Dynamic clock parts
 export const createDynamicClockFace = () => {
     const dynamicClockFace = new THREE.Mesh(
-        geometriesJs.createDynamicClockFaceGeometry(), MATERIALS.clockFace
+        geometriesJs.createDynamicClockFaceGeometry().center(), MATERIALS.clockFace
     );
     dynamicClockFace.name = "dynamicClockFace";
     return dynamicClockFace;
@@ -94,7 +94,7 @@ export const createDynamicClockFace = () => {
 
 export const createDynamicClockBezel = () => {
     const dynamicClockBezel = new THREE.Mesh(
-        geometriesJs.createDynamicClockBezelGeometry(), MATERIALS.clockBezel
+        geometriesJs.createDynamicClockBezelGeometry().center(), MATERIALS.clockBezel
     );
     dynamicClockBezel.name = "dynamicClockBezel";
     dynamicClockBezel.position.z = -0.01
