@@ -75,21 +75,22 @@ export const createClockHand = (tipWidth, baseWidth, baseOffset, handLength, sca
  * Creates the indicators for the perfect clock.
  * 
  * @param {boolean} isFiveMinuteMark - Indicates if the indicator is for a five-minute mark.
+ * @param {boolean} [isDynamic=true] - Optional parameter to specify if clock is currently dynamic.
  */
-export const createIndicator = (isFiveMinuteMark) => {
+export const createIndicator = (isFiveMinuteMark, isDynamic = true) => {
     const scaledTipWidth = SIZES.MINUTE_HAND_TIP_WIDTH * 2 * SIZES.MINUTE_HAND_SCALE;
     const piScaledTipWidth = SIZES.MINUTE_HAND_TIP_WIDTH * Math.PI * SIZES.MINUTE_HAND_SCALE;
     
     let stubWidth, baseWidth, indicatorHeight;
     
     if (isFiveMinuteMark) {
-        stubWidth = scaleValue(scaledTipWidth);
+        stubWidth = isDynamic ? scaleValue(scaledTipWidth) : scaledTipWidth;
         baseWidth = stubWidth * 2;
-        indicatorHeight = scaleValue(piScaledTipWidth * 2);
+        indicatorHeight = isDynamic ? scaleValue(piScaledTipWidth * 2) : piScaledTipWidth * 2;
     } else {
-        baseWidth = scaleValue(scaledTipWidth);
+        baseWidth = isDynamic ? scaleValue(scaledTipWidth) : scaledTipWidth;
         stubWidth = baseWidth * 0.5;
-        indicatorHeight = scaleValue(piScaledTipWidth);
+        indicatorHeight = isDynamic ? scaleValue(piScaledTipWidth) : piScaledTipWidth;
     }
 
     const shape = new THREE.Shape();
@@ -102,7 +103,7 @@ export const createIndicator = (isFiveMinuteMark) => {
     return shape;
 }
 
-export const createComplicationFrame = (length, width) => {
+export const createComplicationBox = (length, width) => {
 
     const shape = new THREE.Shape();
     shape.moveTo( 0,0 );
