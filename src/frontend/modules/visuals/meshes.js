@@ -123,9 +123,9 @@ export const createDigitalDisplayBox = (width, height, isDynamic) => {
     return digitalDisplayBox;
 };
 
-export const createDayDateBox = (width, height) => {
+export const createDayDateBox = (width, height, isDynamic) => {
     const dayDateBox = new THREE.Mesh(
-        geometriesJs.createDayDateBoxGeometry(width, height),
+        geometriesJs.createDayDateBoxGeometry(width, height, isDynamic),
         [MATERIALS.dayDateBox, MATERIALS.complicationFrame]
     );
     dayDateBox.name = "dayDateBox";

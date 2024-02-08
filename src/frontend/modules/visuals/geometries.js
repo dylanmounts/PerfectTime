@@ -134,24 +134,28 @@ export const createDigitalDisplayBoxGeometry = (width, height, isDynamic = true)
     return new THREE.ExtrudeGeometry(shape, extrudeSettings).center();
 };
 
-export const createDayDateBoxGeometry = (width, height) => {
+export const createDayDateBoxGeometry = (width, height, isDynamic = true) => {
     const shape = SHAPES.createComplicationBox(width, height)
     const extrudeSettings = {
         steps: 1,
         depth: CONSTANTS.SIZES.DAY_DATE_BOX_DEPTH / 2,
         bevelEnabled: true,
         bevelThickness: CONSTANTS.SIZES.DAY_DATE_BEVEL_THICKNESS,
-        bevelSize: scaleValue(CONSTANTS.SIZES.DAY_DATE_BEVEL_SIZE),
+        bevelSize: isDynamic
+            ? scaleValue(CONSTANTS.SIZES.DAY_DATE_BEVEL_SIZE)
+            : CONSTANTS.SIZES.DAY_DATE_BEVEL_SIZE,
         bevelSegments: 1
     };
     return new THREE.ExtrudeGeometry(shape, extrudeSettings).center();
 };
 
 // Text geometry for the day/date display
-export function createDayDateGeometry(dayDateStr, font) {
+export function createDayDateGeometry(dayDateStr, font, isDynamic = true) {
     const textGeometry = new TextGeometry(String(dayDateStr), {
         font: font,
-        size: scaleValue(CONSTANTS.SIZES.DAY_DATE_SIZE),
+        size: isDynamic
+            ? scaleValue(CONSTANTS.SIZES.DAY_DATE_SIZE)
+            : CONSTANTS.SIZES.DAY_DATE_SIZE,
         height: CONSTANTS.SIZES.DAY_DATE_NUMBER_HEIGHT,
         curveSegments: CONSTANTS.SEGMENTS / 8,
         bevelEnabled: false
