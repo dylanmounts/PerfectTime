@@ -20,7 +20,7 @@ import { distanceToEdge } from '../utils/sizeUtils.js';
  * @param {number} meshAngle - The angle used to calculate the mesh's x and y positions.
  * @param {number} centerDistance - The distance from the center of the scene to the mesh.
  */
-function configureDynamicMesh(mesh, meshName, meshAngle, centerDistance) {
+function configureMesh(mesh, meshName, meshAngle, centerDistance) {
     mesh.position.x = Math.sin(meshAngle) * centerDistance;
     mesh.position.y = Math.cos(meshAngle) * centerDistance;
     mesh.position.z = (CONSTANTS.SIZES.CLOCK_THICKNESS / 2 + CONSTANTS.SIZES.BEZEL_RADIUS / 2) / 2
@@ -33,33 +33,44 @@ function configureDynamicMesh(mesh, meshName, meshAngle, centerDistance) {
  * @param {Object} scene - The Three.js scene object.
  * @param {Object} hoursFont - The serif font used for the hours.
  * @param {Object} minutesFont - The sans font used for the minutes.
+ * @param {boolean} [isDynamic=true] - Optional parameter to specify if clock is currently dynamic.
  */
-function createNumbers(scene, hoursFont, minutesFont) {
+function createNumbers(scene, hoursFont, minutesFont, isDyanmic = true) {
+        const hoursDistanceFromCenter = CONSTANTS.SIZES.CLOCK_RADIUS * 5/6;
+        const minutesDistanceFromCenter = CONSTANTS.SIZES.CLOCK_RADIUS * 2/3;
+
     for (let i = 1; i <= 12; i++) {
         const angle = (Math.PI / 6) * i;
 
         // Hours
-        const hourGeometry = createHourGeometry(i, hoursFont);
+        const hourGeometry = createHourGeometry(i, hoursFont, isDyanmic);
         hourGeometry.center();
 
         const hourMesh = meshesJs.createHourMesh(hourGeometry)
         const distanceFromCenter = distanceToEdge(angle) * 3/4
 
-        configureDynamicMesh(hourMesh, `hour${i}`, angle, distanceFromCenter)
         CONSTANTS.HOUR_NUMBERS[i] = hourMesh;
-        scene.add(hourMesh);
 
         // Minutes
         const minuteNumber = i * 5;
 
-        const minuteGeometry = createMinuteGeometry(minuteNumber, minutesFont);
+        const minuteGeometry = createMinuteGeometry(minuteNumber, minutesFont, isDyanmic);
         minuteGeometry.center();
 
         const minuteMesh = meshesJs.createMinuteMesh(minuteGeometry);
         const minuteDistanceFromCenter = distanceToEdge(angle) * 23/40
 
-        configureDynamicMesh(minuteMesh, `minute${minuteNumber}`, angle, minuteDistanceFromCenter);
         CONSTANTS.MINUTE_NUMBERS[minuteNumber] = minuteMesh;
+
+        // Final configuration
+        if (isDyanmic) {
+            configureMesh(hourMesh, `hour${i}`, angle, distanceFromCenter)
+            configureMesh(minuteMesh, `minute${minuteNumber}`, angle, minuteDistanceFromCenter);
+        } else {
+            configureMesh(hourMesh, `hour${i}`, angle, hoursDistanceFromCenter)
+            configureMesh(minuteMesh, `minute${minuteNumber}`, angle, minutesDistanceFromCenter);
+        }
+        scene.add(hourMesh);
         scene.add(minuteMesh);
     }
 }
@@ -91,7 +102,7 @@ function createIndicators(scene, isDynamic = true) {
         }
 
         const indicator = meshesJs.createIndicatorMesh(indicatorGeometry);
-        configureDynamicMesh(indicator, `indicator${i}`, angle, adjustedDistanceFromCenter);
+        configureMesh(indicator, `indicator${i}`, angle, adjustedDistanceFromCenter);
         indicator.rotation.z = -angle;
         CONSTANTS.INDICATORS[i] = indicator;
 
@@ -115,7 +126,7 @@ export function addClassicClock(scene, hoursFont, minutesFont) {
     scene.add(meshesJs.post);
 
     createIndicators(scene, false);
-    createNumbers(scene, hoursFont, minutesFont);
+    createNumbers(scene, hoursFont, minutesFont, false);
 }
 
 /**
