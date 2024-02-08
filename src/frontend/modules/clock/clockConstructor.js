@@ -148,6 +148,11 @@ export function addDynamicClock(scene, hoursFont, minutesFont) {
     createNumbers(scene, hoursFont, minutesFont);
 }
 
+/**
+ * Removes the clock from the scene.
+ * 
+ * @param {Object} scene - The Three.js scene object.
+ */
 export function destroyClock(scene) {
     ['clockFace', 'clockBezel'].forEach(meshName => {
         const mesh = scene.getObjectByName(meshName)
