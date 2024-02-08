@@ -58,7 +58,7 @@ export const createOuterMinuteHand = (handLength) => {
     return outerMinuteHand;
 };
 
-const post = new THREE.Mesh(geometriesJs.GEOMETRIES.post, MATERIALS.post);
+export const post = new THREE.Mesh(geometriesJs.GEOMETRIES.post, MATERIALS.post);
 post.rotation.x = Math.PI / 2
 post.position.z = CONSTANTS.SIZES.CLOCK_THICKNESS / 2 + CONSTANTS.SIZES.POST_HEIGHT / 2;
 
@@ -101,43 +101,23 @@ export const createDynamicClockBezel = () => {
     return dynamicClockBezel;
 };
 
-export const createDigitalTimeBox = () => {
-    const digitalTimeBox = new THREE.Mesh(
-        geometriesJs.createDigitalTimeBoxGeometry(), MATERIALS.digitalTimeBox
+export const createDigitalDisplayBox = (width, height) => {
+    const digitalDisplayBox = new THREE.Mesh(
+        geometriesJs.createDigitalDisplayBoxGeometry(width, height),
+        [MATERIALS.digitalDisplayBox, MATERIALS.complicationFrame]
     );
-    digitalTimeBox.name = "digitalTimeBox";
-    return digitalTimeBox;
+    digitalDisplayBox.name = "digitalDisplayBox";
+    return digitalDisplayBox;
 };
 
-export const createDigitalTimeFrame = () => {
-    const digitalTimeFrame = new THREE.Mesh(
-        geometriesJs.createDigitalTimeFrameGeometry(), MATERIALS.digitalTimeFrame
-    );
-    digitalTimeFrame.name = "digitalTimeFrame";
-    return digitalTimeFrame;
-};
-
-export const createDayDateBox = () => {
+export const createDayDateBox = (width, height) => {
     const dayDateBox = new THREE.Mesh(
-        geometriesJs.createDayDateBoxGeometry(), MATERIALS.dayDateBox
+        geometriesJs.createDayDateBoxGeometry(width, height),
+        [MATERIALS.dayDateBox, MATERIALS.complicationFrame]
     );
     dayDateBox.name = "dayDateBox";
     return dayDateBox;
 };
-
-export const createDayDateFrame = () => {
-    const dayDateFrame = new THREE.Mesh(
-        geometriesJs.createDayDateFrameGeometry(), MATERIALS.dayDateFrame
-    );
-    dayDateFrame.name = "dayDateFrame";
-    return dayDateFrame;
-};
-
-export const MESHES = {
-    clockBezel,
-    clockFace,
-    post,
-}
 
 /**
  * Removes a mesh by name from the specified Three.js.
@@ -149,7 +129,6 @@ export function removeMeshByName(scene, name) {
     const selectedObject = scene.getObjectByName(name);
     if (selectedObject) {
         selectedObject.geometry.dispose();
-        selectedObject.material.dispose();
         scene.remove(selectedObject);
     }
 }
