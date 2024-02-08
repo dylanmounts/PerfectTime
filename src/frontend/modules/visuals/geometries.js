@@ -171,29 +171,29 @@ export function createDigitalDisplayGeometry(dayDateStr, font) {
     return textGeometry;
 }
 
-export function createHourGeometry(hour, font) {
+export function createHourGeometry(hour, font, isDynamic = true) {
     return new TextGeometry(String(hour), {
         font: font,
-        size: scaleValue(CONSTANTS.SIZES.NUMBER_SIZE),
-        height: scaleValue(CONSTANTS.SIZES.NUMBER_HEIGHT),
+        size: isDynamic ? scaleValue(CONSTANTS.SIZES.NUMBER_SIZE) : CONSTANTS.SIZES.NUMBER_SIZE,
+        height: isDynamic ? scaleValue(CONSTANTS.SIZES.NUMBER_HEIGHT) : CONSTANTS.SIZES.NUMBER_HEIGHT,
         curveSegments: CONSTANTS.SEGMENTS / 8,
         bevelEnabled: true,
-        bevelThickness: scaleValue(CONSTANTS.SIZES.NUMBER_BEVEL_THICKNESS),
-        bevelSize: scaleValue(CONSTANTS.SIZES.NUMBER_BEVEL_SIZE),
+        bevelThickness: isDynamic ? scaleValue(CONSTANTS.SIZES.NUMBER_BEVEL_THICKNESS) : CONSTANTS.SIZES.NUMBER_BEVEL_THICKNESS,
+        bevelSize: isDynamic ? scaleValue(CONSTANTS.SIZES.NUMBER_BEVEL_SIZE) : CONSTANTS.SIZES.NUMBER_BEVEL_SIZE,
         bevelSegments: 1
     });
 }
 
 // Text geometries for each minute number
-export function createMinuteGeometry(minute, font) {
+export function createMinuteGeometry(minute, font, isDynamic = true) {
     return new TextGeometry(String(minute), {
         font: font,
-        size: scaleValue(CONSTANTS.SIZES.NUMBER_SIZE / 2),
-        height: scaleValue(CONSTANTS.SIZES.NUMBER_HEIGHT / 2),
+        size: isDynamic ? scaleValue(CONSTANTS.SIZES.NUMBER_SIZE / 2) : CONSTANTS.SIZES.NUMBER_SIZE / 2,
+        height: isDynamic ? scaleValue(CONSTANTS.SIZES.NUMBER_HEIGHT / 2) : CONSTANTS.SIZES.NUMBER_HEIGHT / 2,
         curveSegments: CONSTANTS.SEGMENTS / 8,
         bevelEnabled: true,
-        bevelThickness: scaleValue(CONSTANTS.SIZES.NUMBER_BEVEL_THICKNESS / 2),
-        bevelSize: scaleValue(CONSTANTS.SIZES.NUMBER_BEVEL_SIZE * 5/6),
+        bevelThickness: isDynamic ? scaleValue(CONSTANTS.SIZES.NUMBER_BEVEL_THICKNESS / 2) : CONSTANTS.SIZES.NUMBER_BEVEL_THICKNESS / 2,
+        bevelSize: isDynamic ? scaleValue(CONSTANTS.SIZES.NUMBER_BEVEL_SIZE * 5/6) : CONSTANTS.SIZES.NUMBER_BEVEL_SIZE * 5/6,
         bevelSegments: 1
     });
 }
