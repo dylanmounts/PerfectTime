@@ -23,7 +23,6 @@ const renderer = new THREE.WebGLRenderer({ antialias: true });
 const controls = new OrbitControls(camera, renderer.domElement);
 const minPan = new THREE.Vector3();
 const maxPan = new THREE.Vector3();
-let maxZoom = 5;
 
 let hoursFont = null;
 let minutesFont = null;
@@ -102,8 +101,8 @@ function updatePanLimits() {
     const size = target.geometry.boundingBox.getSize(new THREE.Vector3());
 
     // Scale the clock size based on the screen size
-    const paddingFactor = SIZES.CLOCK_RADIUS / (maxZoom * maxZoom)
-    const scalingFactor = maxZoom * paddingFactor;
+    const paddingFactor = SIZES.CLOCK_RADIUS / (controls.maxDistance * controls.maxDistance)
+    const scalingFactor = controls.maxDistance * paddingFactor;
     const adjustedSize = size.clone().multiplyScalar(scalingFactor);
 
     // Calculate the ratio of current zoom level to the maximum zoom level
@@ -149,7 +148,6 @@ export function updateCamera(isDynamic = true) {
     }
 
     camera.position.z = cameraZ + SIZES.BEZEL_THICKNESS * 1.5;
-    if (maxZoom === null) maxZoom = cameraZ;
     camera.lookAt(center);
     camera.position.set(center.x, center.y, center.z + cameraZ);
 
@@ -166,7 +164,8 @@ export function updateCamera(isDynamic = true) {
  * @returns {number} The calculated camera zoom level.
  */
 function mapZoomLevel(sliderValue) {
-    return (100 - sliderValue) / 100 * (maxZoom - MINIMUM_ZOOM) + MINIMUM_ZOOM;
+    let value = (100 - sliderValue) / 100 * (controls.maxDistance - MINIMUM_ZOOM) + MINIMUM_ZOOM;
+    return value
 }
 
 /**
@@ -175,7 +174,7 @@ function mapZoomLevel(sliderValue) {
  * @returns {number} The corresponding slider value.
  */
 function unmapZoomLevel(cameraZoom) {
-    return 100 - ((cameraZoom - MINIMUM_ZOOM) / (maxZoom - MINIMUM_ZOOM) * 100);
+    return 100 - ((cameraZoom - MINIMUM_ZOOM) / (controls.maxDistance - MINIMUM_ZOOM) * 100);
 }
 
 /**
@@ -212,8 +211,6 @@ export function onWindowResize() {
     } else {
         addClassicClock(scene, hoursFont, minutesFont);
     }
-
-    maxZoom = camera.position.z;
 
     controls.update();
     updateCamera(useDynamicClock);
