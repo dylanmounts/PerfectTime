@@ -468,8 +468,8 @@ export function updateSecondHand(scene, angle) {
         ? distanceToEdge(angle)
         : constantsJs.SIZES.CLOCK_RADIUS * 47 / 48
 
-    const secondHandMesh = meshesJs.createSecondHand(handLength);
-    const outerSecondHandMesh = meshesJs.createOuterSecondHand(handLength);
+    const secondHandMesh = meshesJs.createSecondHand(handLength, useDynamicClock);
+    const outerSecondHandMesh = meshesJs.createOuterSecondHand(handLength, useDynamicClock);
     secondHandMesh.rotation.z = -angle;
     outerSecondHandMesh.rotation.z = -angle;
 

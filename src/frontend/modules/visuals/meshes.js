@@ -31,9 +31,9 @@ export const createClockFace = () => {
     return clockFace;
 }
 
-export const createHourHand = (handLength) => {
+export const createHourHand = (handLength, isDynamic) => {
     const hourHand = new THREE.Mesh(
-        geometriesJs.createHourHandGeometry(handLength),
+        geometriesJs.createHourHandGeometry(handLength, isDynamic),
         MATERIALS.hourHand
     );
     hourHand.position.z = CONSTANTS.SIZES.CLOCK_THICKNESS / 2 + CONSTANTS.SIZES.POST_HEIGHT - 0.005;
@@ -41,9 +41,9 @@ export const createHourHand = (handLength) => {
     return hourHand;
 };
 
-export const createOuterHourHand = (handLength) => {
+export const createOuterHourHand = (handLength, isDynamic) => {
     const outerHourHand = new THREE.Mesh(
-        geometriesJs.createOuterHourHandGeometry(handLength),
+        geometriesJs.createOuterHourHandGeometry(handLength, isDynamic),
         MATERIALS.outerHourHand
     );
     outerHourHand.position.z = CONSTANTS.SIZES.CLOCK_THICKNESS / 2 + CONSTANTS.SIZES.POST_HEIGHT - 0.006;
@@ -51,9 +51,9 @@ export const createOuterHourHand = (handLength) => {
     return outerHourHand;
 };
 
-export const createMinuteHand = (handLength) => {
+export const createMinuteHand = (handLength, isDynamic) => {
     const minuteHand = new THREE.Mesh(
-        geometriesJs.createMinuteHandGeometry(handLength),
+        geometriesJs.createMinuteHandGeometry(handLength, isDynamic),
         MATERIALS.minuteHand
     );
     minuteHand.position.z = CONSTANTS.SIZES.CLOCK_THICKNESS / 2 + CONSTANTS.SIZES.POST_HEIGHT - 0.003;
@@ -61,9 +61,9 @@ export const createMinuteHand = (handLength) => {
     return minuteHand;
 };
 
-export const createOuterMinuteHand = (handLength) => {
+export const createOuterMinuteHand = (handLength, isDynamic) => {
     const outerMinuteHand = new THREE.Mesh(
-        geometriesJs.createOuterMinuteHandGeometry(handLength),
+        geometriesJs.createOuterMinuteHandGeometry(handLength, isDynamic),
         MATERIALS.outerMinuteHand
     );
     outerMinuteHand.position.z = CONSTANTS.SIZES.CLOCK_THICKNESS / 2 + CONSTANTS.SIZES.POST_HEIGHT - 0.004;
@@ -75,9 +75,9 @@ export const post = new THREE.Mesh(geometriesJs.createPost(), MATERIALS.post);
 post.rotation.x = Math.PI / 2
 post.position.z = CONSTANTS.SIZES.CLOCK_THICKNESS / 2 + CONSTANTS.SIZES.POST_HEIGHT / 2;
 
-export const createSecondHand = (handLength) => {
+export const createSecondHand = (handLength, isDynamic) => {
     const secondHand = new THREE.Mesh(
-        geometriesJs.createSecondHandGeometry(handLength),
+        geometriesJs.createSecondHandGeometry(handLength, isDynamic),
         MATERIALS.secondHand
     );
     secondHand.position.z = CONSTANTS.SIZES.CLOCK_THICKNESS / 2 + CONSTANTS.SIZES.POST_HEIGHT - 0.001;
@@ -85,9 +85,9 @@ export const createSecondHand = (handLength) => {
     return secondHand;
 };
 
-export const createOuterSecondHand = (handLength) => {
+export const createOuterSecondHand = (handLength, isDynamic) => {
     const outerSecondHand = new THREE.Mesh(
-        geometriesJs.createOuterSecondHandGeometry(handLength),
+        geometriesJs.createOuterSecondHandGeometry(handLength, isDynamic),
         MATERIALS.outerSecondHand
     );
     outerSecondHand.position.z = CONSTANTS.SIZES.CLOCK_THICKNESS / 2 + CONSTANTS.SIZES.POST_HEIGHT - 0.002;

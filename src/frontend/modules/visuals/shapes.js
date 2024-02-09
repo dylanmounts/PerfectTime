@@ -31,9 +31,12 @@ export const calculateHandLength = (handLengthRatio, scale) => {
  * @param {number} scale - Scaling factor to further adjust the hand's length.
  * @returns {number} The adjusted length of the clock hand.
  */
-export const adjustHandLength = (initialLength, scale) => {
-    const lengthScale = scale === 1 ? 0 : SIZES.INDICATOR_BEVEL_SIZE / 2;
-    return initialLength - lengthScale;
+export const adjustHandLength = (initialLength, scale, isDynamic = true) => {
+    const lengthScale = scale === 1 ? 0 : SIZES.INDICATOR_BEVEL_SIZE;
+    const adjustedLength = isDynamic
+        ? initialLength - scaleValue(lengthScale)
+        : initialLength - lengthScale;
+    return adjustedLength;
 }
 
 /**
@@ -44,14 +47,21 @@ export const adjustHandLength = (initialLength, scale) => {
  * @param {number} baseOffset - Offset of the base of the clock hand from the clock's center.
  * @param {number} handLength - Length of the clock hand.
  * @param {number} [scale=1] - Optional scaling factor to adjust the overall size of the clock hand.
+ * @param {boolean} [isDynamic=true] - Optional parameter to specify if clock is currently dynamic.
  * @returns {THREE.Shape} A THREE.Shape object representing the clock hand.
  */
-export const createClockHand = (tipWidth, baseWidth, baseOffset, handLength, scale = 1) => {
-    baseWidth = scaleValue(baseWidth * scale);
-    baseOffset = scaleValue(baseOffset * scale);
-    tipWidth = scaleValue(tipWidth * scale);
+export const createClockHand = (tipWidth, baseWidth, baseOffset, handLength, scale = 1, isDynamic = false) => {
+    baseWidth = isDynamic
+        ? scaleValue(baseWidth * scale)
+        : baseWidth * scale;
+    baseOffset = isDynamic
+        ? scaleValue(baseOffset * scale)
+        : baseOffset * scale;
+    tipWidth = isDynamic
+        ? scaleValue(tipWidth * scale)
+        : tipWidth * scale;
 
-    const adjustedLength = adjustHandLength(handLength, scale);
+    const adjustedLength = adjustHandLength(handLength, scale, isDynamic);
     const triangleHeight = tipWidth * Math.PI;
     const shape = new THREE.Shape();
     shape.moveTo(0, -baseOffset);
