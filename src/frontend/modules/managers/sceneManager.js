@@ -152,7 +152,7 @@ function updatePanLimits() {
     camera.position.set(center.x, center.y, center.z + cameraZ);
 
     // Update zoom limits and control target based on the clock's dynamic state.
-    minimumZoom = dynamicClockRatio < 2 ? 1 : dynamicClockRatio;
+    minimumZoom = dynamicClockRatio <= 1 ? 1 : dynamicClockRatio;
     controls.minDistance = isDynamic ? minimumZoom : 1;
     controls.maxDistance = camera.position.z;
     controls.target = center;
