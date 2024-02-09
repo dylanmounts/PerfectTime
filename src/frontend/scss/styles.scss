@@ -103,7 +103,9 @@ html, body {
     z-index: 2;
 }
 
-#zoomOutBtn, #zoomInBtn, #twelveHour, #twentyFourHour {
+#zoomOutBtn, #zoomInBtn,
+#twelveHour, #twentyFourHour,
+#roundClock, #dynamicClock {
     cursor: pointer;
 }
 
@@ -131,9 +133,9 @@ html, body {
 }
 
 /* Media Queries */
-@media screen and (max-height: 750px) {
+@media screen and (max-height: 865px) {
     .toast .toast-body {
-        max-height: 300px;
+        max-height: 66vh;
     }
 }
 

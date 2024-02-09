@@ -16,6 +16,8 @@ if (isWebApp) {
         standardHeaders: true,
         legacyHeaders: false,
     });
+    
+    app.set('trust proxy', 1)
 
     // Endpoint to get the perfect time
     app.use('/api/time', apiLimiter, (req, res) => {

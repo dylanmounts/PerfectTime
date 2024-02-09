@@ -40,6 +40,11 @@
             <div class="toast-body">
                 <p><strong>Perfect Time</strong> is designed to show the perfect time every time.</p>
                 <p>Your device's clock is <strong><span id="timeOffsetNumber">0</span> seconds</strong> <span id="timeOffsetDirection">ahead</span>.</p>
+                <div class="d-flex justify-content-around pb-2" id="appStoresContainer">
+                    <a href="https://apps.apple.com/us/app/perfecttime-org/id6477336577?itsct=apps_box_link&itscg=30200" target="_blank" title="App Store">
+                        <img class="apple-badge" alt="Download on the App Store" src="img/apple-badge-black.svg">
+                    </a>
+                </div>
                 <footer class="d-flex border-top">
                     <ul class="nav container justify-content-center align-items-center mt-3 px-0 pb-0">
                         <a class="nav-link py-0" href="https://github.com/dylanmounts/PerfectTime" target="_blank" title="Source">
@@ -64,6 +69,26 @@
                 <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
             </div>
             <div class="toast-body">
+                <table class="table table-borderless text-nowrap">
+                    <thead>
+                        <tr>
+                            <th scope="col">Clock Shape:</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>
+                                <div class="d-flex justify-content-center align-items-center ps-2 pe-5">
+                                    <div class="d-flex h6 m-0 align-items-center" id="roundClock">Classic<i class='bx bx-time-five ps-2'></i></div>
+                                    <div class="d-flex form-check form-switch align-items-center m-0 px-2">
+                                        <input class="form-check-input m-0" type="checkbox" role="switch" id="useDynamicClock" checked>
+                                    </div>
+                                    <div class="d-flex h6 m-0 align-items-center" id="dynamicClock"><i class='bx bx-tab pe-2'></i>Dynamic</div>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
                 <table class="table table-borderless text-nowrap">
                     <thead>
                         <tr>
