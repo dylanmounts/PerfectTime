@@ -50,7 +50,7 @@ export const adjustHandLength = (initialLength, scale, isDynamic = true) => {
  * @param {boolean} [isDynamic=true] - Optional parameter to specify if clock is currently dynamic.
  * @returns {THREE.Shape} A THREE.Shape object representing the clock hand.
  */
-export const createClockHand = (tipWidth, baseWidth, baseOffset, handLength, scale = 1, isDynamic = false) => {
+export const createClockHand = (tipWidth, baseWidth, baseOffset, handLength, scale = 1, isDynamic = true) => {
     baseWidth = isDynamic
         ? scaleValue(baseWidth * scale)
         : baseWidth * scale;
