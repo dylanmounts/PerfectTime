@@ -78,33 +78,10 @@ export const CLOCK_MINUTES_FONT = 'fonts/noto_sans_regular.typeface.json';
 export const CLOCK_DAY_DATE_FONT = 'fonts/noto_serif_light_regular.typeface.json';
 export const CLOCK_DIGITAL_FONT = 'fonts/noto_sans_light_regular.typeface.json';
 export const CLOCK_OUTER_RADIUS = SIZES.CLOCK_RADIUS + SIZES.BEZEL_THICKNESS;
-export const DAY_DATE_FRAME_HEIGHT = SIZES.DAY_DATE_BOX_HEIGHT + 2 * SIZES.DAY_DATE_FRAME_THICKNESS;
-export const DAY_DATE_FRAME_WIDTH = SIZES.DAY_DATE_BOX_WIDTH + 2 * SIZES.DAY_DATE_FRAME_THICKNESS;
-export const DAY_DATE_BOX_ANGLE = Math.PI / 2;
-export const DAY_DATE_CENTER_X = Math.sin(DAY_DATE_BOX_ANGLE) * SIZES.CLOCK_RADIUS * 3/4;
-export const DAY_DATE_CENTER_Y = Math.cos(DAY_DATE_BOX_ANGLE) * SIZES.CLOCK_RADIUS * 3/4;
-export const DAY_DATE_BOX_LEFT_X = DAY_DATE_CENTER_X - SIZES.DAY_DATE_BOX_WIDTH / 2 - SIZES.DAY_DATE_FRAME_THICKNESS / 2;
-export const DAY_DATE_BOX_RIGHT_X = DAY_DATE_CENTER_X + SIZES.DAY_DATE_BOX_WIDTH / 2 + SIZES.DAY_DATE_FRAME_THICKNESS / 2;
-export const DAY_DATE_BOX_TOP_Y = DAY_DATE_CENTER_Y + SIZES.DAY_DATE_BOX_HEIGHT / 2 + SIZES.DAY_DATE_FRAME_THICKNESS / 2;
-export const DAY_DATE_BOX_BOTTOM_Y = DAY_DATE_CENTER_Y - SIZES.DAY_DATE_BOX_HEIGHT / 2 - SIZES.DAY_DATE_FRAME_THICKNESS / 2;
-export const DAY_DATE_PARTS = [
-    'dayDateBox',
-    'dayDateTopFrame',
-    'dayDateBottomFrame',
-    'dayDateLeftFrame',
-    'dayDateRightFrame',
-]
-export const DIGITAL_DISPLAY_CENTER_Y = SIZES.CLOCK_RADIUS * 1/6;
-export const DIGITAL_DISPLAY_PARTS = [
-    'digitalDisplayBox',
-    'digitalDisplayTopFrame',
-    'digitalDisplayBottomFrame',
-    'digitalDisplayLeftFrame',
-    'digitalDisplayRightFrame',
-]
+export const DAY_DATE_BASE_Y = -SIZES.CLOCK_RADIUS * 1/6;
+export const DIGITAL_DISPLAY_BASE_Y = SIZES.CLOCK_RADIUS * 1/6;
 export const INDICATORS = {};
 export const HOUR_NUMBERS = {};
 export const MINUTE_NUMBERS = {};
 export const TIME_ENDPOINT = 'https://PerfectTime.org/api/time';
 export const PERFECT_TIME_SYNC_SECONDS = 60;
-export const MINIMUM_ZOOM = 1;
