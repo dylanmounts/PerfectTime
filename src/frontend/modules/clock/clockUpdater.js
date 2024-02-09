@@ -209,7 +209,9 @@ export function updateDayDateDisplay(scene, font) {
     // Position the display
     let centerY;
     if (useDynamicClock) {
-        centerY = constantsJs.DAY_DATE_BASE_Y / (dynamicClockRatio / 1.5)
+        centerY = dynamicClockRatio < 1
+            ? constantsJs.DAY_DATE_BASE_Y / dynamicClockRatio
+            : constantsJs.DAY_DATE_BASE_Y / (dynamicClockRatio / 1.5)
     } else {
         centerY = constantsJs.DAY_DATE_BASE_Y * 2
     }
@@ -304,7 +306,9 @@ export function updateDigitalDisplay(scene, font) {
     // Position the display
     let centerY;
     if (useDynamicClock) {
-        centerY = constantsJs.DIGITAL_DISPLAY_BASE_Y / (dynamicClockRatio / 1.5)
+        centerY = dynamicClockRatio < 1
+            ? constantsJs.DIGITAL_DISPLAY_BASE_Y / dynamicClockRatio
+            : constantsJs.DIGITAL_DISPLAY_BASE_Y / (dynamicClockRatio / 1.5)
     } else {
         centerY = constantsJs.DIGITAL_DISPLAY_BASE_Y * 2
     }
