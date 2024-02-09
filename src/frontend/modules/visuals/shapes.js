@@ -113,14 +113,33 @@ export const createIndicator = (isFiveMinuteMark, isDynamic = true) => {
     return shape;
 }
 
-export const createComplicationBox = (length, width) => {
 
+// Creates the rounded box for containing the complication text.
+export const createComplicationBox = (width, height, radius = 0.014) => {
     const shape = new THREE.Shape();
-    shape.moveTo( 0,0 );
-    shape.lineTo( 0, width );
-    shape.lineTo( length, width );
-    shape.lineTo( length, 0 );
-    shape.lineTo( 0, 0 );
+
+    shape.moveTo(0, radius);
+
+    // Top left corner
+    shape.absarc(radius, radius, radius, Math.PI, Math.PI * 1.5, false);
+
+    // Top side
+    shape.lineTo(width - radius, 0);
+
+    // Top right corner
+    shape.absarc(width - radius, radius, radius, Math.PI * 1.5, 0, false);
+
+    // Right side
+    shape.lineTo(width, height - radius);
+
+    // Bottom right corner
+    shape.absarc(width - radius, height - radius, radius, 0, Math.PI / 2, false);
+
+    // Bottom side
+    shape.lineTo(radius, height);
+
+    // Bottom left corner
+    shape.absarc(radius, height - radius, radius, Math.PI / 2, Math.PI, false);
 
     return shape;
 }
