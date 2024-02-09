@@ -26,9 +26,10 @@ export const createClockFace = () => {
     return clockFaceGeometry;
 }
 export const createClockBezel = () => {
-    const clockBezelGeometry = new THREE.RingGeometry(
-        CONSTANTS.SIZES.CLOCK_RADIUS,
+    const clockBezelGeometry = new THREE.CylinderGeometry(
         CONSTANTS.CLOCK_OUTER_RADIUS,
+        CONSTANTS.CLOCK_OUTER_RADIUS,
+        CONSTANTS.SIZES.CLOCK_THICKNESS,
         CONSTANTS.SEGMENTS
     );
     clockBezelGeometry.center();

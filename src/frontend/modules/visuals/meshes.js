@@ -17,7 +17,8 @@ export const createClockBezel = () => {
         MATERIALS.clockBezel
     );
     clockBezel.name = 'clockBezel';
-    clockBezel.position.z = CONSTANTS.SIZES.CLOCK_THICKNESS / 2;
+    clockBezel.position.z = -0.1;
+    clockBezel.rotateX(Math.PI / 2);
     return clockBezel;
 }
 
