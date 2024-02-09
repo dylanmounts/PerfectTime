@@ -7,7 +7,7 @@
  */
 
 
-import { Button, Toast } from 'bootstrap';
+import { Toast } from 'bootstrap';
 
 import { updateCameraZoom } from '../managers/sceneManager';
 
@@ -24,14 +24,16 @@ export function setupToastToggle(buttonId, toastId, styleVisible, styleHidden) {
     const toastEl = document.getElementById(toastId);
     if (!buttonEl || !toastEl) return;
 
-    const button = Button.getOrCreateInstance(buttonEl);
     const toast = Toast.getOrCreateInstance(toastEl);
 
     buttonEl.addEventListener('click', () => {
-        button.toggle();
         if (toastEl.classList.contains('show')) {
+            buttonEl.classList.remove('active');
+            toggleButton(buttonEl, 'inactive');
             toast.hide();
         } else {
+            buttonEl.classList.add('active');
+            toggleButton(buttonEl, 'active');
             toast.show();
         }
     });
@@ -39,14 +41,16 @@ export function setupToastToggle(buttonId, toastId, styleVisible, styleHidden) {
     toastEl.addEventListener('show.bs.toast', () => {
         styleVisible(buttonEl);
         if (!buttonEl.classList.contains('active')) {
-            button.toggle();
+            buttonEl.classList.add('active');
+            toggleButton(buttonEl, 'active');
         }
     });
 
     toastEl.addEventListener('hide.bs.toast', () => {
         styleHidden(buttonEl);
         if (buttonEl.classList.contains('active')) {
-            button.toggle();
+            buttonEl.classList.remove('active');
+            toggleButton(buttonEl, 'inactive');
         }
     });
 }
@@ -151,6 +155,11 @@ export function setLanuage() {
  * @param {string} state - The state to set the button, either 'active' or 'inactive'
  */
 export function toggleButton(btnEl, state) {
-    btnEl.classList.toggle('active', state === 'active');
-    btnEl.classList.toggle('inactive', state === 'inactive');
+    if (state === 'active') {
+        btnEl.style.backgroundColor = '#585f63'
+        btnEl.style.color = '#e8e6e3'
+    } else {
+        btnEl.style.backgroundColor = 'transparent'
+        btnEl.style.color = '#6c757d'
+    }
 }
