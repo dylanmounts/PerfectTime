@@ -119,44 +119,45 @@ function updatePanLimits() {
  * 
  @param {boolean} [isDynamic=true] - Optional parameter to specify if clock is currently dynamic..
  */
-export function updateCamera(isDynamic = true) {
+ export function updateCamera(isDynamic = true) {
+    // Get the clock and calculate its center and size.
     const target = scene.getObjectByName('clockFace');
     const center = target.geometry.boundingBox.getCenter(new THREE.Vector3());
     const size = target.geometry.boundingBox.getSize(new THREE.Vector3());
+
+    // Calculate field of view in radians.
     const fov = camera.fov * (Math.PI / 180);
+    const horizontalFOV = 2 * Math.atan(Math.tan(fov / 2) * camera.aspect);
 
-    let cameraZ;
+    let cameraZ; // Initialize variable to calculate camera's Z position.
     if (isDynamic) {
-        if (dynamicClockRatio >= 1) {
-            cameraZ = (dynamicClockHeight / 2) / Math.tan(0.975 * fov / 2) * 1.05;
-        } else {
-            cameraZ = (dynamicClockWidth / 2) / Math.tan(fov / 2) / dynamicClockRatio * 1.01;
-        }
+        // If dynamic, adjust Z based on the clock's aspect ratio and dimensions.
+        cameraZ = dynamicClockRatio >= 1 ?
+            (1.065 * dynamicClockWidth / 2) / Math.tan(0.9925 * horizontalFOV / 2) :
+            (dynamicClockHeight / 2) / Math.tan(0.9925 * fov / 2);
+        // Further adjustment for very wide aspect ratios.
+        if (camera.aspect >= 2.3334) cameraZ *= horizontalFOV / 2;
     } else {
+        // If classic, adjust Z based on the maximum dimension and camera's aspect ratio.
         const maxDim = Math.max(size.x, size.y, size.z);
-
-        if (dynamicClockRatio >= 1) {
-            cameraZ = Math.abs(maxDim / 2 * Math.tan(fov / 2) * 1.9);
-        } else {
-            cameraZ = Math.abs(maxDim / 2 * Math.tan(fov / 2) * 1.86);
-        }
-
-        if (camera.aspect < 1) cameraZ = cameraZ / camera.aspect;
+        cameraZ = camera.aspect >= 1 ? 
+            (maxDim / 2) / Math.tan(horizontalFOV / 2) :
+            (maxDim / 2) / Math.tan(fov / 2) / camera.aspect;
+        if (camera.aspect > 2) cameraZ *= camera.aspect / 2;
     }
 
+    // Set camera position to frame the clock, adjusting for bezel thickness.
     camera.position.z = cameraZ + SIZES.BEZEL_THICKNESS * 1.5;
     camera.lookAt(center);
     camera.position.set(center.x, center.y, center.z + cameraZ);
 
-    minimumZoom = dynamicClockRatio < 2
-        ? 1
-        : dynamicClockRatio;
-    controls.minDistance = isDynamic
-        ? minimumZoom
-        : 1;
+    // Update zoom limits and control target based on the clock's dynamic state.
+    minimumZoom = dynamicClockRatio < 2 ? 1 : dynamicClockRatio;
+    controls.minDistance = isDynamic ? minimumZoom : 1;
     controls.maxDistance = camera.position.z;
     controls.target = center;
 
+    // Update the pan limits based on the new camera position.
     updatePanLimits();
 }
 
