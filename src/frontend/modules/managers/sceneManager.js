@@ -136,7 +136,7 @@ function updatePanLimits() {
         // If dynamic, adjust Z based on the clock's aspect ratio and dimensions.
         cameraZ = dynamicClockRatio >= 1 ?
             (1.05 * dynamicClockWidth / 2) / Math.tan(0.98 * horizontalFOV / 2) :
-            (dynamicClockHeight / 2) / Math.tan(0.98 * fov / 2);
+            (1.06 * dynamicClockHeight / 2) / Math.tan(1.04 * fov / 2);
         // Further adjustment for very wide aspect ratios.
         if (camera.aspect >= 2.3334) cameraZ *= horizontalFOV / 2;
     } else {
