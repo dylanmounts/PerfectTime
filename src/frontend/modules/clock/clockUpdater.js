@@ -11,11 +11,13 @@
 
 import * as THREE from 'three';
 
-import { DAY_DATE_BOX_RIGHT_X, DAY_DATE_PARTS, DIGITAL_DISPLAY_PARTS, HOUR_NUMBERS, INDICATORS, MINUTE_NUMBERS, SIZES, DAY_DATE_BOX_TOP_Y, DAY_DATE_BOX_BOTTOM_Y, DAY_DATE_FRAME_WIDTH, DIGITAL_DISPLAY_FRAME_WIDTH } from '../constants.js';
-import { createDayDateMesh, createDigitalDisplayMesh, removeMeshByGroup, removeMeshByName, MESHES } from '../visuals/meshes.js';
-import { updateCameraSlider } from '../managers/sceneManager.js';
+import * as constantsJs from '../constants.js';
+import * as meshesJs from '../visuals/meshes.js';
+import { dynamicClockRatio, updateCamera, updateCameraSlider } from '../managers/sceneManager.js';
 import { timeManager } from '../managers/timeManager.js';
-import { createDigitalTimeGeometry } from '../visuals/geometries.js';
+import * as geometriesJs from '../visuals/geometries.js';
+import { distanceToEdge, scaleValue } from '../utils/sizeUtils.js';
+import { addClassicClock, addDynamicClock, destroyClock } from './clockConstructor.js';
 
 
 // State variables for the visibility of clock components.
@@ -31,6 +33,7 @@ let secondHandExists = document.getElementById('secondHandOption').checked;
 let sweepingSeconds = document.getElementById('sweepingSecondsOption').checked;
 
 // State variables for tracking the perfect time and its displays.
+export let useDynamicClock = false;
 let currentTime = null;
 let lastTime = new Date;
 let lastSecond = null;
@@ -40,7 +43,10 @@ let lastDigitalDisplayExists = null;
 let lastLanguage = null;
 let language = 'en-US';
 let lastTimeFormat = null;
+let lastClockShape = null;
+let minuteHandLength = null;
 let useTwentyFourHour = false;
+let resizeHandled = false;
 
 /**
  * Main function to update the clock based on the current time retrieved from the
@@ -50,7 +56,7 @@ let useTwentyFourHour = false;
  * @param {Object} digitalFont - The font used for the digital display
  * @param {Object} dayDateFont - The font used for the day/date display
  */
-export function updateClock(scene, digitalFont, dayDateFont) {
+export function updateClock(scene, digitalFont, dayDateFont, hoursFont, minutesFont) {
     currentTime = timeManager.getCurrentTime();
 
     if (!currentTime) {
@@ -80,13 +86,7 @@ export function updateClock(scene, digitalFont, dayDateFont) {
         ? calculateSweepingSecondAngle(seconds, milliseconds)
         : calculateSecondAngle(seconds);
 
-    MESHES.hourHand.rotation.z = -hourAngle;
-    MESHES.outerHourHand.rotation.z = -hourAngle;
-    MESHES.minuteHand.rotation.z = -minuteAngle;
-    MESHES.outerMinuteHand.rotation.z = -minuteAngle;
-    MESHES.secondHand.rotation.z = -secondAngle;
-    MESHES.outerSecondHand.rotation.z = -secondAngle;
-
+    updateClockShape(scene, hoursFont, minutesFont);
     updateLanguage();
     updateTimeFormat();
     updateCameraSlider();
@@ -95,9 +95,11 @@ export function updateClock(scene, digitalFont, dayDateFont) {
     updateDayDateDisplay(scene, dayDateFont);
     updateIndicators(scene);
     updateNumbers(scene);
-    updateHourHand(scene);
-    updateMinuteHand(scene);
-    updateSecondHand(scene);
+    updateSecondHand(scene, secondAngle);
+    updateMinuteHand(scene, minuteAngle);
+    updateHourHand(scene, hourAngle);
+
+    resizeHandled = true;
 }
 
 // Helper functions for calculating clock hand angles
@@ -134,6 +136,26 @@ function calculateSweepingSecondAngle(seconds, milliseconds) {
            (Math.PI / 30000) * milliseconds;
 }
 
+function updateClockShape(scene, hoursFont, minutesFont) {
+    useDynamicClock = document.getElementById('useDynamicClock').checked;
+
+    if (useDynamicClock === lastClockShape) {
+        return;
+    }
+
+    resizeHandled = false;
+    destroyClock(scene);
+
+    if (useDynamicClock) {
+        addDynamicClock(scene, hoursFont, minutesFont);
+    } else {
+        addClassicClock(scene, hoursFont, minutesFont);
+    }
+
+    updateCamera(useDynamicClock);
+    lastClockShape = useDynamicClock;
+}
+
 /**
  * Updates the day/date display on the perfect clock.
  * 
@@ -141,6 +163,12 @@ function calculateSweepingSecondAngle(seconds, milliseconds) {
  * @param {Object} font - The font used for the day-date display.
  */
 export function updateDayDateDisplay(scene, font) {
+    // Function to update state before returning
+    function updateState() {
+        lastDayDate = dayDateStr;
+        lastDayDateExists = dayDateExists;
+    }
+
     if (!currentTime) {
         return;
     }
@@ -148,73 +176,73 @@ export function updateDayDateDisplay(scene, font) {
     const day = currentTime.toLocaleString(language, { weekday: 'short' }).toUpperCase();
     const month = currentTime.toLocaleString(language, { month: 'short' });
     const date = currentTime.toLocaleString(language, { day: 'numeric' });
-    const dayDateStr = `${day.toUpperCase()} ${month} ${date}`;
 
-    const shouldUpdate = dayDateStr !== lastDayDate || dayDateExists !== lastDayDateExists;
+    // These sneaky unicode characters are hidden by the digital time frame. They exist so
+    // the time remains centered within its frame and doesn't shift slightly as the seconds tick.
+    // It's either this or monospace fonts, and monospace fonts are gross.
+    const dayDateStr = `\u007C\u200B${day.toUpperCase()} ${month} ${date}\u200B\u007C`;
 
-    if (!shouldUpdate) {
+    const shouldUpdate = (
+        (dayDateStr !== lastDayDate || dayDateExists !== lastDayDateExists)
+            || !resizeHandled
+    );
+
+    if (!shouldUpdate) return;
+
+    meshesJs.removeMeshByName(scene, 'dayDateDisplay');
+    meshesJs.removeMeshByName(scene, 'dayDateBox');
+
+    // If the day/date dispaly doesn't exist then we don't need to update it.
+    if (!dayDateExists) {
+        updateState();
         return;
     }
-
-    removeMeshByGroup(scene, 'dayDateDisplay');
-
-    // Remove the associated complication box if it exists and the day/date doesn't
-    if (!dayDateExists) {
-        for (const part of DAY_DATE_PARTS) {
-            const prevPart = scene.getObjectByName(part);
-            if (prevPart) {
-                scene.remove(prevPart);
-            }
-        }
-    }
-
-    // If the Date/Date isn't showing, we don't need to update it
-    if (!dayDateExists) {
-        lastDayDate = dayDateStr;
-        lastDayDateExists = dayDateExists;
-        return;
-    }
-    
-    // Add complication box if necessary
-    for (const part of DAY_DATE_PARTS) {
-        if (!scene.getObjectByName(part)) {
-            scene.add(MESHES[part]);
-        }
-    }
-
-    // Initial position for the day mesh
-    let currentPosition = {
-        x: DAY_DATE_BOX_RIGHT_X - SIZES.DAY_DATE_FRAME_THICKNESS * 2 - SIZES.DAY_DATE_SPACING / 2,
-        y: (DAY_DATE_BOX_BOTTOM_Y + DAY_DATE_BOX_TOP_Y) / 2 - SIZES.DAY_DATE_SIZE / 2,
-        z: MESHES.dayDateBox.position.z - SIZES.DAY_DATE_NUMBER_HEIGHT / 2
-    };    
 
     const dayDateGroup = new THREE.Group();
     dayDateGroup.name = 'dayDateDisplay';
 
-    // Create the Day/Date parts and add them to the scene
-    createDayDateMesh(date.toString(), font, currentPosition, dayDateGroup);
-    createDayDateMesh(month, font, currentPosition, dayDateGroup);
-    const lastMeshX = createDayDateMesh(day, font, currentPosition, dayDateGroup);
-    scene.add(dayDateGroup);
+    // Create and add the Day/Date display
+    const dayDateGeometry = geometriesJs.createDayDateGeometry(dayDateStr, font, useDynamicClock);
+    const dayDateMesh = meshesJs.createDayDateMesh(dayDateGeometry);
+    scene.add(dayDateMesh);
 
-    // Adjust the Day/Date box to fit
-    const newLeftX = lastMeshX - SIZES.DAY_DATE_SPACING / 2;
-    const newWidth = DAY_DATE_BOX_RIGHT_X - newLeftX;
-    const newScale = newWidth / DAY_DATE_FRAME_WIDTH;
+    // Position the display
+    let centerY;
+    if (useDynamicClock) {
+        centerY = dynamicClockRatio < 1
+            ? constantsJs.DAY_DATE_BASE_Y / dynamicClockRatio
+            : constantsJs.DAY_DATE_BASE_Y / (dynamicClockRatio / 1.5)
+    } else {
+        centerY = constantsJs.DAY_DATE_BASE_Y * 2
+    }
 
-    MESHES.dayDateBox.scale.x = newScale;
-    MESHES.dayDateBox.position.x = (DAY_DATE_BOX_RIGHT_X + newLeftX) / 2;
+    // Limit how far the display can be placed from the center
+    centerY = Math.max(centerY, -distanceToEdge(Math.PI / 2) * 5/6)
 
-    // Adjust the Day/Date frames to fit
-    MESHES.dayDateLeftFrame.position.x = newLeftX;
-    ['dayDateTopFrame', 'dayDateBottomFrame'].forEach(frame => {
-        MESHES[frame].position.x = MESHES.dayDateBox.position.x;
-        MESHES[frame].scale.x = newScale;
-    });
+    dayDateMesh.name = 'dayDateDisplay';
+    dayDateMesh.position.set(
+        0,
+        centerY,
+        constantsJs.SIZES.CLOCK_THICKNESS / 2
+    )
 
-    lastDayDate = dayDateStr;
-    lastDayDateExists = dayDateExists;
+    // Put it in its box
+    const width = dayDateMesh.geometry.boundingBox.max.x - dayDateMesh.geometry.boundingBox.min.x
+    const height = dayDateMesh.geometry.boundingBox.max.y - dayDateMesh.geometry.boundingBox.min.y
+
+    let dayDateBox;
+    let dayDateDisplayY;
+    if (useDynamicClock) {
+        dayDateBox = meshesJs.createDayDateBox(width - scaleValue(0.039), height + scaleValue(0.1), useDynamicClock);
+        dayDateDisplayY = centerY + scaleValue(constantsJs.SIZES.DIGITAL_DISPLAY_BEVEL_SIZE);
+    } else {
+        dayDateBox = meshesJs.createDayDateBox(width - 0.039, height + 0.1, useDynamicClock);
+        dayDateDisplayY = centerY + constantsJs.SIZES.DIGITAL_DISPLAY_BEVEL_SIZE;
+    }
+    dayDateBox.position.set(0, dayDateDisplayY, constantsJs.SIZES.CLOCK_THICKNESS / 2 - 0.01)
+    scene.add(dayDateBox);
+
+    updateState();
 }
 
 export function toggleDayDate(isChecked) {
@@ -228,6 +256,14 @@ export function toggleDayDate(isChecked) {
  * @param {Object} font - The font used for the day-date display.
  */
 export function updateDigitalDisplay(scene, font) {
+    // Function to update state before returning
+    function updateState() {
+        lastSecond = currentTime.getSeconds();
+        lastDigitalDisplayExists = digitalDisplayExists;
+        lastLanguage = language;
+        lastTimeFormat = useTwentyFourHour;
+    }
+
     if (!currentTime) {
         return;
     }
@@ -243,76 +279,67 @@ export function updateDigitalDisplay(scene, font) {
     // These sneaky unicode characters are hidden by the digital time frame. They exist so
     // the time remains centered within its frame and doesn't shift slightly as the seconds tick.
     // It's either this or monospace fonts, and monospace fonts are gross.
-    const digitalTimeStr = `\u007C\u200B${digitalTime}\u200B\u007C`;
+    const digitalDisplayStr = `\u007C\u200B${digitalTime}\u200B\u007C`;
 
     const currentSecond = currentTime.getSeconds();
     const shouldUpdate = (
         (currentSecond !== lastSecond || digitalDisplayExists !== lastDigitalDisplayExists)
-            || language !== lastLanguage || useTwentyFourHour !== lastTimeFormat
+            || language !== lastLanguage || useTwentyFourHour !== lastTimeFormat || !resizeHandled
     );
 
-    if (!shouldUpdate) {
-        return;
-    }
+    if (!shouldUpdate) return;
 
-    removeMeshByName(scene, 'digitalDisplay');
+    meshesJs.removeMeshByName(scene, 'digitalDisplay');
+    meshesJs.removeMeshByName(scene, 'digitalDisplayBox');
 
-    // Remove associated complication box if it exists and the digital time doesn't
+    // If the digital time dispaly doesn't exist then we don't need to update it.
     if (!digitalDisplayExists) {
-        for (const part of DIGITAL_DISPLAY_PARTS) {
-            const prevPart = scene.getObjectByName(part);
-            if (prevPart) {
-                scene.remove(prevPart);
-            }
-        }
-    }
-
-    // If the digital display isn't showing, we don't need to update it
-    if (!digitalDisplayExists) {
-        lastSecond = currentSecond;
-        lastDigitalDisplayExists = digitalDisplayExists;
-        lastLanguage = language;
-        lastTimeFormat = useTwentyFourHour;
+        updateState();
         return;
-    }
-
-    // Add complication box if necessary
-    for (const part of DIGITAL_DISPLAY_PARTS) {
-        if (!scene.getObjectByName(part)) {
-            scene.add(MESHES[part]);
-        }
     }
 
     // Create and add new digital time display
-    const digitalTimeGeometry = createDigitalTimeGeometry(digitalTimeStr, font);
-    const digitalDisplayMesh = createDigitalDisplayMesh(digitalTimeGeometry);
+    const digitalDisplayGeometry = geometriesJs.createDigitalDisplayGeometry(digitalDisplayStr, font, useDynamicClock);
+    const digitalDisplayMesh = meshesJs.createDigitalDisplayMesh(digitalDisplayGeometry);
     scene.add(digitalDisplayMesh);
 
-    // Position the dispaly
+    // Position the display
+    let centerY;
+    if (useDynamicClock) {
+        centerY = dynamicClockRatio < 1
+            ? constantsJs.DIGITAL_DISPLAY_BASE_Y / dynamicClockRatio
+            : constantsJs.DIGITAL_DISPLAY_BASE_Y / (dynamicClockRatio / 1.5)
+    } else {
+        centerY = constantsJs.DIGITAL_DISPLAY_BASE_Y * 2
+    }
+
+    // Limit how far the display can be placed from the center
+    centerY = Math.min(centerY, distanceToEdge(Math.PI / 2) * 5/6)
+
     digitalDisplayMesh.name = 'digitalDisplay';
-    digitalDisplayMesh.position.x = 0;
-    digitalDisplayMesh.position.y = SIZES.CLOCK_RADIUS * 1/3 - SIZES.DIGITAL_TIME_FRAME_THICKNESS * 2
-    digitalDisplayMesh.position.z = 0;
+    digitalDisplayMesh.position.set(
+        0,
+        centerY,
+        constantsJs.SIZES.CLOCK_THICKNESS / 2
+    )
 
-    // Find the new dimensions and scale for the display
-    const newLeftX = digitalDisplayMesh.geometry.boundingBox.min.x + SIZES.DIGITAL_TIME_FRAME_THICKNESS / 2;
-    const newRightX = digitalDisplayMesh.geometry.boundingBox.max.x - SIZES.DIGITAL_TIME_FRAME_THICKNESS / 2;
-    const newScaleX = (newRightX - newLeftX + SIZES.DIGITAL_TIME_FRAME_THICKNESS) / DIGITAL_DISPLAY_FRAME_WIDTH;
+    // Put it in its box
+    const width = digitalDisplayMesh.geometry.boundingBox.max.x - digitalDisplayMesh.geometry.boundingBox.min.x
+    const height = digitalDisplayMesh.geometry.boundingBox.max.y - digitalDisplayMesh.geometry.boundingBox.min.y
 
-    // Adjust the digital display box to fit
-    MESHES.digitalDisplayBox.scale.x = newScaleX;
+    let digitalDisplayBox;
+    let digitalDisplayY;
+    if (useDynamicClock) {
+        digitalDisplayBox = meshesJs.createDigitalDisplayBox(width - scaleValue(0.051), height + scaleValue(0.15), useDynamicClock);
+        digitalDisplayY = centerY + scaleValue(constantsJs.SIZES.DIGITAL_DISPLAY_BEVEL_SIZE)
+    } else {
+        digitalDisplayBox = meshesJs.createDigitalDisplayBox(width - 0.051, height + 0.15, useDynamicClock);
+        digitalDisplayY = centerY + constantsJs.SIZES.DIGITAL_DISPLAY_BEVEL_SIZE
+    }
+    digitalDisplayBox.position.set(0, digitalDisplayY, constantsJs.SIZES.CLOCK_THICKNESS / 2 - 0.01)
+    scene.add(digitalDisplayBox);
 
-    // Adjust the digital display frames to fit
-    MESHES.digitalDisplayLeftFrame.position.x = newLeftX
-    MESHES.digitalDisplayRightFrame.position.x = newRightX;
-    ['digitalDisplayTopFrame', 'digitalDisplayBottomFrame'].forEach(frame => {
-        MESHES[frame].scale.x = newScaleX;
-    });
-
-    lastSecond = currentSecond;
-    lastDigitalDisplayExists = digitalDisplayExists;
-    lastLanguage = language;
-    lastTimeFormat = useTwentyFourHour;
+    updateState();
 }
 
 export function toggleDigitalDisplay(isChecked) {
@@ -332,23 +359,15 @@ function updateIndicators(scene) {
 
         // Hours
         if (hourIndicatorsExist && i % 5 === 0) {
-            if (i === 15) {
-                if (!dayDateExists && !indicator) {
-                    scene.add(INDICATORS[i]);
-                } else if (dayDateExists && indicator) {
-                    scene.remove(indicator);
-                }
-            } else {
-                scene.add(INDICATORS[i]);
-            }
-        } else if (!hourIndicatorsExist && i % 5 === 0 && indicator) {
+            scene.add(constantsJs.INDICATORS[i]);
+        } else if (!hourIndicatorsExist && i % 5 === 0) {
             scene.remove(indicator);
         }
 
         // Minutes
         if (minuteIndicatorsExist && i % 5 != 0) {
             if (!indicator) {
-                scene.add(INDICATORS[i]);
+                scene.add(constantsJs.INDICATORS[i]);
             }
         } else if (!minuteIndicatorsExist && i % 5 != 0) {
             scene.remove(indicator);
@@ -371,16 +390,13 @@ export function toggleMinuteIndicators(isChecked) {
  */
 function updateNumbers(scene) {
     for (let i = 1; i <= 12; i++) {
-        updateNumber(scene, i, HOUR_NUMBERS, 'hour', hourNumbersExist);
-        updateNumber(scene, i, MINUTE_NUMBERS, 'minute', minuteNumbersExist, 5);
+        updateNumber(scene, i, constantsJs.HOUR_NUMBERS, 'hour', hourNumbersExist);
+        updateNumber(scene, i, constantsJs.MINUTE_NUMBERS, 'minute', minuteNumbersExist, 5);
     }
 }
 
 /**
  * Updates a single number on the clock, either hour or minute.
- *
- * Due to the design choice of having the day/date window cover the
- * 3 o'clock position, the logic here is particularly complex.
  *
  * @param {Object} scene - The Three.js scene object.
  * @param {number} index - The index of the number to be updated.
@@ -394,15 +410,7 @@ function updateNumber(scene, index, numbersArray, namePrefix, numbersExist, mult
     const numberObject = scene.getObjectByName(name);
 
     if (numbersExist) {
-        if (index === 3) {
-            if (!dayDateExists && !numberObject) {
-                scene.add(numbersArray[index * multiplier]);
-            } else if (dayDateExists && numberObject) {
-                scene.remove(numberObject);
-            }
-        } else {
-            scene.add(numbersArray[index * multiplier]);
-        }
+        scene.add(numbersArray[index * multiplier]);
     } else {
         scene.remove(numberObject);
     }
@@ -417,42 +425,92 @@ export function toggleMinuteNumbers(isChecked) {
 }
 
 // Adds or removes the hour hand from the scene based user configurations
-export function updateHourHand(scene) {
+export function updateHourHand(scene, angle) {
     const hourHand = scene.getObjectByName('hourHand');
     const outerHourHand = scene.getObjectByName('outerHourHand');
-    if (hourHandExists && !hourHand) {
-        scene.add(MESHES.hourHand);
-        scene.add(MESHES.outerHourHand);
-    } else if (!hourHandExists && hourHand) {
-        scene.remove(hourHand);
-        scene.remove(outerHourHand);
+
+    [hourHand, outerHourHand].forEach(hand => {
+        if (hand) {
+            hand.geometry.dispose();
+            scene.remove(hand);
+        }
+    });
+
+    if (!hourHandExists) return;
+
+    const edgeScaledLength = useDynamicClock
+        ? distanceToEdge(angle) * 2/3
+        : constantsJs.SIZES.CLOCK_RADIUS * 5/8
+    const minuteScaledLength = minuteHandLength * 2/3
+    let handLength;
+    if (useDynamicClock) {
+        handLength = Math.min(edgeScaledLength, minuteScaledLength);
+    } else {
+        handLength = edgeScaledLength;
     }
+
+    const hourHandMesh = meshesJs.createHourHand(handLength, useDynamicClock);
+    const outerHourHandMesh = meshesJs.createOuterHourHand(handLength, useDynamicClock);
+    hourHandMesh.rotation.z = -angle;
+    outerHourHandMesh.rotation.z = -angle;
+
+    scene.add(hourHandMesh);
+    scene.add(outerHourHandMesh);
 }
 
 // Adds or removes the minute hand from the scene based user configurations
-export function updateMinuteHand(scene) {
+export function updateMinuteHand(scene, angle) {
     const minuteHand = scene.getObjectByName('minuteHand');
     const outerMinuteHand = scene.getObjectByName('outerMinuteHand');
-    if (minuteHandExists && !minuteHand) {
-        scene.add(MESHES.minuteHand);
-        scene.add(MESHES.outerMinuteHand);
-    } else if (!minuteHandExists && minuteHand) {
-        scene.remove(minuteHand);
-        scene.remove(outerMinuteHand);
-    }
+
+    [minuteHand, outerMinuteHand].forEach(hand => {
+        if (hand) {
+            hand.geometry.dispose();
+            scene.remove(hand);
+        }
+    });
+
+    if (!minuteHandExists) return;
+
+    const handLength = useDynamicClock
+        ? distanceToEdge(angle)
+        : constantsJs.SIZES.CLOCK_RADIUS * 47 / 48
+    minuteHandLength = handLength;
+
+    const minuteHandMesh = meshesJs.createMinuteHand(handLength, useDynamicClock);
+    const outerMinuteHandMesh = meshesJs.createOuterMinuteHand(handLength, useDynamicClock);
+    minuteHandMesh.rotation.z = -angle;
+    outerMinuteHandMesh.rotation.z = -angle;
+
+    scene.add(minuteHandMesh);
+    scene.add(outerMinuteHandMesh);
 }
 
 // Adds or removes the second hand from the scene based user configurations
-export function updateSecondHand(scene) {
+export function updateSecondHand(scene, angle) {
     const secondHand = scene.getObjectByName('secondHand');
     const outerSecondHand = scene.getObjectByName('outerSecondHand');
-    if (secondHandExists && !secondHand) {
-        scene.add(MESHES.secondHand);
-        scene.add(MESHES.outerSecondHand);
-    } else if (!secondHandExists && secondHand) {
-        scene.remove(secondHand);
-        scene.remove(outerSecondHand);
-    }
+
+    [secondHand, outerSecondHand].forEach(hand => {
+        if (hand) {
+            hand.geometry.dispose();
+            scene.remove(hand);
+        }
+    });
+
+    if (!secondHandExists) return;
+
+    const handLength = useDynamicClock
+        ? distanceToEdge(angle)
+        : constantsJs.SIZES.CLOCK_RADIUS * 47 / 48
+
+    const secondHandMesh = meshesJs.createSecondHand(handLength, useDynamicClock);
+    const outerSecondHandMesh = meshesJs.createOuterSecondHand(handLength, useDynamicClock);
+    secondHandMesh.rotation.z = -angle;
+    outerSecondHandMesh.rotation.z = -angle;
+
+    scene.add(secondHandMesh);
+    scene.add(outerSecondHandMesh);
 }
 
 export function toggleHourHand(isChecked) {
@@ -489,4 +547,8 @@ function updateLanguage() {
 // Sets the time format (12 or 24-hour) for the digital display based on the selected value
 function updateTimeFormat() {
     useTwentyFourHour = document.getElementById('useTwentyFourHour').checked;
+}
+
+export function toggleResizeHandled(isHandled) {
+    resizeHandled = isHandled;
 }
