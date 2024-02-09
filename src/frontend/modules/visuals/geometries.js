@@ -229,8 +229,8 @@ export function createMinuteGeometry(minute, font, isDynamic = true) {
             ? scaleValue(CONSTANTS.SIZES.NUMBER_SIZE / 2)
             : CONSTANTS.SIZES.NUMBER_SIZE / 2,
         height: isDynamic
-            ? scaleValue(CONSTANTS.SIZES.NUMBER_HEIGHT / 2)
-            : CONSTANTS.SIZES.NUMBER_HEIGHT / 2,
+            ? scaleValue(CONSTANTS.SIZES.NUMBER_HEIGHT / 2.5)
+            : CONSTANTS.SIZES.NUMBER_HEIGHT / 2.5,
         curveSegments: CONSTANTS.SEGMENTS / 8,
         bevelEnabled: true,
         bevelThickness: isDynamic 
