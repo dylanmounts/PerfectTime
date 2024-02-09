@@ -8,7 +8,7 @@
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 
-import { MINIMUM_ZOOM, PERFECT_TIME_SYNC_SECONDS, SIZES } from '../constants';
+import { PERFECT_TIME_SYNC_SECONDS, SIZES } from '../constants';
 import { dayDateFontManager, digitalFontManager, hoursFontManager, minutesFontManager } from './fontManager';
 import { timeManager } from './timeManager';
 import { addClassicClock, addDynamicClock, destroyClock } from '../clock/clockConstructor';
@@ -23,6 +23,7 @@ const renderer = new THREE.WebGLRenderer({ antialias: true });
 const controls = new OrbitControls(camera, renderer.domElement);
 const minPan = new THREE.Vector3();
 const maxPan = new THREE.Vector3();
+let minimumZoom = 1;
 
 let hoursFont = null;
 let minutesFont = null;
@@ -67,7 +68,7 @@ function setupScene() {
     controls.maxPolarAngle = Math.PI / 2;
     controls.minAzimuthAngle = 0;
     controls.maxAzimuthAngle = 0;
-    controls.minDistance = MINIMUM_ZOOM;
+    controls.minDistance = minimumZoom;
     controls.mouseButtons = {
         LEFT: THREE.MOUSE.PAN,
         RIGHT: THREE.MOUSE.PAN,
@@ -101,7 +102,7 @@ function updatePanLimits() {
     const size = target.geometry.boundingBox.getSize(new THREE.Vector3());
 
     // Calculate the ratio of current zoom level to the maximum zoom level
-    const zoomRatio = controls.maxDistance / (camera.position.distanceTo(center));
+    const zoomRatio = controls.maxDistance / camera.position.distanceTo(center);
     const adjustedSize = size.multiplyScalar(zoomRatio);
 
     // Calculate the original pan limits based on the object size
@@ -123,11 +124,11 @@ export function updateCamera(isDynamic = true) {
     const center = target.geometry.boundingBox.getCenter(new THREE.Vector3());
     const size = target.geometry.boundingBox.getSize(new THREE.Vector3());
     const fov = camera.fov * (Math.PI / 180);
-    let cameraZ;
 
+    let cameraZ;
     if (isDynamic) {
         if (dynamicClockRatio >= 1) {
-            cameraZ = (dynamicClockHeight / 2) / Math.tan(fov / 2) * 1.075;
+            cameraZ = (dynamicClockHeight / 2) / Math.tan(0.975 * fov / 2) * 1.05;
         } else {
             cameraZ = (dynamicClockWidth / 2) / Math.tan(fov / 2) / dynamicClockRatio * 1.01;
         }
@@ -147,6 +148,10 @@ export function updateCamera(isDynamic = true) {
     camera.lookAt(center);
     camera.position.set(center.x, center.y, center.z + cameraZ);
 
+    minimumZoom = dynamicClockRatio;
+    controls.minDistance = isDynamic
+        ? dynamicClockRatio
+        : 1;
     controls.maxDistance = camera.position.z;
     controls.target = center;
 
@@ -160,7 +165,7 @@ export function updateCamera(isDynamic = true) {
  * @returns {number} The calculated camera zoom level.
  */
 function mapZoomLevel(sliderValue) {
-    let value = (100 - sliderValue) / 100 * (controls.maxDistance - MINIMUM_ZOOM) + MINIMUM_ZOOM;
+    let value = (100 - sliderValue) / 100 * (controls.maxDistance - minimumZoom) + minimumZoom;
     return value
 }
 
@@ -170,7 +175,7 @@ function mapZoomLevel(sliderValue) {
  * @returns {number} The corresponding slider value.
  */
 function unmapZoomLevel(cameraZoom) {
-    return 100 - ((cameraZoom - MINIMUM_ZOOM) / (controls.maxDistance - MINIMUM_ZOOM) * 100);
+    return 100 - ((cameraZoom - minimumZoom) / (controls.maxDistance - minimumZoom) * 100);
 }
 
 /**
