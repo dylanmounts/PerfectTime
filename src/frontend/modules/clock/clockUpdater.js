@@ -209,12 +209,13 @@ export function updateDayDateDisplay(scene, font) {
     // Position the display
     let centerY;
     if (useDynamicClock) {
-        centerY = dynamicClockRatio > 1
-            ? constantsJs.DAY_DATE_BASE_Y / (dynamicClockRatio / 1.5)
-            : constantsJs.DAY_DATE_BASE_Y / dynamicClockRatio
+        centerY = constantsJs.DAY_DATE_BASE_Y / (dynamicClockRatio / 1.5)
     } else {
         centerY = constantsJs.DAY_DATE_BASE_Y * 2
     }
+
+    // Limit how far the display can be placed from the center
+    centerY = Math.max(centerY, -distanceToEdge(Math.PI / 2) * 5/6)
 
     dayDateMesh.name = 'dayDateDisplay';
     dayDateMesh.position.set(
@@ -303,12 +304,14 @@ export function updateDigitalDisplay(scene, font) {
     // Position the display
     let centerY;
     if (useDynamicClock) {
-        centerY = dynamicClockRatio > 1
-            ? constantsJs.DIGITAL_DISPLAY_BASE_Y / (dynamicClockRatio / 1.5)
-            : constantsJs.DIGITAL_DISPLAY_BASE_Y / dynamicClockRatio
+        centerY = constantsJs.DIGITAL_DISPLAY_BASE_Y / (dynamicClockRatio / 1.5)
     } else {
         centerY = constantsJs.DIGITAL_DISPLAY_BASE_Y * 2
     }
+
+    // Limit how far the display can be placed from the center
+    centerY = Math.min(centerY, distanceToEdge(Math.PI / 2) * 5/6)
+
     digitalDisplayMesh.name = 'digitalDisplay';
     digitalDisplayMesh.position.set(
         0,
