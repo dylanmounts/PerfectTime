@@ -438,11 +438,13 @@ export function updateMinuteHand(scene, angle) {
 
     if (!minuteHandExists) return;
 
-    const handLength = distanceToEdge(angle)
+    const handLength = useDynamicClock
+        ? distanceToEdge(angle)
+        : constantsJs.SIZES.CLOCK_RADIUS * 47 / 48
     minuteHandLength = handLength;
 
-    const minuteHandMesh = meshesJs.createMinuteHand(handLength);
-    const outerMinuteHandMesh = meshesJs.createOuterMinuteHand(handLength);
+    const minuteHandMesh = meshesJs.createMinuteHand(handLength, useDynamicClock);
+    const outerMinuteHandMesh = meshesJs.createOuterMinuteHand(handLength, useDynamicClock);
     minuteHandMesh.rotation.z = -angle;
     outerMinuteHandMesh.rotation.z = -angle;
 
