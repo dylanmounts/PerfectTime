@@ -133,8 +133,8 @@ export const createDynamicClockFaceGeometry = () => new RoundedBoxGeometry(
 );
 
 export const createDynamicClockBezelGeometry = () => new RoundedBoxGeometry(
-    dynamicClockWidth + CONSTANTS.SIZES.BEZEL_THICKNESS,
-    dynamicClockHeight + CONSTANTS.SIZES.BEZEL_THICKNESS,
+    dynamicClockWidth + CONSTANTS.SIZES.BEZEL_THICKNESS * 100,
+    dynamicClockHeight + CONSTANTS.SIZES.BEZEL_THICKNESS * 100,
     CONSTANTS.SIZES.CLOCK_THICKNESS,
     CONSTANTS.SEGMENTS / 8,
     CONSTANTS.SIZES.BEZEL_RADIUS
