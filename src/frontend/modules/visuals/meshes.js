@@ -17,8 +17,7 @@ export const createClockBezel = () => {
         MATERIALS.clockBezel
     );
     clockBezel.name = 'clockBezel';
-    clockBezel.position.z = -0.1;
-    clockBezel.rotateX(Math.PI / 2);
+    clockBezel.position.z = CONSTANTS.SIZES.CLOCK_THICKNESS / 2;
     return clockBezel;
 }
 
@@ -30,6 +29,17 @@ export const createClockFace = () => {
     clockFace.name = 'clockFace';
     clockFace.rotateX(Math.PI / 2);
     return clockFace;
+}
+
+export const createClockFrame = () => {
+    const clockFrame = new THREE.Mesh(
+        geometriesJs.createClockFrame(),
+        MATERIALS.clockBezel
+    );
+    clockFrame.name = 'clockFrame';
+    clockFrame.position.z = -.01;
+    clockFrame.rotateX(Math.PI / 2);
+    return clockFrame;
 }
 
 export const createHourHand = (handLength, isDynamic) => {

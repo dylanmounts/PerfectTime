@@ -25,11 +25,20 @@ export const createClockFace = () => {
     clockFaceGeometry.center();
     return clockFaceGeometry;
 }
-export const createClockBezel = () => {
-    const clockBezelGeometry = new THREE.CylinderGeometry(
+export const createClockFrame = () => {
+    const createClockFrame = new THREE.CylinderGeometry(
         CONSTANTS.CLOCK_OUTER_RADIUS,
         CONSTANTS.CLOCK_OUTER_RADIUS,
         CONSTANTS.SIZES.CLOCK_THICKNESS,
+        CONSTANTS.SEGMENTS
+    );
+    createClockFrame.center();
+    return createClockFrame;
+};
+export const createClockBezel = () => {
+    const clockBezelGeometry = new THREE.RingGeometry(
+        CONSTANTS.SIZES.CLOCK_RADIUS,
+        CONSTANTS.CLOCK_OUTER_RADIUS,
         CONSTANTS.SEGMENTS
     );
     clockBezelGeometry.center();
