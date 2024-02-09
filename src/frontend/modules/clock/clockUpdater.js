@@ -163,6 +163,12 @@ function updateClockShape(scene, hoursFont, minutesFont) {
  * @param {Object} font - The font used for the day-date display.
  */
 export function updateDayDateDisplay(scene, font) {
+    // Function to update state before returning
+    function updateState() {
+        lastDayDate = dayDateStr;
+        lastDayDateExists = dayDateExists;
+    }
+
     if (!currentTime) {
         return;
     }
@@ -181,12 +187,16 @@ export function updateDayDateDisplay(scene, font) {
             || !resizeHandled
     );
 
-    if (!shouldUpdate) {
-        return;
-    }
+    if (!shouldUpdate) return;
 
     meshesJs.removeMeshByName(scene, 'dayDateDisplay');
     meshesJs.removeMeshByName(scene, 'dayDateBox');
+
+    // If the day/date dispaly doesn't exist then we don't need to update it.
+    if (!dayDateExists) {
+        updateState();
+        return;
+    }
 
     const dayDateGroup = new THREE.Group();
     dayDateGroup.name = 'dayDateDisplay';
@@ -223,8 +233,7 @@ export function updateDayDateDisplay(scene, font) {
     dayDateBox.position.set(0, dayDateDisplayY, constantsJs.SIZES.CLOCK_THICKNESS / 2 - 0.01)
     scene.add(dayDateBox);
 
-    lastDayDate = dayDateStr;
-    lastDayDateExists = dayDateExists;
+    updateState();
 }
 
 export function toggleDayDate(isChecked) {
@@ -238,6 +247,14 @@ export function toggleDayDate(isChecked) {
  * @param {Object} font - The font used for the day-date display.
  */
 export function updateDigitalDisplay(scene, font) {
+    // Function to update state before returning
+    function updateState() {
+        lastSecond = currentTime.getSeconds();
+        lastDigitalDisplayExists = digitalDisplayExists;
+        lastLanguage = language;
+        lastTimeFormat = useTwentyFourHour;
+    }
+
     if (!currentTime) {
         return;
     }
@@ -261,12 +278,16 @@ export function updateDigitalDisplay(scene, font) {
             || language !== lastLanguage || useTwentyFourHour !== lastTimeFormat || !resizeHandled
     );
 
-    if (!shouldUpdate) {
-        return;
-    }
+    if (!shouldUpdate) return;
 
     meshesJs.removeMeshByName(scene, 'digitalDisplay');
     meshesJs.removeMeshByName(scene, 'digitalDisplayBox');
+
+    // If the digital time dispaly doesn't exist then we don't need to update it.
+    if (!digitalDisplayExists) {
+        updateState();
+        return;
+    }
 
     // Create and add new digital time display
     const digitalDisplayGeometry = geometriesJs.createDigitalDisplayGeometry(digitalDisplayStr, font, useDynamicClock);
@@ -300,10 +321,7 @@ export function updateDigitalDisplay(scene, font) {
     digitalDisplayBox.position.set(0, digitalDisplayY, constantsJs.SIZES.CLOCK_THICKNESS / 2 - 0.01)
     scene.add(digitalDisplayBox);
 
-    lastSecond = currentSecond;
-    lastDigitalDisplayExists = digitalDisplayExists;
-    lastLanguage = language;
-    lastTimeFormat = useTwentyFourHour;
+    updateState();
 }
 
 export function toggleDigitalDisplay(isChecked) {
