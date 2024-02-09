@@ -103,7 +103,9 @@ function updatePanLimits() {
 
     // Calculate the ratio of current zoom level to the maximum zoom level
     const zoomRatio = controls.maxDistance / camera.position.distanceTo(center);
-    const adjustedSize = size.multiplyScalar(zoomRatio);
+    const adjustedSize = useDynamicClock
+        ? size.multiplyScalar(zoomRatio)
+        : size.multiplyScalar(1 / zoomRatio);
 
     // Calculate the original pan limits based on the object size
     const originalMinPan = center.clone().sub(adjustedSize);
@@ -140,14 +142,12 @@ function updatePanLimits() {
     } else {
         // If classic, adjust Z based on the maximum dimension and camera's aspect ratio.
         const maxDim = Math.max(size.x, size.y, size.z);
-        cameraZ = camera.aspect >= 1 ? 
-            (maxDim / 2) / Math.tan(horizontalFOV / 2) :
-            (maxDim / 2) / Math.tan(fov / 2) / camera.aspect;
-        if (camera.aspect > 2) cameraZ *= camera.aspect / 2;
+        cameraZ = Math.abs(maxDim / 1.175 * Math.tan(fov / 2));
+        if (camera.aspect < 1) cameraZ = cameraZ / camera.aspect;
+        cameraZ += SIZES.CLOCK_THICKNESS * 0.75;
     }
 
     // Set camera position to frame the clock, adjusting for bezel thickness.
-    camera.position.z = cameraZ + SIZES.BEZEL_THICKNESS * 1.5;
     camera.lookAt(center);
     camera.position.set(center.x, center.y, center.z + cameraZ);
 
