@@ -65,7 +65,6 @@ export function applyTouchDeviceStyles() {
     const appStoresContainer = document.getElementById('appStoresContainer')
     appStoresContainer.classList.remove('d-flex');
     appStoresContainer.style.display = 'none';
-    console.log(appStoresContainer);
 
     if (!isAppleDevice()) return;
 
