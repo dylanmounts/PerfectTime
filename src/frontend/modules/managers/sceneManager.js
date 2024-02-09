@@ -148,10 +148,13 @@ export function updateCamera(isDynamic = true) {
     camera.lookAt(center);
     camera.position.set(center.x, center.y, center.z + cameraZ);
 
-    minimumZoom = dynamicClockRatio;
+    minimumZoom = dynamicClockRatio < 2
+        ? 1
+        : dynamicClockRatio;
     controls.minDistance = isDynamic
-        ? dynamicClockRatio
+        ? minimumZoom
         : 1;
+    console.log(controls.minDistance);
     controls.maxDistance = camera.position.z;
     controls.target = center;
 
