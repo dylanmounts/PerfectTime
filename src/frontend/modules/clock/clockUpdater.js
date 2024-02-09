@@ -207,9 +207,15 @@ export function updateDayDateDisplay(scene, font) {
     scene.add(dayDateMesh);
 
     // Position the display
-    const centerY = dynamicClockRatio > 1
-        ? constantsJs.DAY_DATE_BASE_Y / (dynamicClockRatio / 1.5)
-        : constantsJs.DAY_DATE_BASE_Y / dynamicClockRatio
+    let centerY;
+    if (useDynamicClock) {
+        centerY = dynamicClockRatio > 1
+            ? constantsJs.DAY_DATE_BASE_Y / (dynamicClockRatio / 1.5)
+            : constantsJs.DAY_DATE_BASE_Y / dynamicClockRatio
+    } else {
+        centerY = constantsJs.DAY_DATE_BASE_Y * 2
+    }
+
     dayDateMesh.name = 'dayDateDisplay';
     dayDateMesh.position.set(
         0,
@@ -295,9 +301,14 @@ export function updateDigitalDisplay(scene, font) {
     scene.add(digitalDisplayMesh);
 
     // Position the display
-    const centerY = dynamicClockRatio > 1
-        ? constantsJs.DIGITAL_DISPLAY_BASE_Y / (dynamicClockRatio / 1.5)
-        : constantsJs.DIGITAL_DISPLAY_BASE_Y / dynamicClockRatio
+    let centerY;
+    if (useDynamicClock) {
+        centerY = dynamicClockRatio > 1
+            ? constantsJs.DIGITAL_DISPLAY_BASE_Y / (dynamicClockRatio / 1.5)
+            : constantsJs.DIGITAL_DISPLAY_BASE_Y / dynamicClockRatio
+    } else {
+        centerY = constantsJs.DIGITAL_DISPLAY_BASE_Y * 2
+    }
     digitalDisplayMesh.name = 'digitalDisplay';
     digitalDisplayMesh.position.set(
         0,
