@@ -154,7 +154,6 @@ export function updateCamera(isDynamic = true) {
     controls.minDistance = isDynamic
         ? minimumZoom
         : 1;
-    console.log(controls.minDistance);
     controls.maxDistance = camera.position.z;
     controls.target = center;
 
