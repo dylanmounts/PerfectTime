@@ -118,12 +118,9 @@ function createIndicators(scene, isDynamic = true) {
  * @param {Object} minutesFont - The sans font used for the minutes.
  */
 export function addClassicClock(scene, hoursFont, minutesFont) {
-    let clockFace = meshesJs.createClockFace();
-    let clockBezel = meshesJs.createClockBezel();
-
-    scene.add(clockFace);
-    scene.add(clockBezel);
-    scene.add(meshesJs.post);
+    scene.add(meshesJs.createClockFace());
+    scene.add(meshesJs.createClockFrame());
+    scene.add(meshesJs.createClockBezel());
 
     createIndicators(scene, false);
     createNumbers(scene, hoursFont, minutesFont, false);
@@ -137,12 +134,9 @@ export function addClassicClock(scene, hoursFont, minutesFont) {
  * @param {Object} minutesFont - The sans font used for the minutes.
  */
 export function addDynamicClock(scene, hoursFont, minutesFont) {
-    let clockFace = meshesJs.createDynamicClockFace();
-    let clockBezel = meshesJs.createDynamicClockBezel();
-
-    scene.add(clockFace);
-    scene.add(clockBezel);
-    scene.add(meshesJs.post);
+    scene.add(meshesJs.createDynamicClockFace());
+    scene.add(meshesJs.createClockFrame());
+    scene.add(meshesJs.createDynamicClockBezel());
 
     createIndicators(scene);
     createNumbers(scene, hoursFont, minutesFont);
