@@ -58,6 +58,7 @@ let resizeHandled = false;
  */
 export function updateClock(scene, digitalFont, dayDateFont, hoursFont, minutesFont) {
     currentTime = timeManager.getCurrentTime();
+    currentTime.setHours(12, 1, 0, 0);
 
     if (!currentTime) {
         return;
@@ -91,8 +92,8 @@ export function updateClock(scene, digitalFont, dayDateFont, hoursFont, minutesF
     updateTimeFormat();
     updateCameraSlider();
     updateTimeOffset();
-    updateDigitalDisplay(scene, digitalFont, useDynamicClock);
-    updateDayDateDisplay(scene, dayDateFont, useDynamicClock);
+    updateDigitalDisplay(scene, digitalFont);
+    updateDayDateDisplay(scene, dayDateFont);
     updateIndicators(scene);
     updateNumbers(scene);
     updateSecondHand(scene, secondAngle);
@@ -161,9 +162,8 @@ function updateClockShape(scene, hoursFont, minutesFont) {
  * 
  * @param {Object} scene - The Three.js scene object.
  * @param {Object} font - The font used for the day-date display.
- * @param {boolean} [isDynamic=true] - Optional parameter to specify if clock is currently dynamic.
  */
-export function updateDayDateDisplay(scene, font, isDynamic = true) {
+export function updateDayDateDisplay(scene, font) {
     if (!currentTime) {
         return;
     }
@@ -197,7 +197,7 @@ export function updateDayDateDisplay(scene, font, isDynamic = true) {
     dayDateGroup.name = 'dayDateDisplay';
 
     // Create and add the Day/Date display
-    const dayDateGeometry = geometriesJs.createDayDateGeometry(dayDateStr, font, isDynamic);
+    const dayDateGeometry = geometriesJs.createDayDateGeometry(dayDateStr, font, useDynamicClock);
     const dayDateMesh = meshesJs.createDayDateMesh(dayDateGeometry);
     scene.add(dayDateMesh);
 
@@ -215,11 +215,11 @@ export function updateDayDateDisplay(scene, font, isDynamic = true) {
 
     let dayDateBox;
     let dayDateDisplayY;
-    if (isDynamic) {
-        dayDateBox = meshesJs.createDayDateBox(width - scaleValue(0.039), height + scaleValue(0.1), isDynamic);
+    if (useDynamicClock) {
+        dayDateBox = meshesJs.createDayDateBox(width - scaleValue(0.039), height + scaleValue(0.1), useDynamicClock);
         dayDateDisplayY = -constantsJs.DIGITAL_DISPLAY_CENTER_Y + scaleValue(constantsJs.SIZES.DIGITAL_DISPLAY_BEVEL_SIZE);
     } else {
-        dayDateBox = meshesJs.createDayDateBox(width - 0.039, height + 0.1, isDynamic);
+        dayDateBox = meshesJs.createDayDateBox(width - 0.039, height + 0.1, useDynamicClock);
         dayDateDisplayY = -constantsJs.DIGITAL_DISPLAY_CENTER_Y + constantsJs.SIZES.DIGITAL_DISPLAY_BEVEL_SIZE;
     }
     dayDateBox.position.set(0, dayDateDisplayY, constantsJs.SIZES.CLOCK_THICKNESS / 2 - 0.01)
@@ -238,9 +238,8 @@ export function toggleDayDate(isChecked) {
  * 
  * @param {Object} scene - The Three.js scene object.
  * @param {Object} font - The font used for the day-date display.
- * @param {boolean} [isDynamic=true] - Optional parameter to specify if clock is currently dynamic.
  */
-export function updateDigitalDisplay(scene, font, isDynamic = true) {
+export function updateDigitalDisplay(scene, font) {
     if (!currentTime) {
         return;
     }
@@ -282,7 +281,7 @@ export function updateDigitalDisplay(scene, font, isDynamic = true) {
     }
 
     // Create and add new digital time display
-    const digitalDisplayGeometry = geometriesJs.createDigitalDisplayGeometry(digitalDisplayStr, font, isDynamic);
+    const digitalDisplayGeometry = geometriesJs.createDigitalDisplayGeometry(digitalDisplayStr, font, useDynamicClock);
     const digitalDisplayMesh = meshesJs.createDigitalDisplayMesh(digitalDisplayGeometry);
     scene.add(digitalDisplayMesh);
 
@@ -300,11 +299,11 @@ export function updateDigitalDisplay(scene, font, isDynamic = true) {
 
     let digitalDisplayBox;
     let digitalDisplayY;
-    if (isDynamic) {
-        digitalDisplayBox = meshesJs.createDigitalDisplayBox(width - scaleValue(0.051), height + scaleValue(0.15), isDynamic);
+    if (useDynamicClock) {
+        digitalDisplayBox = meshesJs.createDigitalDisplayBox(width - scaleValue(0.051), height + scaleValue(0.15), useDynamicClock);
         digitalDisplayY = constantsJs.DIGITAL_DISPLAY_CENTER_Y + scaleValue(constantsJs.SIZES.DIGITAL_DISPLAY_BEVEL_SIZE)
     } else {
-        digitalDisplayBox = meshesJs.createDigitalDisplayBox(width - 0.051, height + 0.15, isDynamic);
+        digitalDisplayBox = meshesJs.createDigitalDisplayBox(width - 0.051, height + 0.15, useDynamicClock);
         digitalDisplayY = constantsJs.DIGITAL_DISPLAY_CENTER_Y + constantsJs.SIZES.DIGITAL_DISPLAY_BEVEL_SIZE
     }
     digitalDisplayBox.position.set(0, digitalDisplayY, constantsJs.SIZES.CLOCK_THICKNESS / 2 - 0.01)
@@ -465,7 +464,9 @@ export function updateSecondHand(scene, angle) {
 
     if (!secondHandExists) return;
 
-    const handLength = distanceToEdge(angle)
+    const handLength = useDynamicClock
+        ? distanceToEdge(angle)
+        : constantsJs.SIZES.CLOCK_RADIUS * 47 / 48
 
     const secondHandMesh = meshesJs.createSecondHand(handLength);
     const outerSecondHandMesh = meshesJs.createOuterSecondHand(handLength);
