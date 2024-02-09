@@ -96,17 +96,13 @@ function setupScene() {
  * Dynamically updates the panning limits of the camera based on its current zoom level.
  */
 function updatePanLimits() {
-    const target = scene.getObjectByName('clockFace')
+    const target = scene.getObjectByName('clockBezel')
     const center = target.geometry.boundingBox.getCenter(new THREE.Vector3());
     const size = target.geometry.boundingBox.getSize(new THREE.Vector3());
 
-    // Scale the clock size based on the screen size
-    const paddingFactor = SIZES.CLOCK_RADIUS / (controls.maxDistance * controls.maxDistance)
-    const scalingFactor = controls.maxDistance * paddingFactor;
-    const adjustedSize = size.clone().multiplyScalar(scalingFactor);
-
     // Calculate the ratio of current zoom level to the maximum zoom level
-    const zoomRatio = controls.maxDistance / camera.position.distanceTo(center);
+    const zoomRatio = controls.maxDistance / (camera.position.distanceTo(center));
+    const adjustedSize = size.multiplyScalar(zoomRatio);
 
     // Calculate the original pan limits based on the object size
     const originalMinPan = center.clone().sub(adjustedSize);
