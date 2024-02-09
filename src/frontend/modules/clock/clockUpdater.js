@@ -58,7 +58,6 @@ let resizeHandled = false;
  */
 export function updateClock(scene, digitalFont, dayDateFont, hoursFont, minutesFont) {
     currentTime = timeManager.getCurrentTime();
-    currentTime.setHours(12, 1, 0, 0);
 
     if (!currentTime) {
         return;
@@ -411,12 +410,19 @@ export function updateHourHand(scene, angle) {
 
     if (!hourHandExists) return;
 
-    const edgeScaledLength = distanceToEdge(angle) * 2/3
+    const edgeScaledLength = useDynamicClock
+        ? distanceToEdge(angle) * 2/3
+        : constantsJs.SIZES.CLOCK_RADIUS * 5/8
     const minuteScaledLength = minuteHandLength * 2/3
-    const handLength = Math.min(edgeScaledLength, minuteScaledLength)
+    let handLength;
+    if (useDynamicClock) {
+        handLength = Math.min(edgeScaledLength, minuteScaledLength);
+    } else {
+        handLength = edgeScaledLength;
+    }
 
-    const hourHandMesh = meshesJs.createHourHand(handLength);
-    const outerHourHandMesh = meshesJs.createOuterHourHand(handLength);
+    const hourHandMesh = meshesJs.createHourHand(handLength, useDynamicClock);
+    const outerHourHandMesh = meshesJs.createOuterHourHand(handLength, useDynamicClock);
     hourHandMesh.rotation.z = -angle;
     outerHourHandMesh.rotation.z = -angle;
 
