@@ -13,7 +13,7 @@ import * as THREE from 'three';
 
 import * as constantsJs from '../constants.js';
 import * as meshesJs from '../visuals/meshes.js';
-import { updateCamera, updateCameraSlider } from '../managers/sceneManager.js';
+import { dynamicClockRatio, updateCamera, updateCameraSlider } from '../managers/sceneManager.js';
 import { timeManager } from '../managers/timeManager.js';
 import * as geometriesJs from '../visuals/geometries.js';
 import { distanceToEdge, scaleValue } from '../utils/sizeUtils.js';
@@ -170,6 +170,10 @@ export function updateDayDateDisplay(scene, font) {
     const day = currentTime.toLocaleString(language, { weekday: 'short' }).toUpperCase();
     const month = currentTime.toLocaleString(language, { month: 'short' });
     const date = currentTime.toLocaleString(language, { day: 'numeric' });
+
+    // These sneaky unicode characters are hidden by the digital time frame. They exist so
+    // the time remains centered within its frame and doesn't shift slightly as the seconds tick.
+    // It's either this or monospace fonts, and monospace fonts are gross.
     const dayDateStr = `\u007C\u200B${day.toUpperCase()} ${month} ${date}\u200B\u007C`;
 
     const shouldUpdate = (
@@ -184,14 +188,6 @@ export function updateDayDateDisplay(scene, font) {
     meshesJs.removeMeshByName(scene, 'dayDateDisplay');
     meshesJs.removeMeshByName(scene, 'dayDateBox');
 
-    // If the Date/Date isn't showing, we don't need to update it
-    // TODO: Certainly don't need this anymore.
-    if (!dayDateExists) {
-        lastDayDate = dayDateStr;
-        lastDayDateExists = dayDateExists;
-        return;
-    }
-
     const dayDateGroup = new THREE.Group();
     dayDateGroup.name = 'dayDateDisplay';
 
@@ -201,10 +197,13 @@ export function updateDayDateDisplay(scene, font) {
     scene.add(dayDateMesh);
 
     // Position the display
+    const centerY = dynamicClockRatio > 1
+        ? constantsJs.DAY_DATE_BASE_Y / (dynamicClockRatio / 1.5)
+        : constantsJs.DAY_DATE_BASE_Y / dynamicClockRatio
     dayDateMesh.name = 'dayDateDisplay';
     dayDateMesh.position.set(
         0,
-        -constantsJs.DIGITAL_DISPLAY_CENTER_Y,
+        centerY,
         constantsJs.SIZES.CLOCK_THICKNESS / 2
     )
 
@@ -216,10 +215,10 @@ export function updateDayDateDisplay(scene, font) {
     let dayDateDisplayY;
     if (useDynamicClock) {
         dayDateBox = meshesJs.createDayDateBox(width - scaleValue(0.039), height + scaleValue(0.1), useDynamicClock);
-        dayDateDisplayY = -constantsJs.DIGITAL_DISPLAY_CENTER_Y + scaleValue(constantsJs.SIZES.DIGITAL_DISPLAY_BEVEL_SIZE);
+        dayDateDisplayY = centerY + scaleValue(constantsJs.SIZES.DIGITAL_DISPLAY_BEVEL_SIZE);
     } else {
         dayDateBox = meshesJs.createDayDateBox(width - 0.039, height + 0.1, useDynamicClock);
-        dayDateDisplayY = -constantsJs.DIGITAL_DISPLAY_CENTER_Y + constantsJs.SIZES.DIGITAL_DISPLAY_BEVEL_SIZE;
+        dayDateDisplayY = centerY + constantsJs.SIZES.DIGITAL_DISPLAY_BEVEL_SIZE;
     }
     dayDateBox.position.set(0, dayDateDisplayY, constantsJs.SIZES.CLOCK_THICKNESS / 2 - 0.01)
     scene.add(dayDateBox);
@@ -269,26 +268,19 @@ export function updateDigitalDisplay(scene, font) {
     meshesJs.removeMeshByName(scene, 'digitalDisplay');
     meshesJs.removeMeshByName(scene, 'digitalDisplayBox');
 
-    // If the digital display isn't showing, we don't need to update it
-    // TODO: This probably doesn't need to be here any more
-    if (!digitalDisplayExists) {
-        lastSecond = currentSecond;
-        lastDigitalDisplayExists = digitalDisplayExists;
-        lastLanguage = language;
-        lastTimeFormat = useTwentyFourHour;
-        return;
-    }
-
     // Create and add new digital time display
     const digitalDisplayGeometry = geometriesJs.createDigitalDisplayGeometry(digitalDisplayStr, font, useDynamicClock);
     const digitalDisplayMesh = meshesJs.createDigitalDisplayMesh(digitalDisplayGeometry);
     scene.add(digitalDisplayMesh);
 
     // Position the display
+    const centerY = dynamicClockRatio > 1
+        ? constantsJs.DIGITAL_DISPLAY_BASE_Y / (dynamicClockRatio / 1.5)
+        : constantsJs.DIGITAL_DISPLAY_BASE_Y / dynamicClockRatio
     digitalDisplayMesh.name = 'digitalDisplay';
     digitalDisplayMesh.position.set(
         0,
-        constantsJs.DIGITAL_DISPLAY_CENTER_Y,
+        centerY,
         constantsJs.SIZES.CLOCK_THICKNESS / 2
     )
 
@@ -300,10 +292,10 @@ export function updateDigitalDisplay(scene, font) {
     let digitalDisplayY;
     if (useDynamicClock) {
         digitalDisplayBox = meshesJs.createDigitalDisplayBox(width - scaleValue(0.051), height + scaleValue(0.15), useDynamicClock);
-        digitalDisplayY = constantsJs.DIGITAL_DISPLAY_CENTER_Y + scaleValue(constantsJs.SIZES.DIGITAL_DISPLAY_BEVEL_SIZE)
+        digitalDisplayY = centerY + scaleValue(constantsJs.SIZES.DIGITAL_DISPLAY_BEVEL_SIZE)
     } else {
         digitalDisplayBox = meshesJs.createDigitalDisplayBox(width - 0.051, height + 0.15, useDynamicClock);
-        digitalDisplayY = constantsJs.DIGITAL_DISPLAY_CENTER_Y + constantsJs.SIZES.DIGITAL_DISPLAY_BEVEL_SIZE
+        digitalDisplayY = centerY + constantsJs.SIZES.DIGITAL_DISPLAY_BEVEL_SIZE
     }
     digitalDisplayBox.position.set(0, digitalDisplayY, constantsJs.SIZES.CLOCK_THICKNESS / 2 - 0.01)
     scene.add(digitalDisplayBox);
