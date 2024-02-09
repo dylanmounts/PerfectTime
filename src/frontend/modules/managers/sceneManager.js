@@ -23,7 +23,7 @@ const renderer = new THREE.WebGLRenderer({ antialias: true });
 const controls = new OrbitControls(camera, renderer.domElement);
 const minPan = new THREE.Vector3();
 const maxPan = new THREE.Vector3();
-let minimumZoom = 1;
+let minimumZoom;
 
 let hoursFont = null;
 let minutesFont = null;
@@ -152,8 +152,8 @@ function updatePanLimits() {
     camera.position.set(center.x, center.y, center.z + cameraZ);
 
     // Update zoom limits and control target based on the clock's dynamic state.
-    minimumZoom = dynamicClockRatio <= 1 ? 1 : dynamicClockRatio;
-    controls.minDistance = isDynamic ? minimumZoom : 1;
+    minimumZoom = dynamicClockRatio <= 1 ? 2 : dynamicClockRatio;
+    controls.minDistance = isDynamic ? minimumZoom : 2;
     controls.maxDistance = camera.position.z;
     controls.target = center;
 
