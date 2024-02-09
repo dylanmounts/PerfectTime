@@ -63,13 +63,13 @@ export function applyTouchDeviceStyles() {
     if (!isTouchDevice()) return;
 
     const appStoresContainer = document.getElementById('appStoresContainer')
-    appStoresContainer.classList.remove('d-flex');
-    appStoresContainer.style.display = 'none';
-
-    if (!isAppleDevice()) return;
-
     const configButtonContainer = document.querySelector('.config-button-container');
     const infoMenuBtn = document.getElementById('infoMenuBtn');
+
+    if (appStoresContainer) {
+        appStoresContainer.classList.remove('d-flex');
+        appStoresContainer.style.display = 'none';
+    }
 
     if (configButtonContainer) {
         configButtonContainer.style.bottom = '25px';
