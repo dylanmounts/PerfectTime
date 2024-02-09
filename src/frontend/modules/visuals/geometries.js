@@ -53,7 +53,9 @@ export const createPost = () => new THREE.CylinderGeometry(
 export const createHourHandGeometry = (handLength, isDynamic) => new THREE.ShapeGeometry(
     SHAPES.createClockHand(
         CONSTANTS.SIZES.HOUR_HAND_TIP_WIDTH,
-        CONSTANTS.SIZES.HOUR_HAND_BASE_WIDTH,
+        isDynamic
+            ? CONSTANTS.SIZES.HOUR_HAND_BASE_WIDTH
+            : CONSTANTS.SIZES.HOUR_HAND_BASE_WIDTH * 0.784,
         CONSTANTS.SIZES.HOUR_HAND_BASE_OFFSET,
         handLength,
         CONSTANTS.SIZES.HOUR_HAND_SCALE,
@@ -63,7 +65,9 @@ export const createHourHandGeometry = (handLength, isDynamic) => new THREE.Shape
 export const createOuterHourHandGeometry = (handLength, isDynamic) => new THREE.ShapeGeometry(
     SHAPES.createClockHand(
         CONSTANTS.SIZES.HOUR_HAND_TIP_WIDTH,
-        CONSTANTS.SIZES.HOUR_HAND_BASE_WIDTH,
+        isDynamic
+            ? CONSTANTS.SIZES.HOUR_HAND_BASE_WIDTH
+            : CONSTANTS.SIZES.HOUR_HAND_BASE_WIDTH * 0.784,
         CONSTANTS.SIZES.HOUR_HAND_BASE_OFFSET,
         handLength,
         1,
@@ -73,7 +77,9 @@ export const createOuterHourHandGeometry = (handLength, isDynamic) => new THREE.
 export const createMinuteHandGeometry = (handLength, isDynamic) => new THREE.ShapeGeometry(
     SHAPES.createClockHand(
         CONSTANTS.SIZES.MINUTE_HAND_TIP_WIDTH,
-        CONSTANTS.SIZES.MINUTE_HAND_BASE_WIDTH,
+        isDynamic
+            ? CONSTANTS.SIZES.MINUTE_HAND_BASE_WIDTH
+            : CONSTANTS.SIZES.MINUTE_HAND_BASE_WIDTH * 0.784,
         CONSTANTS.SIZES.MINUTE_HAND_BASE_OFFSET,
         handLength,
         CONSTANTS.SIZES.MINUTE_HAND_SCALE,
@@ -83,7 +89,9 @@ export const createMinuteHandGeometry = (handLength, isDynamic) => new THREE.Sha
 export const createOuterMinuteHandGeometry = (handLength, isDynamic) => new THREE.ShapeGeometry(
     SHAPES.createClockHand(
         CONSTANTS.SIZES.MINUTE_HAND_TIP_WIDTH,
-        CONSTANTS.SIZES.MINUTE_HAND_BASE_WIDTH,
+        isDynamic
+            ? CONSTANTS.SIZES.MINUTE_HAND_BASE_WIDTH
+            : CONSTANTS.SIZES.MINUTE_HAND_BASE_WIDTH * 0.784,
         CONSTANTS.SIZES.MINUTE_HAND_BASE_OFFSET,
         handLength,
         1,
@@ -93,7 +101,9 @@ export const createOuterMinuteHandGeometry = (handLength, isDynamic) => new THRE
 export const createSecondHandGeometry = (handLength, isDynamic) => new THREE.ShapeGeometry(
     SHAPES.createClockHand(
         CONSTANTS.SIZES.SECOND_HAND_TIP_WIDTH,
-        CONSTANTS.SIZES.SECOND_HAND_BASE_WIDTH,
+        isDynamic
+            ? CONSTANTS.SIZES.SECOND_HAND_BASE_WIDTH
+            : CONSTANTS.SIZES.SECOND_HAND_BASE_WIDTH * 0.9375,
         CONSTANTS.SIZES.SECOND_HAND_BASE_OFFSET,
         handLength,
         CONSTANTS.SIZES.SECOND_HAND_SCALE,
@@ -103,7 +113,9 @@ export const createSecondHandGeometry = (handLength, isDynamic) => new THREE.Sha
 export const createOuterSecondHandGeometry = (handLength, isDynamic) => new THREE.ShapeGeometry(
     SHAPES.createClockHand(
         CONSTANTS.SIZES.SECOND_HAND_TIP_WIDTH,
-        CONSTANTS.SIZES.SECOND_HAND_BASE_WIDTH,
+        isDynamic
+            ? CONSTANTS.SIZES.SECOND_HAND_BASE_WIDTH
+            : CONSTANTS.SIZES.SECOND_HAND_BASE_WIDTH * 0.9375,
         CONSTANTS.SIZES.SECOND_HAND_BASE_OFFSET,
         handLength,
         1,
