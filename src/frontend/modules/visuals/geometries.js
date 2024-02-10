@@ -185,7 +185,7 @@ export function createDayDateGeometry(dayDateStr, font, isDynamic = true) {
     const textGeometry = new TextGeometry(String(dayDateStr), {
         font: font,
         size: isDynamic
-            ? scaleValue(CONSTANTS.SIZES.DAY_DATE_SIZE)
+            ? scaleValue(CONSTANTS.SIZES.DAY_DATE_SIZE) * 1.15
             : CONSTANTS.SIZES.DAY_DATE_SIZE,
         height: CONSTANTS.SIZES.DAY_DATE_NUMBER_HEIGHT,
         curveSegments: CONSTANTS.SEGMENTS / 8,
@@ -200,7 +200,7 @@ export function createDigitalDisplayGeometry(dayDateStr, font, isDynamic = true)
     const textGeometry = new TextGeometry(String(dayDateStr), {
         font: font,
         size: isDynamic
-            ? scaleValue(CONSTANTS.SIZES.DIGITAL_DISPLAY_SIZE)
+            ? scaleValue(CONSTANTS.SIZES.DIGITAL_DISPLAY_SIZE) * 1.15
             : CONSTANTS.SIZES.DIGITAL_DISPLAY_SIZE,
         height: CONSTANTS.SIZES.DIGITAL_DISPLAY_NUMBER_HEIGHT,
         curveSegments: CONSTANTS.SEGMENTS / 8,
