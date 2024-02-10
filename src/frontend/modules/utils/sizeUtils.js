@@ -20,10 +20,8 @@ export function interpolateValue(distance) {
     let scaleFactor;
     if (distance <= goldenRadius) {
         scaleFactor = 1;
-    } else if (distance > goldenRadius && distance <= SIZES.CLOCK_RADIUS) {
-        scaleFactor = 1 + (distance - goldenRadius) * (2 / goldenRadius);
     } else {
-        scaleFactor = 1.618;
+        scaleFactor = 1 + (distance - goldenRadius) * (goldenRadius / 2);
     }
 
     return SIZES.NUMBER_SIZE / 2 * scaleFactor;
