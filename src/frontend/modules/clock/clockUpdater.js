@@ -57,11 +57,16 @@ let resizeHandled = false;
  * @param {Object} dayDateFont - The font used for the day/date display
  */
 export function updateClock(scene, digitalFont, dayDateFont, hoursFont, minutesFont) {
-    currentTime = timeManager.getCurrentTime();
+    const foundTime = timeManager.getCurrentTime();
 
-    if (!currentTime) {
+    if (!foundTime) {
         return;
     }
+
+    // Ensure currentTime is a valid Date object; otherwise, use the current date.
+    currentTime = foundTime instanceof Date && !isNaN(foundTime)
+        ? foundTime
+        : new Date();
 
     // Reset the perfect time if the last times retrieved are off by more
     // than 10 seconds
