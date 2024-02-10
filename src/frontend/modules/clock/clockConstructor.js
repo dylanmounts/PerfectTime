@@ -119,6 +119,7 @@ export function addClassicClock(scene, hoursFont, minutesFont) {
     scene.add(meshesJs.createClockFace());
     scene.add(meshesJs.createClockFrame());
     scene.add(meshesJs.createClockBezel());
+    scene.add(meshesJs.createPost());
 
     createIndicators(scene, false);
     createNumbers(scene, hoursFont, minutesFont, false);
@@ -135,6 +136,7 @@ export function addDynamicClock(scene, hoursFont, minutesFont) {
     scene.add(meshesJs.createDynamicClockFace());
     scene.add(meshesJs.createClockFrame());
     scene.add(meshesJs.createDynamicClockBezel());
+    scene.add(meshesJs.createPost());
 
     createIndicators(scene);
     createNumbers(scene, hoursFont, minutesFont);

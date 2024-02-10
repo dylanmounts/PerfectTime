@@ -82,9 +82,12 @@ export const createOuterMinuteHand = (handLength, isDynamic) => {
     return outerMinuteHand;
 };
 
-export const post = new THREE.Mesh(geometriesJs.createPost(), MATERIALS.post);
-post.rotation.x = Math.PI / 2
-post.position.z = CONSTANTS.SIZES.CLOCK_THICKNESS / 2 + CONSTANTS.SIZES.POST_HEIGHT / 2;
+export const createPost = () => {
+    const post = new THREE.Mesh(geometriesJs.createPost(), MATERIALS.post);
+    post.rotation.x = Math.PI / 2
+    post.position.z = CONSTANTS.SIZES.CLOCK_THICKNESS / 2 + CONSTANTS.SIZES.POST_HEIGHT / 2;
+    return post
+}
 
 export const createSecondHand = (handLength, isDynamic) => {
     const secondHand = new THREE.Mesh(
