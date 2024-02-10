@@ -44,16 +44,6 @@ export const createClockBezel = () => {
     clockBezelGeometry.center();
     return clockBezelGeometry;
 };
-const dayDateBox = new THREE.BoxGeometry(
-    CONSTANTS.SIZES.DAY_DATE_BOX_WIDTH,
-    scaleValue(CONSTANTS.SIZES.DAY_DATE_BOX_HEIGHT),
-    CONSTANTS.SIZES.DAY_DATE_BOX_DEPTH
-);
-const digitalDisplayBox = new THREE.BoxGeometry(
-    CONSTANTS.SIZES.DIGITAL_DISPLAY_BOX_WIDTH,
-    scaleValue(CONSTANTS.SIZES.DIGITAL_DISPLAY_BOX_HEIGHT),
-    CONSTANTS.SIZES.DIGITAL_TIME_BOX_DEPTH
-);
 export const createPost = () => new THREE.CylinderGeometry(
     scaleValue(CONSTANTS.SIZES.POST_RADIUS),
     scaleValue(CONSTANTS.SIZES.POST_RADIUS),
@@ -158,7 +148,7 @@ export const createDigitalDisplayBoxGeometry = (width, height, isDynamic = true)
         bevelEnabled: true,
         bevelThickness: CONSTANTS.SIZES.DIGITAL_DISPLAY_BEVEL_THICKNESS,
         bevelSize: isDynamic 
-            ? scaleValue(CONSTANTS.SIZES.DIGITAL_DISPLAY_BEVEL_SIZE)
+            ? scaleValue(CONSTANTS.SIZES.DIGITAL_DISPLAY_BEVEL_SIZE) * CONSTANTS.SIZES.COMPLICATION_BOX_SCALE
             : CONSTANTS.SIZES.DIGITAL_DISPLAY_BEVEL_SIZE,
         bevelSegments: 1
     };
@@ -173,7 +163,7 @@ export const createDayDateBoxGeometry = (width, height, isDynamic = true) => {
         bevelEnabled: true,
         bevelThickness: CONSTANTS.SIZES.DAY_DATE_BEVEL_THICKNESS,
         bevelSize: isDynamic
-            ? scaleValue(CONSTANTS.SIZES.DAY_DATE_BEVEL_SIZE)
+            ? scaleValue(CONSTANTS.SIZES.DAY_DATE_BEVEL_SIZE) * CONSTANTS.SIZES.COMPLICATION_BOX_SCALE
             : CONSTANTS.SIZES.DAY_DATE_BEVEL_SIZE,
         bevelSegments: 1
     };
@@ -185,7 +175,7 @@ export function createDayDateGeometry(dayDateStr, font, isDynamic = true) {
     const textGeometry = new TextGeometry(String(dayDateStr), {
         font: font,
         size: isDynamic
-            ? scaleValue(CONSTANTS.SIZES.DAY_DATE_SIZE) * 1.15
+            ? scaleValue(CONSTANTS.SIZES.DAY_DATE_SIZE) * CONSTANTS.SIZES.COMPLICATION_BOX_SCALE
             : CONSTANTS.SIZES.DAY_DATE_SIZE,
         height: CONSTANTS.SIZES.DAY_DATE_NUMBER_HEIGHT,
         curveSegments: CONSTANTS.SEGMENTS / 8,
@@ -200,7 +190,7 @@ export function createDigitalDisplayGeometry(dayDateStr, font, isDynamic = true)
     const textGeometry = new TextGeometry(String(dayDateStr), {
         font: font,
         size: isDynamic
-            ? scaleValue(CONSTANTS.SIZES.DIGITAL_DISPLAY_SIZE) * 1.15
+            ? scaleValue(CONSTANTS.SIZES.DIGITAL_DISPLAY_SIZE) * CONSTANTS.SIZES.COMPLICATION_BOX_SCALE
             : CONSTANTS.SIZES.DIGITAL_DISPLAY_SIZE,
         height: CONSTANTS.SIZES.DIGITAL_DISPLAY_NUMBER_HEIGHT,
         curveSegments: CONSTANTS.SEGMENTS / 8,
