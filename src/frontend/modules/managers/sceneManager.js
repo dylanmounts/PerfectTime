@@ -8,7 +8,7 @@
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 
-import { PERFECT_TIME_SYNC_SECONDS, SIZES } from '../constants';
+import { MAX_ZOOM, PERFECT_TIME_SYNC_SECONDS, SIZES, ZOOM_EXPONENT } from '../constants';
 import { dayDateFontManager, digitalFontManager, hoursFontManager, minutesFontManager } from './fontManager';
 import { timeManager } from './timeManager';
 import { addClassicClock, addDynamicClock, destroyClock } from '../clock/clockConstructor';
@@ -16,14 +16,16 @@ import { useDynamicClock, toggleResizeHandled, updateClock } from '../clock/cloc
 
 
 const scene = new THREE.Scene();
-const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight);
-const container = document.getElementById('clockContainer');
+const camera = new THREE.OrthographicCamera();
 const renderer = new THREE.WebGLRenderer({ antialias: true });
+const container = document.getElementById('clockContainer');
 
 const controls = new OrbitControls(camera, renderer.domElement);
-const minPan = new THREE.Vector3();
-const maxPan = new THREE.Vector3();
-let minimumZoom;
+let minPan = new THREE.Vector3();
+let maxPan = new THREE.Vector3();
+const minimumZoom = 1;
+const maximumZoom = 1.1;
+
 
 let hoursFont = null;
 let minutesFont = null;
@@ -61,14 +63,15 @@ export function calculateClockDimensions() {
  * Initializes and sets up the scene with lighting, renderer, and controls.
  */
 function setupScene() {
+    controls.minDistance = minimumZoom;
+    controls.maxZoom = MAX_ZOOM;
     controls.enableDamping = true;
-    controls.dampingFactor = 0.04;
+    controls.dampingFactor = 0.035;
     controls.enableRotate = false;
     controls.minPolarAngle = Math.PI / 2;
     controls.maxPolarAngle = Math.PI / 2;
     controls.minAzimuthAngle = 0;
     controls.maxAzimuthAngle = 0;
-    controls.minDistance = minimumZoom;
     controls.mouseButtons = {
         LEFT: THREE.MOUSE.PAN,
         RIGHT: THREE.MOUSE.PAN,
@@ -97,67 +100,84 @@ function setupScene() {
  * Dynamically updates the panning limits of the camera based on its current zoom level.
  */
 function updatePanLimits() {
-    const target = scene.getObjectByName('clockBezel')
-    const center = target.geometry.boundingBox.getCenter(new THREE.Vector3());
-    const size = target.geometry.boundingBox.getSize(new THREE.Vector3());
+    const target = scene.getObjectByName('clockFace');
+    const boundingBox = new THREE.Box3().setFromObject(target);
 
-    // Calculate the ratio of current zoom level to the maximum zoom level
-    const zoomRatio = controls.maxDistance / camera.position.distanceTo(center);
-    const adjustedSize = useDynamicClock
-        ? size.multiplyScalar(zoomRatio)
-        : size.multiplyScalar(1 / zoomRatio);
+    // Define the original view extents based on the camera's settings at the initial zoom (zoom = 1)
+    const originalLeft = boundingBox.min.x;
+    const originalRight = boundingBox.max.x;
+    const originalTop = boundingBox.max.y;
+    const originalBottom = boundingBox.min.y;
 
-    // Calculate the original pan limits based on the object size
-    const originalMinPan = center.clone().sub(adjustedSize);
-    const originalMaxPan = center.clone().add(adjustedSize);
+    // Calculate the initial view width and height
+    const initialWidth = originalRight - originalLeft;
+    const initialHeight = originalTop - originalBottom;
 
-    // Linearly interpolate between the center and the original pan limits
-    minPan.lerpVectors(center, originalMinPan, Math.max(0, zoomRatio - 1));
-    maxPan.lerpVectors(center, originalMaxPan, Math.max(0, zoomRatio - 1));
+    // Calculate the current view width and height based on zoom
+    const currentWidth = initialWidth / camera.zoom;
+    const currentHeight = initialHeight / camera.zoom;
+
+    // Determine the difference between the initial and current view sizes
+    const widthDiff = (initialWidth - currentWidth) / 2;
+    const heightDiff = (initialHeight - currentHeight) / 2;
+
+    // Adjust pan limits based on the difference, allowing panning within the original view boundaries
+    controls.maxPan = new THREE.Vector3(widthDiff, heightDiff, 0);
+    controls.minPan = new THREE.Vector3(-widthDiff, -heightDiff, 0);
+
+    maxPan = new THREE.Vector3(widthDiff, heightDiff, 0);
+    minPan = new THREE.Vector3(-widthDiff, -heightDiff, 0);
 }
 
 /**
  * Updates the camera's position to ensure the clock is appropriately framed on screen.
- * 
- @param {boolean} [isDynamic=true] - Optional parameter to specify if clock is currently dynamic..
  */
- export function updateCamera(isDynamic = true) {
-    // Get the clock and calculate its center and size.
+export function updateCamera() {    
     const target = scene.getObjectByName('clockFace');
-    const center = target.geometry.boundingBox.getCenter(new THREE.Vector3());
-    const size = target.geometry.boundingBox.getSize(new THREE.Vector3());
+    let left, right, top, bottom;
 
-    // Calculate field of view in radians.
-    const fov = camera.fov * (Math.PI / 180);
-    const horizontalFOV = 2 * Math.atan(Math.tan(fov / 2) * camera.aspect);
-
-    let cameraZ; // Initialize variable to calculate camera's Z position.
-    if (isDynamic) {
-        // If dynamic, adjust Z based on the clock's aspect ratio and dimensions.
-        cameraZ = dynamicClockRatio >= 1 ?
-            (1.05 * dynamicClockWidth / 2) / Math.tan(0.98 * horizontalFOV / 2) :
-            (1.06 * dynamicClockHeight / 2) / Math.tan(1.04 * fov / 2);
-        // Further adjustment for very wide aspect ratios.
-        if (camera.aspect >= 2.3334) cameraZ *= horizontalFOV / 2;
+    if (useDynamicClock) {
+        if (dynamicClockRatio > 1) {
+            // Wider than tall
+            left = -dynamicClockWidth / 2 + SIZES.BEZEL_THICKNESS * 1.75;
+            right = dynamicClockWidth / 2 - SIZES.BEZEL_THICKNESS * 1.75;
+            top = dynamicClockWidth / (2 * dynamicClockRatio) - SIZES.BEZEL_THICKNESS * 1.75;
+            bottom = -dynamicClockWidth / (2 * dynamicClockRatio) + SIZES.BEZEL_THICKNESS * 1.75;
+        } else {
+            // Taller than wide
+            left = -dynamicClockHeight * dynamicClockRatio / 2 + SIZES.BEZEL_THICKNESS * 1.75;
+            right = dynamicClockHeight * dynamicClockRatio / 2 - SIZES.BEZEL_THICKNESS * 1.75;
+            top = dynamicClockHeight / 2 - SIZES.BEZEL_THICKNESS * 1.75;
+            bottom = -dynamicClockHeight / 2 + SIZES.BEZEL_THICKNESS * 1.75;
+        }
     } else {
-        // If classic, adjust Z based on the maximum dimension and camera's aspect ratio.
-        const maxDim = Math.max(size.x, size.y, size.z);
-        cameraZ = Math.abs(maxDim / 1.175 * Math.tan(fov / 2));
-        if (camera.aspect < 1) cameraZ = cameraZ / camera.aspect;
-        cameraZ += SIZES.CLOCK_THICKNESS * 0.75;
+        const radiusWithBezel = SIZES.CLOCK_RADIUS + SIZES.BEZEL_THICKNESS;
+        const aspect = container.clientWidth / container.clientHeight;
+        if (aspect >= 1) {
+            // Wider than tall
+            left = -radiusWithBezel * aspect;
+            right = radiusWithBezel * aspect;
+            top = radiusWithBezel;
+            bottom = -radiusWithBezel;
+        } else {
+            // Taller than wide
+            left = -radiusWithBezel;
+            right = radiusWithBezel;
+            top = radiusWithBezel / aspect;
+            bottom = -radiusWithBezel / aspect;
+        }
     }
 
-    // Set camera position to frame the clock, adjusting for bezel thickness.
-    camera.lookAt(center);
-    camera.position.set(center.x, center.y, center.z + cameraZ);
+    camera.left = left;
+    camera.right = right;
+    camera.top = top;
+    camera.bottom = bottom;
+    camera.position.set(0, 0);
+    camera.lookAt(target);
+    camera.updateProjectionMatrix();
 
-    // Update zoom limits and control target based on the clock's dynamic state.
-    minimumZoom = dynamicClockRatio <= 1 ? 2 : dynamicClockRatio;
-    controls.minDistance = isDynamic ? minimumZoom : 2;
-    controls.maxDistance = camera.position.z;
-    controls.target = center;
+    controls.minZoom = camera.zoom;
 
-    // Update the pan limits based on the new camera position.
     updatePanLimits();
 }
 
@@ -168,8 +188,7 @@ function updatePanLimits() {
  * @returns {number} The calculated camera zoom level.
  */
 function mapZoomLevel(sliderValue) {
-    let value = (100 - sliderValue) / 100 * (controls.maxDistance - minimumZoom) + minimumZoom;
-    return value
+    return Math.pow(sliderValue, ZOOM_EXPONENT) * (maximumZoom - minimumZoom) + minimumZoom;
 }
 
 /**
@@ -178,7 +197,7 @@ function mapZoomLevel(sliderValue) {
  * @returns {number} The corresponding slider value.
  */
 function unmapZoomLevel(cameraZoom) {
-    return 100 - ((cameraZoom - minimumZoom) / (controls.maxDistance - minimumZoom) * 100);
+    return Math.pow((cameraZoom - minimumZoom) / (maximumZoom - minimumZoom), 1 / ZOOM_EXPONENT);
 }
 
 /**
@@ -186,8 +205,8 @@ function unmapZoomLevel(cameraZoom) {
  *
  * @param {number} cameraZoom - The desired zoom level for the camera.
  */
-export function updateCameraZoom(cameraZoom) {
-    camera.position.z = mapZoomLevel(cameraZoom);
+export function updateCameraZoom(sliderValue) {   
+    camera.zoom = mapZoomLevel(sliderValue);
     controls.update();
 }
 
@@ -195,8 +214,8 @@ export function updateCameraZoom(cameraZoom) {
  * Updates the zoom slider to reflect the current camera zoom level.
  */
 export function updateCameraSlider() {
-    const zoomLevel = unmapZoomLevel(camera.position.z);
-    document.getElementById('zoomSlider').value = zoomLevel;
+    const sliderValue = unmapZoomLevel(camera.zoom);
+    document.getElementById('zoomSlider').value = sliderValue;
 }
 
 /**
