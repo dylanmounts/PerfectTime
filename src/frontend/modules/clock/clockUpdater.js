@@ -238,7 +238,7 @@ export function updateDayDateDisplay(scene, font) {
     let dayDateBox;
     let dayDateDisplayY;
     if (useDynamicClock) {
-        dayDateBox = meshesJs.createDayDateBox(width - scaleValue(0.039), height + scaleValue(0.1), useDynamicClock);
+        dayDateBox = meshesJs.createDayDateBox(width - scaleValue(0.039) * constantsJs.SIZES.COMPLICATION_BOX_SCALE, height + scaleValue(0.1), useDynamicClock);
         dayDateDisplayY = centerY + scaleValue(constantsJs.SIZES.DIGITAL_DISPLAY_BEVEL_SIZE);
     } else {
         dayDateBox = meshesJs.createDayDateBox(width - 0.039, height + 0.1, useDynamicClock);
@@ -335,7 +335,7 @@ export function updateDigitalDisplay(scene, font) {
     let digitalDisplayBox;
     let digitalDisplayY;
     if (useDynamicClock) {
-        digitalDisplayBox = meshesJs.createDigitalDisplayBox(width - scaleValue(0.051), height + scaleValue(0.15), useDynamicClock);
+        digitalDisplayBox = meshesJs.createDigitalDisplayBox(width - scaleValue(0.051) * constantsJs.SIZES.COMPLICATION_BOX_SCALE, height + scaleValue(0.15), useDynamicClock);
         digitalDisplayY = centerY + scaleValue(constantsJs.SIZES.DIGITAL_DISPLAY_BEVEL_SIZE)
     } else {
         digitalDisplayBox = meshesJs.createDigitalDisplayBox(width - 0.051, height + 0.15, useDynamicClock);
