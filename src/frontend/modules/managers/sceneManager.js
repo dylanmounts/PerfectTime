@@ -201,8 +201,8 @@ function unmapZoomLevel(cameraZoom) {
  *
  * @param {number} cameraZoom - The desired zoom level for the camera.
  */
-export function updateCameraZoom(sliderValue) {   
-    camera.zoom = mapZoomLevel(sliderValue);
+export function updateCameraZoom(cameraZoom) {
+    camera.zoom = mapZoomLevel(cameraZoom);
     controls.update();
 }
 
