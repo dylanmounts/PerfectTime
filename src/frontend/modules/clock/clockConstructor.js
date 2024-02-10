@@ -10,6 +10,7 @@ import * as CONSTANTS from '../constants.js';
 import { createHourGeometry, createMinuteGeometry, createIndicatorGeometry } from '../visuals/geometries.js';
 import * as meshesJs from '../visuals/meshes.js';
 import { distanceToEdge } from '../utils/sizeUtils.js';
+import { updateCameraZoom } from '../managers/sceneManager.js';
 
 
 /**
@@ -148,6 +149,8 @@ export function addDynamicClock(scene, hoursFont, minutesFont) {
  * @param {Object} scene - The Three.js scene object.
  */
 export function destroyClock(scene) {
+    updateCameraZoom(0);
+
     ['clockFace', 'clockBezel'].forEach(meshName => {
         const mesh = scene.getObjectByName(meshName)
         if (mesh) {

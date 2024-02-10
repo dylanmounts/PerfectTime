@@ -74,5 +74,7 @@ export const DIGITAL_DISPLAY_BASE_Y = SIZES.CLOCK_RADIUS * 1/6;
 export const INDICATORS = {};
 export const HOUR_NUMBERS = {};
 export const MINUTE_NUMBERS = {};
+export const MAX_ZOOM = 16.84893;
+export const ZOOM_EXPONENT = 1.1;
 export const TIME_ENDPOINT = 'https://PerfectTime.org/api/time';
 export const PERFECT_TIME_SYNC_SECONDS = 60;
