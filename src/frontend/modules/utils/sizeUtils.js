@@ -13,6 +13,22 @@ export function scaleValue(value) {
         : value / sceneManager.dynamicClockRatio;
 }
 
+// Function to interpolate values based on the distance from the center of the clock.
+export function interpolateValue(distance) {
+    const goldenRadius = SIZES.CLOCK_RADIUS / 1.618
+
+    let scaleFactor;
+    if (distance <= goldenRadius) {
+        scaleFactor = 1;
+    } else if (distance > goldenRadius && distance <= SIZES.CLOCK_RADIUS) {
+        scaleFactor = 1 + (distance - goldenRadius) * (2 / goldenRadius);
+    } else {
+        scaleFactor = 1.618;
+    }
+
+    return SIZES.NUMBER_SIZE / 2 * scaleFactor;
+}
+
 /**
  * Calculates the shortest distance from the center to the edge of the dynamic clock along a given angle.
  * This accounts for adjustments due to the bezel radius, ensuring accurate placement within the clock face.
