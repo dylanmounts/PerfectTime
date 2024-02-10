@@ -10,7 +10,7 @@ import { RoundedBoxGeometry } from 'three/examples/jsm/geometries/RoundedBoxGeom
 import * as CONSTANTS from '../constants.js';
 import * as SHAPES from './shapes.js';
 import { calculateClockDimensions, dynamicClockHeight, dynamicClockWidth } from '../managers/sceneManager.js';
-import { scaleValue } from '../utils/sizeUtils.js';
+import { interpolateValue, scaleValue } from '../utils/sizeUtils.js';
 
 calculateClockDimensions();
 
@@ -210,11 +210,11 @@ export function createDigitalDisplayGeometry(dayDateStr, font, isDynamic = true)
     return textGeometry;
 }
 
-export function createHourGeometry(hour, font, isDynamic = true) {
+export function createHourGeometry(hour, font, distance, isDynamic = true) {
     return new TextGeometry(String(hour), {
         font: font,
         size: isDynamic
-            ? scaleValue(CONSTANTS.SIZES.NUMBER_SIZE)
+            ? interpolateValue(distance)
             : CONSTANTS.SIZES.NUMBER_SIZE,
         height: isDynamic
             ? scaleValue(CONSTANTS.SIZES.NUMBER_HEIGHT)
@@ -232,11 +232,11 @@ export function createHourGeometry(hour, font, isDynamic = true) {
 }
 
 // Text geometries for each minute number
-export function createMinuteGeometry(minute, font, isDynamic = true) {
+export function createMinuteGeometry(minute, font, distance, isDynamic = true) {
     return new TextGeometry(String(minute), {
         font: font,
         size: isDynamic 
-            ? scaleValue(CONSTANTS.SIZES.NUMBER_SIZE / 2)
+            ? interpolateValue(distance) / 2
             : CONSTANTS.SIZES.NUMBER_SIZE / 2,
         height: isDynamic
             ? scaleValue(CONSTANTS.SIZES.NUMBER_HEIGHT / 2.5)

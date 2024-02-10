@@ -37,30 +37,26 @@ function configureMesh(mesh, meshName, meshAngle, centerDistance) {
  * @param {boolean} [isDynamic=true] - Optional parameter to specify if clock is currently dynamic.
  */
 function createNumbers(scene, hoursFont, minutesFont, isDyanmic = true) {
-        const hoursDistanceFromCenter = CONSTANTS.SIZES.CLOCK_RADIUS * 5/6;
-        const minutesDistanceFromCenter = CONSTANTS.SIZES.CLOCK_RADIUS * 2/3;
-
     for (let i = 1; i <= 12; i++) {
         const angle = (Math.PI / 6) * i;
 
         // Hours
-        const hourGeometry = createHourGeometry(i, hoursFont, isDyanmic);
+        const distanceFromCenter = distanceToEdge(angle) * 3/4
+        const hourGeometry = createHourGeometry(i, hoursFont, distanceFromCenter, isDyanmic);
         hourGeometry.center();
 
         const hourMesh = meshesJs.createHourMesh(hourGeometry)
-        const distanceFromCenter = distanceToEdge(angle) * 3/4
 
         CONSTANTS.HOUR_NUMBERS[i] = hourMesh;
 
         // Minutes
         const minuteNumber = i * 5;
 
-        const minuteGeometry = createMinuteGeometry(minuteNumber, minutesFont, isDyanmic);
+        const minuteDistanceFromCenter = distanceToEdge(angle) * 23/40
+        const minuteGeometry = createMinuteGeometry(minuteNumber, minutesFont, minuteDistanceFromCenter, isDyanmic);
         minuteGeometry.center();
 
         const minuteMesh = meshesJs.createMinuteMesh(minuteGeometry);
-        const minuteDistanceFromCenter = distanceToEdge(angle) * 23/40
-
         CONSTANTS.MINUTE_NUMBERS[minuteNumber] = minuteMesh;
 
         // Final configuration
@@ -68,9 +64,10 @@ function createNumbers(scene, hoursFont, minutesFont, isDyanmic = true) {
             configureMesh(hourMesh, `hour${i}`, angle, distanceFromCenter)
             configureMesh(minuteMesh, `minute${minuteNumber}`, angle, minuteDistanceFromCenter);
         } else {
-            configureMesh(hourMesh, `hour${i}`, angle, hoursDistanceFromCenter)
-            configureMesh(minuteMesh, `minute${minuteNumber}`, angle, minutesDistanceFromCenter);
+            configureMesh(hourMesh, `hour${i}`, angle, CONSTANTS.HOURS_BASE_DISTANCE)
+            configureMesh(minuteMesh, `minute${minuteNumber}`, angle, CONSTANTS.MINUTES_BASE_DISTANCE);
         }
+    
         scene.add(hourMesh);
         scene.add(minuteMesh);
     }
