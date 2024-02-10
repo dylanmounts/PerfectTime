@@ -133,7 +133,6 @@ function updatePanLimits() {
  * Updates the camera's position to ensure the clock is appropriately framed on screen.
  */
 export function updateCamera() {    
-    const target = scene.getObjectByName('clockFace');
     let left, right, top, bottom;
 
     if (useDynamicClock) {
@@ -172,12 +171,9 @@ export function updateCamera() {
     camera.right = right;
     camera.top = top;
     camera.bottom = bottom;
-    camera.position.set(0, 0);
-    camera.lookAt(target);
     camera.updateProjectionMatrix();
 
     controls.minZoom = camera.zoom;
-
     updatePanLimits();
 }
 
