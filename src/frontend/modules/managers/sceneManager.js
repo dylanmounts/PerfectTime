@@ -43,7 +43,7 @@ function setClockDimensions(width, height) {
 }
 
 export function calculateClockDimensions() {
-    const aspectRatio = window.innerWidth / window.innerHeight;
+    const aspectRatio = container.clientWidth / container.clientHeight;
     let width, height;
 
     if (aspectRatio >= 1) {

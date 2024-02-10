@@ -60,7 +60,7 @@ export function isiPhone() {
  * Apply specific styles for touch devices.
  */
 export function applyTouchDeviceStyles() {
-    if (!isTouchDevice()) return;
+    if (!(isTouchDevice() || isAppleDevice())) return;
 
     const appStoresContainer = document.getElementById('appStoresContainer')
     const configButtonContainer = document.querySelector('.config-button-container');
