@@ -178,7 +178,7 @@ export function createDayDateGeometry(dayDateStr, font, isDynamic = true) {
             ? scaleValue(CONSTANTS.SIZES.DAY_DATE_SIZE) * CONSTANTS.SIZES.COMPLICATION_BOX_SCALE
             : CONSTANTS.SIZES.DAY_DATE_SIZE,
         height: CONSTANTS.SIZES.DAY_DATE_NUMBER_HEIGHT,
-        curveSegments: CONSTANTS.SEGMENTS / 8,
+        curveSegments: 2,
         bevelEnabled: false
     });
     textGeometry.center();
@@ -193,7 +193,7 @@ export function createDigitalDisplayGeometry(dayDateStr, font, isDynamic = true)
             ? scaleValue(CONSTANTS.SIZES.DIGITAL_DISPLAY_SIZE) * CONSTANTS.SIZES.COMPLICATION_BOX_SCALE
             : CONSTANTS.SIZES.DIGITAL_DISPLAY_SIZE,
         height: CONSTANTS.SIZES.DIGITAL_DISPLAY_NUMBER_HEIGHT,
-        curveSegments: CONSTANTS.SEGMENTS / 8,
+        curveSegments: 2,
         bevelEnabled: false
     });
     textGeometry.center();
