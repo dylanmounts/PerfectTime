@@ -12,11 +12,10 @@ import { distanceToEdge } from '../utils/sizeUtils.js';
 import { dynamicClockRatio } from '../managers/sceneManager.js';
 
 
-// Static clock parts
 export const createClockBezel = (isDynamic) => {
     const clockBezel = isDynamic
-        ? new THREE.Mesh(geometriesJs.createClockBezel(), MATERIALS.clockBezel)
-        : new THREE.Mesh(geometriesJs.createDynamicClockBezelGeometry().center(), MATERIALS.clockBezel);
+        ? new THREE.Mesh(geometriesJs.createDynamicClockBezelGeometry().center(), MATERIALS.clockBezel)
+        : new THREE.Mesh(geometriesJs.createClockBezel(), MATERIALS.clockBezel);
     clockBezel.position.z = isDynamic 
         ? -0.01
         : CONSTANTS.SIZES.CLOCK_THICKNESS / 2;
@@ -121,25 +120,6 @@ export const createOuterSecondHand = (isDynamic) => {
     outerSecondHand.position.z = CONSTANTS.SIZES.CLOCK_THICKNESS / 2 + CONSTANTS.SIZES.POST_HEIGHT - 0.002;
     outerSecondHand.name = 'outerSecondHand';
     return outerSecondHand;
-};
-
-
-// Dynamic clock parts
-export const createDynamicClockFace = () => {
-    const dynamicClockFace = new THREE.Mesh(
-        geometriesJs.createDynamicClockFaceGeometry().center(), MATERIALS.clockFace
-    );
-    dynamicClockFace.name = "clockFace";
-    return dynamicClockFace;
-};
-
-export const createDynamicClockBezel = () => {
-    const dynamicClockBezel = new THREE.Mesh(
-        geometriesJs.createDynamicClockBezelGeometry().center(), MATERIALS.clockBezel
-    );
-    dynamicClockBezel.name = "clockBezel";
-    dynamicClockBezel.position.z = -0.01
-    return dynamicClockBezel;
 };
 
 export const createDigitalDisplayBox = (width, height, isDynamic) => {
