@@ -493,29 +493,39 @@ export function updateMinuteHand(scene, angle) {
 
 // Adds or removes the second hand from the scene based user configurations
 export function updateSecondHand(scene, angle) {
-    const secondHand = scene.getObjectByName('secondHand');
-    const outerSecondHand = scene.getObjectByName('outerSecondHand');
+    if (!secondHandExists) {
+        meshesJs.removeMeshByName(scene, 'secondHand');
+        meshesJs.removeMeshByName(scene, 'outerSecondHand');
+        return;
+    }
 
-    [secondHand, outerSecondHand].forEach(hand => {
-        if (hand) {
-            hand.geometry.dispose();
-            scene.remove(hand);
-        }
-    });
+    let secondHand = scene.getObjectByName('secondHand')
+    let outerSecondHand = scene.getObjectByName('outerSecondHand');
 
-    if (!secondHandExists) return;
+    if (!secondHand) {
+        scene.add(meshesJs.createSecondHand(useDynamicClock));
+        scene.add(meshesJs.createOuterSecondHand(useDynamicClock));
+
+        secondHand = scene.getObjectByName('secondHand');
+        outerSecondHand = scene.getObjectByName('outerSecondHand');
+    }
 
     const handLength = useDynamicClock
         ? distanceToEdge(angle)
-        : constantsJs.SIZES.CLOCK_RADIUS * 47 / 48
+        : constantsJs.SECOND_HAND_BASE_DISTANCE;
 
-    const secondHandMesh = meshesJs.createSecondHand(handLength, useDynamicClock);
-    const outerSecondHandMesh = meshesJs.createOuterSecondHand(handLength, useDynamicClock);
-    secondHandMesh.rotation.z = -angle;
-    outerSecondHandMesh.rotation.z = -angle;
+    const baseHandLength = distanceToEdge(0);
+    const handLengthScale = handLength / baseHandLength
 
-    scene.add(secondHandMesh);
-    scene.add(outerSecondHandMesh);
+    const scaleFactor = useDynamicClock
+        ? handLengthScale
+        : 1
+    
+    secondHand.scale.y = scaleFactor;
+    outerSecondHand.scale.y = scaleFactor;
+
+    secondHand.rotation.z = -angle;
+    outerSecondHand.rotation.z = -angle;
 }
 
 export function toggleHourHand(isChecked) {
