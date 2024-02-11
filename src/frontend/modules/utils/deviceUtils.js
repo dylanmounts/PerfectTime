@@ -61,15 +61,9 @@ export function isiPhone() {
  */
 export function applyTouchDeviceStyles() {
     if (!(isTouchDevice() || isAppleDevice())) return;
-
-    const appStoresContainer = document.getElementById('appStoresContainer')
+    
     const configButtonContainer = document.querySelector('.config-button-container');
     const infoMenuBtn = document.getElementById('infoMenuBtn');
-
-    if (appStoresContainer) {
-        appStoresContainer.classList.remove('d-flex');
-        appStoresContainer.style.display = 'none';
-    }
 
     if (configButtonContainer) {
         configButtonContainer.style.bottom = '25px';
@@ -82,6 +76,16 @@ export function applyTouchDeviceStyles() {
         infoMenuBtn.style.left = '15px';
         infoMenuBtn.style.top = 'auto';
     }
+}
+
+/**
+ * Apply specific styles for the web (desktop) app.
+ */
+export function applyWebAppStyles() {
+    if (!window.IS_WEB_APP) return ;
+
+    const appStoresContainer = document.getElementById('appStoresContainer')
+    if (appStoresContainer) appStoresContainer.classList.add('d-flex');
 }
 
 /**

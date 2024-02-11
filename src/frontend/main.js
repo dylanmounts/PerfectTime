@@ -79,6 +79,7 @@ window.addEventListener('resize', onWindowResize);
 window.addEventListener('resize', DeviceUtils.applyTouchDeviceStyles);
 window.addEventListener('orientationchange', DeviceUtils.applyTouchDeviceStyles);
 DeviceUtils.applyTouchDeviceStyles();
+DeviceUtils.applyWebAppStyles();
 DeviceUtils.adjustToastsForTouch();
 
 // Tick tock run the clock
