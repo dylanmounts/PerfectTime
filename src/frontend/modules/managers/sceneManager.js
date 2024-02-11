@@ -11,7 +11,7 @@ import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 import { MAX_ZOOM, PERFECT_TIME_SYNC_SECONDS, SIZES, ZOOM_EXPONENT } from '../constants';
 import { dayDateFontManager, digitalFontManager, hoursFontManager, minutesFontManager } from './fontManager';
 import { timeManager } from './timeManager';
-import { addClassicClock, addDynamicClock, destroyClock } from '../clock/clockConstructor';
+import { addClock, destroyClock } from '../clock/clockConstructor';
 import { useDynamicClock, toggleResizeHandled, updateClock } from '../clock/clockUpdater';
 
 
@@ -225,11 +225,7 @@ export function onWindowResize() {
     renderer.setSize(container.clientWidth, container.clientHeight);
 
     destroyClock(scene);
-    if (useDynamicClock) {
-        addDynamicClock(scene, hoursFont, minutesFont);
-    } else {
-        addClassicClock(scene, hoursFont, minutesFont);
-    }
+    addClock(scene, hoursFont, minutesFont, useDynamicClock);
 
     controls.update();
     updateCamera(useDynamicClock);
@@ -262,7 +258,7 @@ export async function initializeScene() {
     digitalFont = await digitalFontManager.getLoadedFont();
     dayDateFont = await dayDateFontManager.getLoadedFont();
 
-    addDynamicClock(scene, hoursFont, minutesFont);
+    addClock(scene, hoursFont, minutesFont);
     animate();
     onWindowResize(); // To update the camera and renderer
 }

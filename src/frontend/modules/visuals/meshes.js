@@ -13,23 +13,23 @@ import { dynamicClockRatio } from '../managers/sceneManager.js';
 
 
 // Static clock parts
-export const createClockBezel = () => {
-    const clockBezel = new THREE.Mesh(
-        geometriesJs.createClockBezel(),
-        MATERIALS.clockBezel
-    );
+export const createClockBezel = (isDynamic) => {
+    const clockBezel = isDynamic
+        ? new THREE.Mesh(geometriesJs.createClockBezel(), MATERIALS.clockBezel)
+        : new THREE.Mesh(geometriesJs.createDynamicClockBezelGeometry().center(), MATERIALS.clockBezel);
+    clockBezel.position.z = isDynamic 
+        ? -0.01
+        : CONSTANTS.SIZES.CLOCK_THICKNESS / 2;
     clockBezel.name = 'clockBezel';
-    clockBezel.position.z = CONSTANTS.SIZES.CLOCK_THICKNESS / 2;
     return clockBezel;
 }
 
-export const createClockFace = () => {
-    const clockFace = new THREE.Mesh(
-        geometriesJs.createClockFace(),
-        MATERIALS.clockFace
-    );
+export const createClockFace = (isDynamic) => {
+    const clockFace = isDynamic
+        ? new THREE.Mesh(geometriesJs.createDynamicClockFaceGeometry().center(), MATERIALS.clockFace)
+        : new THREE.Mesh(geometriesJs.createClockFace(), MATERIALS.clockFace);
+    if (!isDynamic) clockFace.rotateX(Math.PI / 2);
     clockFace.name = 'clockFace';
-    clockFace.rotateX(Math.PI / 2);
     return clockFace;
 }
 

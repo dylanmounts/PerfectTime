@@ -109,37 +109,21 @@ function createIndicators(scene, isDynamic = true) {
 }
 
 /**
- * Adds the complete clock to the scene, including indicators, numbers, and other displays.
- * 
- * @param {Object} scene - The Three.js scene object.
- * @param {Object} hoursFont - The serif font used for the hours.
- * @param {Object} minutesFont - The sans font used for the minutes.
- */
-export function addClassicClock(scene, hoursFont, minutesFont) {
-    scene.add(meshesJs.createClockFace());
-    scene.add(meshesJs.createClockFrame());
-    scene.add(meshesJs.createClockBezel());
-    scene.add(meshesJs.createPost());
-
-    createIndicators(scene, false);
-    createNumbers(scene, hoursFont, minutesFont, false);
-}
-
-/**
- * Adds the dynamic clock to the scene.
+ * Adds the clock to the scene.
  * 
  * @param {Object} scene - The Three.js scene object.
  * @param {Object} hoursFont - The serif font used for the hours. 
  * @param {Object} minutesFont - The sans font used for the minutes.
+ * @param {boolean} [isDynamic=true] - Optional parameter to specify if clock is currently dynamic.
  */
-export function addDynamicClock(scene, hoursFont, minutesFont) {
-    scene.add(meshesJs.createDynamicClockFace());
+export function addClock(scene, hoursFont, minutesFont, isDynamic = true) {
+    scene.add(meshesJs.createClockFace(isDynamic));
+    scene.add(meshesJs.createClockBezel(isDynamic));
     scene.add(meshesJs.createClockFrame());
-    scene.add(meshesJs.createDynamicClockBezel());
     scene.add(meshesJs.createPost());
 
-    createIndicators(scene);
-    createNumbers(scene, hoursFont, minutesFont);
+    createIndicators(scene, isDynamic);
+    createNumbers(scene, hoursFont, minutesFont, isDynamic);
 }
 
 /**
