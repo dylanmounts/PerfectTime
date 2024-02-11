@@ -149,13 +149,14 @@ export function addDynamicClock(scene, hoursFont, minutesFont) {
  */
 export function destroyClock(scene) {
     updateCameraZoom(0);
-
-    ['clockFace', 'clockBezel'].forEach(meshName => {
-        const mesh = scene.getObjectByName(meshName)
-        if (mesh) {
-            mesh.geometry.dispose();
-            scene.remove(mesh);
-        }
+    [
+        'clockFace', 'clockBezel',
+        'clockFrame', 'clockPost',
+        'secondHand', 'outerSecondHand',
+        'minuteHand', 'outerMinuteHand',
+        'hourHand', 'outerHourHand'
+    ].forEach(meshName => {
+        meshesJs.removeMeshByName(scene, meshName);
     });
 
     for (const indicator in CONSTANTS.INDICATORS) {

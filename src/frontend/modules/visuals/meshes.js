@@ -8,6 +8,7 @@ import * as THREE from 'three';
 import * as CONSTANTS from '../constants.js';
 import * as geometriesJs from './geometries.js'; 
 import { MATERIALS } from './materials.js';
+import { distanceToEdge } from '../utils/sizeUtils.js';
 
 
 // Static clock parts
@@ -89,21 +90,31 @@ export const createPost = () => {
     return post
 }
 
-export const createSecondHand = (handLength, isDynamic) => {
+export const createSecondHand = (isDynamic) => {
+    const handLength = isDynamic
+        ? distanceToEdge(0)
+        : CONSTANTS.SECOND_HAND_BASE_DISTANCE
+
     const secondHand = new THREE.Mesh(
         geometriesJs.createSecondHandGeometry(handLength, isDynamic),
         MATERIALS.secondHand
     );
+
     secondHand.position.z = CONSTANTS.SIZES.CLOCK_THICKNESS / 2 + CONSTANTS.SIZES.POST_HEIGHT - 0.001;
     secondHand.name = 'secondHand';
     return secondHand;
 };
 
-export const createOuterSecondHand = (handLength, isDynamic) => {
+export const createOuterSecondHand = (isDynamic) => {
+    const handLength = isDynamic
+        ? distanceToEdge(0)
+        : CONSTANTS.SECOND_HAND_BASE_DISTANCE
+
     const outerSecondHand = new THREE.Mesh(
         geometriesJs.createOuterSecondHandGeometry(handLength, isDynamic),
         MATERIALS.outerSecondHand
     );
+
     outerSecondHand.position.z = CONSTANTS.SIZES.CLOCK_THICKNESS / 2 + CONSTANTS.SIZES.POST_HEIGHT - 0.002;
     outerSecondHand.name = 'outerSecondHand';
     return outerSecondHand;
