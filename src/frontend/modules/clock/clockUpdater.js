@@ -514,7 +514,10 @@ export function updateSecondHand(scene, angle) {
         ? distanceToEdge(angle)
         : constantsJs.SECOND_HAND_BASE_DISTANCE;
 
-    const baseHandLength = distanceToEdge(0);
+    const baseHandLength = dynamicClockRatio < 1
+        ? distanceToEdge(0)
+        : distanceToEdge(Math.PI / 2);
+
     const handLengthScale = handLength / baseHandLength
 
     const scaleFactor = useDynamicClock

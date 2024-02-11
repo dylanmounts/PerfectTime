@@ -9,6 +9,7 @@ import * as CONSTANTS from '../constants.js';
 import * as geometriesJs from './geometries.js'; 
 import { MATERIALS } from './materials.js';
 import { distanceToEdge } from '../utils/sizeUtils.js';
+import { dynamicClockRatio } from '../managers/sceneManager.js';
 
 
 // Static clock parts
@@ -91,8 +92,9 @@ export const createPost = () => {
 }
 
 export const createSecondHand = (isDynamic) => {
+    const referenceAngle = dynamicClockRatio < 1 ? 0 : Math.PI / 2;
     const handLength = isDynamic
-        ? distanceToEdge(0)
+        ? distanceToEdge(referenceAngle)
         : CONSTANTS.SECOND_HAND_BASE_DISTANCE
 
     const secondHand = new THREE.Mesh(
@@ -106,8 +108,9 @@ export const createSecondHand = (isDynamic) => {
 };
 
 export const createOuterSecondHand = (isDynamic) => {
+    const referenceAngle = dynamicClockRatio < 1 ? 0 : Math.PI / 2;
     const handLength = isDynamic
-        ? distanceToEdge(0)
+        ? distanceToEdge(referenceAngle)
         : CONSTANTS.SECOND_HAND_BASE_DISTANCE
 
     const outerSecondHand = new THREE.Mesh(
