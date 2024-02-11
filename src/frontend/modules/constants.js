@@ -46,7 +46,7 @@ export const SIZES = {
     NUMBER_BEVEL_SIZE: 0.0275,
     NUMBER_BEVEL_THICKNESS: 0.01,
     POST_HEIGHT: 0.02,
-    POST_RADIUS: 0.015,
+    POST_RADIUS: 0.01,
     HOUR_HAND_SCALE: 0.75,
     HOUR_HAND_TIP_WIDTH: 0.048,
     HOUR_HAND_BASE_WIDTH: 0.51,
@@ -61,10 +61,10 @@ export const SIZES = {
     SECOND_HAND_BASE_OFFSET: 0.1,
 };
 
-export const CLOCK_HOURS_FONT = 'fonts/noto_serif_regular.typeface.json';
-export const CLOCK_MINUTES_FONT = 'fonts/noto_sans_regular.typeface.json';
-export const CLOCK_DAY_DATE_FONT = 'fonts/noto_serif_light_regular.typeface.json';
-export const CLOCK_DIGITAL_FONT = 'fonts/noto_sans_light_regular.typeface.json';
+export const CLOCK_HOURS_FONT = 'dist/fonts/noto_serif_regular.typeface.json';
+export const CLOCK_MINUTES_FONT = 'dist/fonts/noto_sans_regular.typeface.json';
+export const CLOCK_DAY_DATE_FONT = 'dist/fonts/noto_serif_light_regular.typeface.json';
+export const CLOCK_DIGITAL_FONT = 'dist/fonts/noto_sans_light_regular.typeface.json';
 export const CLOCK_OUTER_RADIUS = SIZES.CLOCK_RADIUS + SIZES.BEZEL_THICKNESS;
 export const DAY_DATE_BASE_Y = -SIZES.CLOCK_RADIUS * 1/6;
 export const DIGITAL_DISPLAY_BASE_Y = SIZES.CLOCK_RADIUS * 1/6;
