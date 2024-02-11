@@ -17,7 +17,7 @@ import { dynamicClockRatio, updateCamera, updateCameraSlider } from '../managers
 import { timeManager } from '../managers/timeManager.js';
 import * as geometriesJs from '../visuals/geometries.js';
 import { distanceToEdge, scaleValue } from '../utils/sizeUtils.js';
-import { addClassicClock, addDynamicClock, destroyClock } from './clockConstructor.js';
+import { addClock, destroyClock } from './clockConstructor.js';
 
 
 // State variables for the visibility of clock components.
@@ -143,21 +143,14 @@ function calculateSweepingSecondAngle(seconds, milliseconds) {
 
 function updateClockShape(scene, hoursFont, minutesFont) {
     useDynamicClock = document.getElementById('useDynamicClock').checked;
-
-    if (useDynamicClock === lastClockShape) {
-        return;
-    }
+    if (useDynamicClock === lastClockShape) return;
 
     resizeHandled = false;
+
     destroyClock(scene);
-
-    if (useDynamicClock) {
-        addDynamicClock(scene, hoursFont, minutesFont);
-    } else {
-        addClassicClock(scene, hoursFont, minutesFont);
-    }
-
+    addClock(scene, hoursFont, minutesFont, useDynamicClock);
     updateCamera(useDynamicClock);
+
     lastClockShape = useDynamicClock;
 }
 
