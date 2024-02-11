@@ -1,7 +1,8 @@
 const express = require('express');
 const path = require('path');
-const app = express();
+const fs = require('fs');
 const rateLimit = require('express-rate-limit');
+const app = express();
 const port = process.env.PORT || 8100;
 const hostname = process.env.HOSTNAME || '127.0.0.1';
 const isWebApp = process.env.IS_WEB_APP === 'true';
@@ -53,13 +54,19 @@ if (isWebApp) {
     setInterval(timeServer.updateTimeFromNTP, 10 * 60 * 1000);
 }
 
+// Pass the IS_WEB_APP environment variable before serving index.html
+app.use((req, res, next) => {
+    if (req.method === 'GET' && (req.path === '/' || !req.path.includes('.'))) {
+        let html = fs.readFileSync(path.join(__dirname, 'dist/index.html'), 'utf8');
+        html = html.replace('<!--ENV_VARIABLES-->', `<script>window.IS_WEB_APP = ${isWebApp};</script>`);
+        res.send(html);
+    } else {
+        next();
+    }
+});
+
 // Serve static files from the 'dist' directory
 app.use(express.static(path.join(__dirname, 'dist')));
-
-// Serve the main index.html for any other requests
-app.get('*', (req, res) => {
-    res.sendFile(path.join(__dirname, 'dist/index.html'));
-});
 
 // Start the server
 app.listen(port, hostname, () => {
