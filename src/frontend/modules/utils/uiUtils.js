@@ -53,6 +53,16 @@ export function setupToastToggle(buttonId, toastId, styleVisible, styleHidden) {
             toggleButton(buttonEl, 'inactive');
         }
     });
+
+    document.addEventListener('click', function(e) {
+        const toastShowing = toastEl.classList.contains('showing');
+        const toastShown = toastEl.classList.contains('show');
+        const toastClicked = toastEl.contains(e.target);
+
+        if (toastShown && !toastShowing && !toastClicked) {
+            toast.hide();
+        }
+    });
 }
 
 /**
