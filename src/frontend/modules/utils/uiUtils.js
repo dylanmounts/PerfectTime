@@ -1,15 +1,13 @@
 /**
  * uiUtils.js - User Interface utilities for the perfect clock.
- * 
- * This module contains functions for managing UI elements and interactions within PerfectTime.
- * It includes setup for Bootstrap toast elements, handling checkbox changes for user settings,
- * and potentially more UI-related functionalities.
  */
 
 
 import { Toast } from 'bootstrap';
 
+import { detectSystemColorScheme } from './deviceUtils';
 import { updateCameraZoom } from '../managers/sceneManager';
+import { switchScheme } from '../managers/colorManager';
 
 /**
  * Sets up a toggle for a Bootstrap toast element and manages button styles.
@@ -172,4 +170,19 @@ export function toggleButton(btnEl, state) {
         btnEl.style.backgroundColor = 'transparent'
         btnEl.style.color = '#6c757d'
     }
+}
+
+/**
+ *  Sets the color scheme based on the user's system preference.
+ */
+export function setColorScheme() {
+    const colorScheme = detectSystemColorScheme();
+    const darkSchemeSelector = document.getElementById('useDarkScheme');
+    if (colorScheme === 'light') {
+        switchScheme('light');
+        darkSchemeSelector.checked = false;
+    } else {
+        switchScheme('dark');
+        darkSchemeSelector.checked = true;
+    };
 }

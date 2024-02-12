@@ -12,11 +12,13 @@
 import * as THREE from 'three';
 
 import * as constantsJs from '../constants.js';
-import * as meshesJs from '../visuals/meshes.js';
+import { switchScheme } from '../managers/colorManager.js';
 import { dynamicClockRatio, updateCamera, updateCameraSlider } from '../managers/sceneManager.js';
 import { timeManager } from '../managers/timeManager.js';
-import * as geometriesJs from '../visuals/geometries.js';
 import { distanceToEdge, scaleValue } from '../utils/sizeUtils.js';
+import * as materialsJs from '../visuals/materials.js'
+import * as meshesJs from '../visuals/meshes.js';
+import * as geometriesJs from '../visuals/geometries.js';
 import { addClock, destroyClock } from './clockConstructor.js';
 
 
@@ -43,9 +45,11 @@ let lastDigitalDisplayExists = null;
 let lastLanguage = null;
 let language = 'en-US';
 let lastTimeFormat = null;
+let lastColorScheme = null;
 let lastClockShape = null;
 let minuteHandLength = null;
 let useTwentyFourHour = false;
+let useDarkScheme = true;
 let resizeHandled = false;
 
 /**
@@ -91,7 +95,7 @@ export function updateClock(scene, digitalFont, dayDateFont, hoursFont, minutesF
         ? calculateSweepingSecondAngle(seconds, milliseconds)
         : calculateSecondAngle(seconds);
 
-    updateClockShape(scene, hoursFont, minutesFont);
+    updateClockStyle(scene, hoursFont, minutesFont);
     updateLanguage();
     updateTimeFormat();
     updateCameraSlider();
@@ -141,17 +145,26 @@ function calculateSweepingSecondAngle(seconds, milliseconds) {
            (Math.PI / 30000) * milliseconds;
 }
 
-function updateClockShape(scene, hoursFont, minutesFont) {
+function updateClockStyle(scene, hoursFont, minutesFont) {
     useDynamicClock = document.getElementById('useDynamicClock').checked;
-    if (useDynamicClock === lastClockShape) return;
+    useDarkScheme = document.getElementById('useDarkScheme').checked;
+
+    if (useDynamicClock === lastClockShape && useDarkScheme === lastColorScheme) {
+        return;
+    }
+
+    if ((useDarkScheme !== lastColorScheme)) {
+        switchScheme(useDarkScheme ? 'dark' : 'light');
+        materialsJs.rebuildMaterials()
+    }
 
     resizeHandled = false;
-
     destroyClock(scene);
     addClock(scene, hoursFont, minutesFont, useDynamicClock);
     updateCamera(useDynamicClock);
 
     lastClockShape = useDynamicClock;
+    lastColorScheme = useDarkScheme;
 }
 
 /**

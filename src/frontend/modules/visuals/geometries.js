@@ -12,17 +12,37 @@ import * as SHAPES from './shapes.js';
 import { calculateClockDimensions, dynamicClockHeight, dynamicClockWidth } from '../managers/sceneManager.js';
 import { interpolateValue, scaleValue } from '../utils/sizeUtils.js';
 
-calculateClockDimensions();
-
-// Static clock parts
-export const createClockFace = () => {
-    const clockFaceGeometry = new THREE.CylinderGeometry(
-        CONSTANTS.SIZES.CLOCK_RADIUS,
-        CONSTANTS.SIZES.CLOCK_RADIUS,
-        CONSTANTS.SIZES.CLOCK_THICKNESS,
-        CONSTANTS.SEGMENTS
-    );
+export const createClockBezel = (isDynamic) => {
+    const clockBezelGeometry = isDynamic
+        ? new RoundedBoxGeometry(
+            100, 100,
+            CONSTANTS.SIZES.CLOCK_THICKNESS,
+            CONSTANTS.SEGMENTS / 8,
+            CONSTANTS.SIZES.BEZEL_RADIUS)
+        : new THREE.RingGeometry(
+            CONSTANTS.SIZES.CLOCK_RADIUS,
+            CONSTANTS.CLOCK_OUTER_RADIUS,
+            CONSTANTS.SEGMENTS);
+    clockBezelGeometry.center();
+    calculateClockDimensions();
+    return clockBezelGeometry;
+};
+export const createClockFace = (isDynamic) => {
+    const clockFaceGeometry = isDynamic
+        ? new RoundedBoxGeometry(
+            dynamicClockWidth,
+            dynamicClockHeight,
+            CONSTANTS.SIZES.CLOCK_THICKNESS,
+            CONSTANTS.SEGMENTS / 8,
+            CONSTANTS.SIZES.BEZEL_RADIUS)
+        : new THREE.CylinderGeometry(
+            CONSTANTS.SIZES.CLOCK_RADIUS,
+            CONSTANTS.SIZES.CLOCK_RADIUS,
+            CONSTANTS.SIZES.CLOCK_THICKNESS,
+            CONSTANTS.SEGMENTS
+        );
     clockFaceGeometry.center();
+    calculateClockDimensions();
     return clockFaceGeometry;
 }
 export const createClockFrame = () => {
@@ -34,15 +54,6 @@ export const createClockFrame = () => {
     );
     createClockFrame.center();
     return createClockFrame;
-};
-export const createClockBezel = () => {
-    const clockBezelGeometry = new THREE.RingGeometry(
-        CONSTANTS.SIZES.CLOCK_RADIUS,
-        CONSTANTS.CLOCK_OUTER_RADIUS,
-        CONSTANTS.SEGMENTS
-    );
-    clockBezelGeometry.center();
-    return clockBezelGeometry;
 };
 export const createPost = () => new THREE.CylinderGeometry(
     scaleValue(CONSTANTS.SIZES.POST_RADIUS),
@@ -122,24 +133,6 @@ export const createOuterSecondHandGeometry = (handLength, isDynamic) => new THRE
         isDynamic
     ), CONSTANTS.SEGMENTS / 2
 );
-
-// Dynamic clock parts
-export const createDynamicClockFaceGeometry = () => new RoundedBoxGeometry(
-    dynamicClockWidth,
-    dynamicClockHeight,
-    CONSTANTS.SIZES.CLOCK_THICKNESS,
-    CONSTANTS.SEGMENTS / 8,
-    CONSTANTS.SIZES.BEZEL_RADIUS
-);
-
-export const createDynamicClockBezelGeometry = () => new RoundedBoxGeometry(
-    dynamicClockWidth + CONSTANTS.SIZES.BEZEL_THICKNESS * 100,
-    dynamicClockHeight + CONSTANTS.SIZES.BEZEL_THICKNESS * 100,
-    CONSTANTS.SIZES.CLOCK_THICKNESS,
-    CONSTANTS.SEGMENTS / 8,
-    CONSTANTS.SIZES.BEZEL_RADIUS
-);
-
 export const createDigitalDisplayBoxGeometry = (width, height, isDynamic = true) => {
     const shape = SHAPES.createComplicationBox(width, height)
     const extrudeSettings = {
@@ -200,6 +193,7 @@ export function createDigitalDisplayGeometry(dayDateStr, font, isDynamic = true)
     return textGeometry;
 }
 
+// Text geometries for each hour number
 export function createHourGeometry(hour, font, distance, isDynamic = true) {
     return new TextGeometry(String(hour), {
         font: font,

@@ -119,8 +119,8 @@ function createIndicators(scene, isDynamic = true) {
 export function addClock(scene, hoursFont, minutesFont, isDynamic = true) {
     scene.add(meshesJs.createClockFace(isDynamic));
     scene.add(meshesJs.createClockBezel(isDynamic));
-    scene.add(meshesJs.createClockFrame());
     scene.add(meshesJs.createPost());
+    if (isDynamic) scene.add(meshesJs.createClockFrame());
 
     createIndicators(scene, isDynamic);
     createNumbers(scene, hoursFont, minutesFont, isDynamic);

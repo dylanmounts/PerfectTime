@@ -6,49 +6,42 @@
 
 import * as THREE from 'three';
 
-import { COLORS } from '../constants.js';
+import { getCurrentScheme } from '../managers/colorManager';
 
+export let MATERIALS;
 
-const clockBezel = new THREE.MeshPhongMaterial({ color: COLORS.CLOCK_BEZEL });
-const clockFace = new THREE.MeshPhongMaterial({ color: COLORS.CLOCK_FACE });
-const complicationFrame = new THREE.MeshPhongMaterial({ color: COLORS.COMPLICATION_FRAME });
-const dayDate = new THREE.MeshPhongMaterial({ color: COLORS.COMPLICATION_NUMBERS });
-const dayDateBox = new THREE.MeshPhongMaterial({ color: COLORS.DAY_DATE_BOX });
-const digitalDisplay = new THREE.MeshPhongMaterial({ color: COLORS.COMPLICATION_NUMBERS });
-const digitalDisplayBox = new THREE.MeshPhongMaterial({ color: COLORS.DIGITAL_DISPLAY_BOX });
-const hourHand = new THREE.MeshPhongMaterial({ color: COLORS.HOUR_HAND });
-const outerHourHand = new THREE.MeshPhongMaterial({ color: COLORS.OUTER_HOUR_HAND });
-const hourNumber = new THREE.MeshPhongMaterial({ color: COLORS.HOUR_NUMBERS });
-const outerHourNumber = new THREE.MeshPhongMaterial({ color: COLORS.OUTER_HOUR_NUMBERS });
-const indicator = new THREE.MeshPhongMaterial({ color: COLORS.INDICATORS });
-const outerIndicator = new THREE.MeshPhongMaterial({ color: COLORS.OUTER_INDICATOR });
-const minuteHand = new THREE.MeshPhongMaterial({ color: COLORS.MINUTE_HAND });
-const outerMinuteHand = new THREE.MeshPhongMaterial({ color: COLORS.OUTER_MINUTE_HAND });
-const minuteNumber = new THREE.MeshPhongMaterial({ color: COLORS.MINUTE_NUMBERS });
-const outerMinuteNumber = new THREE.MeshPhongMaterial({ color: COLORS.OUTER_MINUTE_NUMBERS });
-const post = new THREE.MeshPhongMaterial({ color: COLORS.POST });
-const secondHand = new THREE.MeshPhongMaterial({ color: COLORS.SECOND_HAND });
-const outerSecondHand = new THREE.MeshPhongMaterial({ color: COLORS.OUTER_SECOND_HAND });
+const buildMaterials = () => {
+    const COLORS = getCurrentScheme();
+    const materials = {
+        clockBezel: new THREE.MeshPhongMaterial({ color: COLORS.CLOCK_BEZEL }),
+        clockFace: new THREE.MeshPhongMaterial({ color: COLORS.CLOCK_FACE }),
+        complicationFrame: new THREE.MeshPhongMaterial({ color: COLORS.COMPLICATION_FRAME }),
+        dayDate: new THREE.MeshPhongMaterial({ color: COLORS.COMPLICATION_NUMBERS }),
+        dayDateBox: new THREE.MeshPhongMaterial({ color: COLORS.DAY_DATE_BOX }),
+        digitalDisplay: new THREE.MeshPhongMaterial({ color: COLORS.COMPLICATION_NUMBERS }),
+        digitalDisplayBox: new THREE.MeshPhongMaterial({ color: COLORS.DIGITAL_DISPLAY_BOX }),
+        hourHand: new THREE.MeshPhongMaterial({ color: COLORS.HOUR_HAND }),
+        outerHourHand: new THREE.MeshPhongMaterial({ color: COLORS.OUTER_HOUR_HAND }),
+        hourNumber: new THREE.MeshPhongMaterial({ color: COLORS.HOUR_NUMBERS }),
+        outerHourNumber: new THREE.MeshPhongMaterial({ color: COLORS.OUTER_HOUR_NUMBERS }),
+        indicator: new THREE.MeshPhongMaterial({ color: COLORS.INDICATORS }),
+        outerIndicator: new THREE.MeshPhongMaterial({ color: COLORS.OUTER_INDICATOR }),
+        minuteHand: new THREE.MeshPhongMaterial({ color: COLORS.MINUTE_HAND }),
+        outerMinuteHand: new THREE.MeshPhongMaterial({ color: COLORS.OUTER_MINUTE_HAND }),
+        minuteNumber: new THREE.MeshPhongMaterial({ color: COLORS.MINUTE_NUMBERS }),
+        outerMinuteNumber: new THREE.MeshPhongMaterial({ color: COLORS.OUTER_MINUTE_NUMBERS }),
+        post: new THREE.MeshPhongMaterial({ color: COLORS.POST }),
+        secondHand: new THREE.MeshPhongMaterial({ color: COLORS.SECOND_HAND }),
+        outerSecondHand: new THREE.MeshPhongMaterial({ color: COLORS.OUTER_SECOND_HAND }),
+    };
 
-export const MATERIALS = {
-    clockBezel,
-    clockFace,
-    complicationFrame,
-    dayDate,
-    dayDateBox,
-    digitalDisplay,
-    digitalDisplayBox,
-    hourHand,
-    outerHourHand,
-    hourNumber,
-    outerHourNumber,
-    indicator,
-    outerIndicator,
-    minuteHand,
-    outerMinuteHand,
-    minuteNumber,
-    outerMinuteNumber,
-    post,
-    secondHand,
-    outerSecondHand,
-};
+    MATERIALS = materials;
+}
+buildMaterials();
+
+export const rebuildMaterials = () => {
+    Object.keys(MATERIALS).forEach(materialKey => {
+        MATERIALS[materialKey].dispose();
+    });
+    buildMaterials();
+}
