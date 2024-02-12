@@ -2,6 +2,7 @@
  * colorManager.js - Manages the colors for the perfect Clock.
  */
 
+let currentScheme;
 const LIGHT_SECOND_HAND = 0xAE2E24;
 const DARK_SECOND_HAND = 0x822622;
 
@@ -85,12 +86,11 @@ const LIGHT_SCHEME = {
     OUTER_SECOND_HAND: LIGHT_COLORS['1100'],
 };
 
-let currentScheme = LIGHT_SCHEME
-
 export function getCurrentScheme() {
     return currentScheme;
 }
 
-export function switchScheme(scheme) {
+export function switchScheme(scheme = 'dark') {
     currentScheme = scheme === 'dark' ? DARK_SCHEME : LIGHT_SCHEME;
 }
+switchScheme();
