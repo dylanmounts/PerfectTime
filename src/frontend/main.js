@@ -44,6 +44,7 @@ function styleButtonForToastHidden(btn) {
 UIUtils.setupToastToggle('optionsMenuBtn', 'optionsMenu', styleButtonForToastVisible, styleButtonForToastHidden);
 UIUtils.setupToastToggle('infoMenuBtn', 'infoMenu', styleButtonForToastVisible, styleButtonForToastHidden);
 UIUtils.setLanuage();
+UIUtils.setColorScheme();
 UIUtils.setupTimeFormatToggle();
 UIUtils.setupDynamicClockToggle();
 UIUtils.setupZoomControls();
