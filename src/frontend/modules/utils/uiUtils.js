@@ -112,6 +112,23 @@ export function setupZoomControls() {
 }
 
 /**
+ * Initializes the controls for toggling between light and dark color scheme.
+ */
+export function setupColorSchemeToggle() {
+    const lightScheme = document.getElementById('lightScheme');
+    const darkScheme = document.getElementById('darkScheme');
+    const useDarkScheme = document.getElementById('useDarkScheme');
+
+    lightScheme.addEventListener('click', () => {
+        useDarkScheme.checked = false;
+    });
+
+    darkScheme.addEventListener('click', () => {
+        useDarkScheme.checked = true;
+    });
+}
+
+/**
  * Initializes the controls for toggling between 12 and 24-hour time.
  */
 export function setupTimeFormatToggle() {
