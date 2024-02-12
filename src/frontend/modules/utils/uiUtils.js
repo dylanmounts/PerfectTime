@@ -194,6 +194,11 @@ export function setColorScheme() {
     };
 }
 
+/**
+ * Toggles the UI's visibilty.
+ * 
+ * @param {boolean} makeVisible - Whether or not the UI should be visible.
+ */
 function toggleUIVisibility(makeVisible) {
     const uiContainer = document.getElementById('uiContainer')
     if (makeVisible) {
@@ -201,10 +206,13 @@ function toggleUIVisibility(makeVisible) {
     } else {
         uiContainer.style.opacity = '0';
     }
-    resetInteractionTimer();
+    handleInteractionTimer();
 }
 
-function resetInteractionTimer() {
+/**
+ * Sets or clears the timer which toggles the UI depending on user interaction.
+ */
+function handleInteractionTimer() {
     const fullScreenBtn = document.getElementById("fullscreenBtn");
     clearTimeout(interactionTimer);
     if (fullScreenBtn.classList.contains("active")) {
@@ -245,7 +253,7 @@ export function toggleGUI(isFullscreen) {
         }
     }
 
-    resetInteractionTimer();
+    handleInteractionTimer();
     document.addEventListener('mousemove', () => toggleUIVisibility(true));
     document.addEventListener('touchstart', () => toggleUIVisibility(true));
     document.addEventListener('keypress', () => toggleUIVisibility(true));
