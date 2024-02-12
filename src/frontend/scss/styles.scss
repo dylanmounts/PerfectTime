@@ -53,7 +53,6 @@ html, body {
     width: 100%;
     margin: 0;
     padding: 0;
-    background-color: black;
 }
 
 /* Layout and Structure */
@@ -64,19 +63,6 @@ html, body {
     z-index: 1;
 }
 
-/* Components and Elements */
-.form-range::-webkit-slider-runnable-track {
-    background: #8590A2;
-}
-
-.form-range::-moz-range-track {
-    background: #8590A2;
-}
-
-.form-range::-ms-track {
-    background: #8590A2;
-}
-
 .table {
     width: 100%;
     opacity: 0.75;
@@ -84,6 +70,18 @@ html, body {
 
 .table td {
     width: 50%;
+}
+
+.btn-outline-secondary {
+    @include button-outline-variant(
+        #DCDFE4, // color
+        #DCDFE4, // color-hover
+        #626F86, // active-background
+        #DCDFE4, // active-border,
+        #DCDFE4, // active-color
+    );
+    color: #DCDFE4;
+    background-color: transparent;
 }
 
 .btn-lg {

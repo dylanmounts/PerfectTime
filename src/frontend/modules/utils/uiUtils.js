@@ -8,7 +8,7 @@ import { StatusBar } from '@capacitor/status-bar';
 
 import * as deviceUtils from './deviceUtils';
 import { updateCameraZoom } from '../managers/sceneManager';
-import { switchScheme } from '../managers/colorManager';
+import * as colorManager from '../managers/colorManager';
 
 
 let iOSFullscreen = false;
@@ -169,12 +169,12 @@ export function setLanuage() {
  */
 export function toggleButton(btnEl, state) {
     if (state === 'active') {
-        btnEl.style.backgroundColor = '#585f63';
-        btnEl.style.color = '#e8e6e3';
+        btnEl.style.backgroundColor = colorManager.BUTTON_COLORS.ACTIVE_BG;
+        btnEl.style.color = colorManager.BUTTON_COLORS.ACTIVE;
         btnEl.classList.add('active');
     } else {
-        btnEl.style.backgroundColor = 'transparent';
-        btnEl.style.color = '#6c757d';
+        btnEl.style.backgroundColor = colorManager.BUTTON_COLORS.INACTIVE_BG;
+        btnEl.style.color = colorManager.BUTTON_COLORS.INACTIVE;
         btnEl.classList.remove('active');
     }
 }
@@ -186,10 +186,10 @@ export function setColorScheme() {
     const colorScheme = deviceUtils.detectSystemColorScheme();
     const darkSchemeSelector = document.getElementById('useDarkScheme');
     if (colorScheme === 'light') {
-        switchScheme('light');
+        colorManager.switchScheme('light');
         darkSchemeSelector.checked = false;
     } else {
-        switchScheme('dark');
+        colorManager.switchScheme('dark');
         darkSchemeSelector.checked = true;
     };
 }
@@ -284,5 +284,20 @@ export function adjustToastsForTouch() {
             container.classList.remove('top-0', 'start-0', 'end-0');
             container.classList.add('top-50', 'start-50', 'translate-middle');
         });
+    }
+}
+
+// Style functions for toast buttons
+export function styleButtonForToastVisible(btn) {
+    if (deviceUtils.isTouchDevice()) {
+        btn.style.backgroundColor = colorManager.BUTTON_COLORS.ACTIVE_BG;
+        btn.style.color = colorManager.BUTTON_COLORS.ACTIVE;
+    }
+}
+
+export function styleButtonForToastHidden(btn) {
+    if (deviceUtils.isTouchDevice()) {
+        btn.style.backgroundColor = colorManager.BUTTON_COLORS.INACTIVE_BG;
+        btn.style.color = colorManager.BUTTON_COLORS.INACTIVE;
     }
 }
