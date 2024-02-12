@@ -3,6 +3,7 @@
  */
 
 let currentScheme;
+
 const LIGHT_SECOND_HAND = 0xAE2E24;
 const DARK_SECOND_HAND = 0x822622;
 
@@ -43,6 +44,7 @@ const LIGHT_COLORS = {
 };
 
 const DARK_SCHEME = {
+    SCHEME: 'dark',
     CLOCK_BEZEL: DARK_COLORS['0'],
     CLOCK_FACE: DARK_COLORS['300'],
     COMPLICATION_FRAME: DARK_COLORS['100'],
@@ -65,6 +67,7 @@ const DARK_SCHEME = {
 };
 
 const LIGHT_SCHEME = {
+    SCHEME: 'light',
     CLOCK_BEZEL: LIGHT_COLORS['900'],
     CLOCK_FACE: LIGHT_COLORS['500'],
     COMPLICATION_FRAME: LIGHT_COLORS['1000'],
@@ -88,9 +91,18 @@ const LIGHT_SCHEME = {
 
 export function getCurrentScheme() {
     return currentScheme;
-}
+};
 
 export function switchScheme(scheme = 'dark') {
     currentScheme = scheme === 'dark' ? DARK_SCHEME : LIGHT_SCHEME;
+    const htmlElement = document.documentElement;
+    htmlElement.setAttribute('data-bs-theme', scheme === 'dark' ? 'dark': 'light');
 }
 switchScheme();
+
+export const BUTTON_COLORS = {
+    ACTIVE: "#DCDFE4",
+    ACTIVE_BG: "#626F86",
+    INACTIVE: "#DCDFE4",
+    INACTIVE_BG: "transparent",
+};
