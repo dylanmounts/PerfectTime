@@ -4,10 +4,15 @@
 
 
 import { Toast } from 'bootstrap';
+import { StatusBar } from '@capacitor/status-bar';
 
-import { detectSystemColorScheme } from './deviceUtils';
+import * as deviceUtils from './deviceUtils';
 import { updateCameraZoom } from '../managers/sceneManager';
 import { switchScheme } from '../managers/colorManager';
+
+
+let iOSFullscreen = false;
+let interactionTimer;
 
 /**
  * Sets up a toggle for a Bootstrap toast element and manages button styles.
@@ -176,7 +181,7 @@ export function toggleButton(btnEl, state) {
  *  Sets the color scheme based on the user's system preference.
  */
 export function setColorScheme() {
-    const colorScheme = detectSystemColorScheme();
+    const colorScheme = deviceUtils.detectSystemColorScheme();
     const darkSchemeSelector = document.getElementById('useDarkScheme');
     if (colorScheme === 'light') {
         switchScheme('light');
@@ -185,4 +190,90 @@ export function setColorScheme() {
         switchScheme('dark');
         darkSchemeSelector.checked = true;
     };
+}
+
+function toggleButtonVisibility(btnEl, makeVisible) {
+    if (makeVisible) {
+        btnEl.style.opacity = '1';
+        resetInteractionTimer(btnEl);
+    } else {
+        btnEl.style.opacity = '0';
+    }
+}
+
+function resetInteractionTimer(btnEl) {
+    clearTimeout(interactionTimer);
+    interactionTimer = setTimeout(() => toggleButtonVisibility(btnEl, false), 5000); // Set a new timer
+}
+
+/**
+ * Handle GUI changes on fullscreen mode.
+ * @param {boolean} isFullscreen - Indicates if fullscreen mode is active.
+ */
+export function toggleGUI(isFullscreen) {
+    const isPortrait = deviceUtils.isPortraitMode()
+    const btnEl = document.getElementById("fullscreenBtn");
+
+    if (isFullscreen) {
+        if (deviceUtils.isAppleDevice()) {
+            StatusBar.hide();
+        } else if (deviceUtils.isTouchDevice()) {
+            AndroidFullScreen.immersiveMode();
+        }
+        toggleButton(btnEl, "active");
+    } else {
+        if (deviceUtils.isAppleDevice()) {
+            if (!isiPhone()) {
+                StatusBar.show();
+                toggleButton(btnEl, "inactive");
+            }
+            else if (isPortrait && iOSFullscreen) {
+                StatusBar.show();
+                toggleButton(btnEl, "inactive");
+            }
+        } else {
+            if (deviceUtils.isTouchDevice()) {
+                AndroidFullScreen.showSystemUI();
+            }
+            toggleButton(btnEl, "inactive");
+        }
+    }
+
+    // When the button becomes active, reset the interaction timer to start the 5-second countdown
+    if (btnEl.classList.contains("active")) {
+        resetInteractionTimer(btnEl);
+    }
+
+    // Add event listeners for any interaction to reset the timer and show the button
+    document.addEventListener('mousemove', () => resetInteractionTimer(btnEl));
+    document.addEventListener('touchstart', () => resetInteractionTimer(btnEl));
+    document.addEventListener('keypress', () => resetInteractionTimer(btnEl));
+
+    iOSFullscreen = isFullscreen;
+}
+
+/**
+ * Toggle fullscreen mode.
+ */
+export function toggleFullscreen() {
+    if (deviceUtils.isAppleDevice()) {
+        toggleGUI(!iOSFullscreen)
+    } else if (!document.fullscreenElement) {
+        document.documentElement.requestFullscreen();
+    } else if (document.exitFullscreen) {
+        document.exitFullscreen();
+    }
+}
+
+/**
+ * Adjusts toast container positions for touch devices.
+ */
+export function adjustToastsForTouch() {
+    if (deviceUtils.isTouchDevice() || deviceUtils.isAppleDevice()) {
+        const toastContainers = document.querySelectorAll('.toast-container');
+        toastContainers.forEach(container => {
+            container.classList.remove('top-0', 'start-0', 'end-0');
+            container.classList.add('top-50', 'start-50', 'translate-middle');
+        });
+    }
 }

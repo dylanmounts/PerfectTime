@@ -43,6 +43,7 @@ function styleButtonForToastHidden(btn) {
 // Initialize and configure UI components
 UIUtils.setupToastToggle('optionsMenuBtn', 'optionsMenu', styleButtonForToastVisible, styleButtonForToastHidden);
 UIUtils.setupToastToggle('infoMenuBtn', 'infoMenu', styleButtonForToastVisible, styleButtonForToastHidden);
+UIUtils.adjustToastsForTouch();
 UIUtils.setLanuage();
 UIUtils.setColorScheme();
 UIUtils.setupTimeFormatToggle();
@@ -65,10 +66,10 @@ const clockOptions = [
 clockOptions.forEach(option => UIUtils.handleCheckboxChange(option.id, option.toggleFunction));
 
 // Fullscreen and orientation change event listeners
-document.getElementById('fullscreenBtn').addEventListener('click', DeviceUtils.toggleFullscreen);
+document.getElementById('fullscreenBtn').addEventListener('click', UIUtils.toggleFullscreen);
 document.addEventListener('fullscreenchange', () => {
     const isFullscreen = !!document.fullscreenElement;
-    DeviceUtils.toggleGUI(isFullscreen);
+    UIUtils.toggleGUI(isFullscreen);
     if (!isFullscreen) {
         DeviceUtils.handleOrientationChange();
     }
@@ -81,7 +82,6 @@ window.addEventListener('resize', DeviceUtils.applyTouchDeviceStyles);
 window.addEventListener('orientationchange', DeviceUtils.applyTouchDeviceStyles);
 DeviceUtils.applyTouchDeviceStyles();
 DeviceUtils.applyWebAppStyles();
-DeviceUtils.adjustToastsForTouch();
 
 // Tick tock run the clock
 window.onload = initializeScene();

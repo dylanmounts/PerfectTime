@@ -4,12 +4,6 @@
 
 
 import { AndroidFullScreen } from '@awesome-cordova-plugins/android-full-screen';
-import { StatusBar } from '@capacitor/status-bar';
-
-import { toggleButton } from './uiUtils';
-
-
-let iOSFullscreen = false;
 
 /**
  * Check if the current device is a touch device.
@@ -85,55 +79,6 @@ export function applyWebAppStyles() {
 }
 
 /**
- * Toggle fullscreen mode.
- */
-export function toggleFullscreen() {
-    if (isAppleDevice()) {
-        toggleGUI(!iOSFullscreen)
-    } else if (!document.fullscreenElement) {
-        document.documentElement.requestFullscreen();
-    } else if (document.exitFullscreen) {
-        document.exitFullscreen();
-    }
-}
-
-/**
- * Handle GUI changes on fullscreen mode.
- * @param {boolean} isFullscreen - Indicates if fullscreen mode is active.
- */
-export function toggleGUI(isFullscreen) {
-    const isPortrait = isPortraitMode()
-    const btnEl = document.getElementById("fullscreenBtn");
-
-    if (isFullscreen) {
-        if (isAppleDevice()) {
-            StatusBar.hide();
-        } else if (isTouchDevice()) {
-            AndroidFullScreen.immersiveMode();
-        }
-        toggleButton(btnEl, "active");
-    } else {
-        if (isAppleDevice()) {
-            if (!isiPhone()) {
-                StatusBar.show();
-                toggleButton(btnEl, "inactive");
-            }
-            else if (isPortrait && iOSFullscreen) {
-                StatusBar.show();
-                toggleButton(btnEl, "inactive");
-            }
-        } else {
-            if (isTouchDevice()) {
-                AndroidFullScreen.showSystemUI();
-            }
-            toggleButton(btnEl, "inactive");
-        }
-    }
-
-    iOSFullscreen = isFullscreen;
-}
-
-/**
  * Handle device orientation changes.
  */
 export function handleOrientationChange() {
@@ -143,19 +88,6 @@ export function handleOrientationChange() {
         isPortrait ? toggleGUI(false) : toggleGUI(true);
     } else if (isTouchDevice() && !document.fullscreenElement) {
         isPortrait ? AndroidFullScreen.showSystemUI() : AndroidFullScreen.showUnderSystemUI();
-    }
-}
-
-/**
- * Adjusts toast container positions for touch devices.
- */
-export function adjustToastsForTouch() {
-    if (isTouchDevice() || isAppleDevice()) {
-        const toastContainers = document.querySelectorAll('.toast-container');
-        toastContainers.forEach(container => {
-            container.classList.remove('top-0', 'start-0', 'end-0');
-            container.classList.add('top-50', 'start-50', 'translate-middle');
-        });
     }
 }
 
