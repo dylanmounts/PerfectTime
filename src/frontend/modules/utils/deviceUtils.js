@@ -1,9 +1,5 @@
 /**
  * deviceUtils.js - Utility functions for device-specific interactions in the perfect clock.
- * 
- * This module provides a set of functions to enhance the user experience on different devices.
- * It includes detecting touch devices, applying specific styles for touch-enabled interfaces,
- * managing fullscreen mode, and handling orientation changes.
  */
 
 
@@ -161,4 +157,17 @@ export function adjustToastsForTouch() {
             container.classList.add('top-50', 'start-50', 'translate-middle');
         });
     }
+}
+
+/**
+ * Detects the user's preferred color scheme.
+ *
+ * @returns {string} 'light' or 'dark' based on the user's system. Defaults to dark.
+ */
+export function detectSystemColorScheme() {
+    if (window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches) {
+        return 'light';
+    }
+
+    return 'dark';
 }
