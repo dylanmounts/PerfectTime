@@ -35,7 +35,9 @@ let secondHandExists = document.getElementById('secondHandOption').checked;
 let sweepingSeconds = document.getElementById('sweepingSecondsOption').checked;
 
 // State variables for tracking the perfect time and its displays.
+export let language = 'en-US';
 export let useDynamicClock = false;
+export let useTwentyFourHour = false;
 let currentTime = null;
 let lastTime = new Date;
 let lastSecond = null;
@@ -43,12 +45,10 @@ let lastDayDate = null;
 let lastDayDateExists = null;
 let lastDigitalDisplayExists = null;
 let lastLanguage = null;
-let language = 'en-US';
 let lastTimeFormat = null;
 let lastColorScheme = null;
 let lastClockShape = null;
 let minuteHandLength = null;
-let useTwentyFourHour = false;
 let useDarkScheme = true;
 let resizeHandled = false;
 
@@ -180,10 +180,6 @@ export function updateDayDateDisplay(scene, font) {
         lastDayDateExists = dayDateExists;
     }
 
-    if (!currentTime) {
-        return;
-    }
-
     const day = currentTime.toLocaleString(language, { weekday: 'short' }).toUpperCase();
     const month = currentTime.toLocaleString(language, { month: 'short' });
     const date = currentTime.toLocaleString(language, { day: 'numeric' });
@@ -275,23 +271,6 @@ export function updateDigitalDisplay(scene, font) {
         lastTimeFormat = useTwentyFourHour;
     }
 
-    if (!currentTime) {
-        return;
-    }
-
-    let digitalTime = currentTime.toLocaleTimeString(language, {
-        hour12: !useTwentyFourHour,
-        hour: 'numeric',
-        minute: '2-digit',
-        second: '2-digit'
-    });
-    digitalTime = digitalTime.replace(/^24/, '00');
-
-    // These sneaky unicode characters are hidden by the digital time frame. They exist so
-    // the time remains centered within its frame and doesn't shift slightly as the seconds tick.
-    // It's either this or monospace fonts, and monospace fonts are gross.
-    const digitalDisplayStr = `\u007C\u200B${digitalTime}\u200B\u007C`;
-
     const currentSecond = currentTime.getSeconds();
     const shouldUpdate = (
         (currentSecond !== lastSecond || digitalDisplayExists !== lastDigitalDisplayExists)
@@ -303,14 +282,22 @@ export function updateDigitalDisplay(scene, font) {
     meshesJs.removeMeshByName(scene, 'digitalDisplay');
     meshesJs.removeMeshByName(scene, 'digitalDisplayBox');
 
-    // If the digital time dispaly doesn't exist then we don't need to update it.
+    // If the digital time dispaly doesn't exist then we don't need to update it
     if (!digitalDisplayExists) {
         updateState();
         return;
     }
 
+    // Use the next digital time string, unless it needs to be updated
+    let timeStr;
+    if (language !== lastLanguage || useTwentyFourHour !== lastTimeFormat || !timeManager.nextTimeStr) {
+        timeStr = timeManager.generateTimeString(currentTime);
+    } else {
+        timeStr = timeManager.nextTimeStr;
+    }
+
     // Create and add new digital time display
-    const digitalDisplayGeometry = geometriesJs.createDigitalDisplayGeometry(digitalDisplayStr, font, useDynamicClock);
+    const digitalDisplayGeometry = geometriesJs.createDigitalDisplayGeometry(timeStr, font, useDynamicClock);
     const digitalDisplayMesh = meshesJs.createDigitalDisplayMesh(digitalDisplayGeometry);
     scene.add(digitalDisplayMesh);
 
