@@ -12,8 +12,6 @@ import * as SHAPES from './shapes.js';
 import { calculateClockDimensions, dynamicClockHeight, dynamicClockWidth } from '../managers/sceneManager.js';
 import { interpolateValue, scaleValue } from '../utils/sizeUtils.js';
 
-calculateClockDimensions();
-
 export const createClockBezel = (isDynamic) => {
     const clockBezelGeometry = isDynamic
         ? new RoundedBoxGeometry(
@@ -26,6 +24,7 @@ export const createClockBezel = (isDynamic) => {
             CONSTANTS.CLOCK_OUTER_RADIUS,
             CONSTANTS.SEGMENTS);
     clockBezelGeometry.center();
+    calculateClockDimensions();
     return clockBezelGeometry;
 };
 export const createClockFace = (isDynamic) => {
@@ -43,6 +42,7 @@ export const createClockFace = (isDynamic) => {
             CONSTANTS.SEGMENTS
         );
     clockFaceGeometry.center();
+    calculateClockDimensions();
     return clockFaceGeometry;
 }
 export const createClockFrame = () => {
