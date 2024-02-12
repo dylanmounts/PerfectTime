@@ -65,6 +65,18 @@ html, body {
 }
 
 /* Components and Elements */
+.form-range::-webkit-slider-runnable-track {
+    background: #8590A2;
+}
+
+.form-range::-moz-range-track {
+    background: #8590A2;
+}
+
+.form-range::-ms-track {
+    background: #8590A2;
+}
+
 .table {
     width: 100%;
     opacity: 0.75;
