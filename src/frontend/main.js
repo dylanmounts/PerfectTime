@@ -25,24 +25,17 @@ import { initializeScene, onWindowResize } from './modules/managers/sceneManager
 import * as DeviceUtils from './modules/utils/deviceUtils';
 import * as UIUtils from './modules/utils/uiUtils';
 
-// Style functions for toast buttons
-function styleButtonForToastVisible(btn) {
-    if (DeviceUtils.isTouchDevice()) {
-        btn.style.backgroundColor = "#585f63";
-        btn.style.color = "#e8e6e3";
-    }
-}
-
-function styleButtonForToastHidden(btn) {
-    if (DeviceUtils.isTouchDevice()) {
-        btn.style.backgroundColor = "transparent";
-        btn.style.color = "#6c757d";
-    }
-}
-
 // Initialize and configure UI components
-UIUtils.setupToastToggle('optionsMenuBtn', 'optionsMenu', styleButtonForToastVisible, styleButtonForToastHidden);
-UIUtils.setupToastToggle('infoMenuBtn', 'infoMenu', styleButtonForToastVisible, styleButtonForToastHidden);
+UIUtils.setupToastToggle(
+    'optionsMenuBtn', 'optionsMenu',
+    UIUtils.styleButtonForToastVisible,
+    UIUtils.styleButtonForToastHidden
+);
+UIUtils.setupToastToggle(
+    'infoMenuBtn', 'infoMenu',
+    UIUtils.styleButtonForToastVisible,
+    UIUtils.styleButtonForToastHidden
+);
 UIUtils.adjustToastsForTouch();
 UIUtils.setLanuage();
 UIUtils.setColorScheme();
