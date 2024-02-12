@@ -6,8 +6,9 @@
 
 import * as THREE from 'three';
 
-import { COLORS } from '../constants.js';
+import { getCurrentScheme } from '../managers/colorManager';
 
+const COLORS = getCurrentScheme();
 
 const clockBezel = new THREE.MeshPhongMaterial({ color: COLORS.CLOCK_BEZEL });
 const clockFace = new THREE.MeshPhongMaterial({ color: COLORS.CLOCK_FACE });
