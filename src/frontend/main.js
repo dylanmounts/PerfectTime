@@ -39,6 +39,7 @@ UIUtils.setupToastToggle(
 UIUtils.adjustToastsForTouch();
 UIUtils.setLanuage();
 UIUtils.setColorScheme();
+UIUtils.setupColorSchemeToggle();
 UIUtils.setupTimeFormatToggle();
 UIUtils.setupDynamicClockToggle();
 UIUtils.setupZoomControls();
