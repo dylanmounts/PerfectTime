@@ -169,11 +169,13 @@ export function setLanuage() {
  */
 export function toggleButton(btnEl, state) {
     if (state === 'active') {
-        btnEl.style.backgroundColor = '#585f63'
-        btnEl.style.color = '#e8e6e3'
+        btnEl.style.backgroundColor = '#585f63';
+        btnEl.style.color = '#e8e6e3';
+        btnEl.classList.add('active');
     } else {
-        btnEl.style.backgroundColor = 'transparent'
-        btnEl.style.color = '#6c757d'
+        btnEl.style.backgroundColor = 'transparent';
+        btnEl.style.color = '#6c757d';
+        btnEl.classList.remove('active');
     }
 }
 
@@ -192,18 +194,22 @@ export function setColorScheme() {
     };
 }
 
-function toggleButtonVisibility(btnEl, makeVisible) {
+function toggleUIVisibility(makeVisible) {
+    const uiContainer = document.getElementById('uiContainer')
     if (makeVisible) {
-        btnEl.style.opacity = '1';
-        resetInteractionTimer(btnEl);
+        uiContainer.style.opacity = '1';
     } else {
-        btnEl.style.opacity = '0';
+        uiContainer.style.opacity = '0';
     }
+    resetInteractionTimer();
 }
 
-function resetInteractionTimer(btnEl) {
+function resetInteractionTimer() {
+    const fullScreenBtn = document.getElementById("fullscreenBtn");
     clearTimeout(interactionTimer);
-    interactionTimer = setTimeout(() => toggleButtonVisibility(btnEl, false), 5000); // Set a new timer
+    if (fullScreenBtn.classList.contains("active")) {
+        interactionTimer = setTimeout(() => toggleUIVisibility(false), 2500);
+    }
 }
 
 /**
@@ -239,15 +245,10 @@ export function toggleGUI(isFullscreen) {
         }
     }
 
-    // When the button becomes active, reset the interaction timer to start the 5-second countdown
-    if (btnEl.classList.contains("active")) {
-        resetInteractionTimer(btnEl);
-    }
-
-    // Add event listeners for any interaction to reset the timer and show the button
-    document.addEventListener('mousemove', () => resetInteractionTimer(btnEl));
-    document.addEventListener('touchstart', () => resetInteractionTimer(btnEl));
-    document.addEventListener('keypress', () => resetInteractionTimer(btnEl));
+    resetInteractionTimer();
+    document.addEventListener('mousemove', () => toggleUIVisibility(true));
+    document.addEventListener('touchstart', () => toggleUIVisibility(true));
+    document.addEventListener('keypress', () => toggleUIVisibility(true));
 
     iOSFullscreen = isFullscreen;
 }
