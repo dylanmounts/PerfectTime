@@ -8,6 +8,8 @@ import * as THREE from 'three';
 
 import { getCurrentScheme } from '../managers/colorManager';
 
+export let MATERIALS;
+
 const buildMaterials = () => {
     const COLORS = getCurrentScheme();
     const materials = {
@@ -31,8 +33,15 @@ const buildMaterials = () => {
         post: new THREE.MeshPhongMaterial({ color: COLORS.POST }),
         secondHand: new THREE.MeshPhongMaterial({ color: COLORS.SECOND_HAND }),
         outerSecondHand: new THREE.MeshPhongMaterial({ color: COLORS.OUTER_SECOND_HAND }),
-    }
-    return materials
-}
+    };
 
-export const MATERIALS = buildMaterials();
+    MATERIALS = materials;
+}
+buildMaterials();
+
+export const rebuildMaterials = () => {
+    Object.keys(MATERIALS).forEach(materialKey => {
+        MATERIALS[materialKey].dispose();
+    });
+    buildMaterials();
+}
