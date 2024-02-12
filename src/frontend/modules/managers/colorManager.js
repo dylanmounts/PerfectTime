@@ -64,7 +64,7 @@ const DARK_SCHEME = {
 };
 
 const LIGHT_SCHEME = {
-    CLOCK_BEZEL: LIGHT_COLORS['1000'],
+    CLOCK_BEZEL: LIGHT_COLORS['900'],
     CLOCK_FACE: LIGHT_COLORS['500'],
     COMPLICATION_FRAME: LIGHT_COLORS['1000'],
     COMPLICATION_NUMBERS: LIGHT_COLORS['1000'],
@@ -92,5 +92,5 @@ export function getCurrentScheme() {
 }
 
 export function switchScheme(scheme) {
-    currentScheme = scheme === 'light' ? LIGHT_SCHEME : DARK_SCHEME;
+    currentScheme = scheme === 'dark' ? DARK_SCHEME : LIGHT_SCHEME;
 }
