@@ -4,10 +4,15 @@
 
 
 import { Toast } from 'bootstrap';
+import { StatusBar } from '@capacitor/status-bar';
 
-import { detectSystemColorScheme } from './deviceUtils';
+import * as deviceUtils from './deviceUtils';
 import { updateCameraZoom } from '../managers/sceneManager';
 import { switchScheme } from '../managers/colorManager';
+
+
+let iOSFullscreen = false;
+let interactionTimer;
 
 /**
  * Sets up a toggle for a Bootstrap toast element and manages button styles.
@@ -164,11 +169,13 @@ export function setLanuage() {
  */
 export function toggleButton(btnEl, state) {
     if (state === 'active') {
-        btnEl.style.backgroundColor = '#585f63'
-        btnEl.style.color = '#e8e6e3'
+        btnEl.style.backgroundColor = '#585f63';
+        btnEl.style.color = '#e8e6e3';
+        btnEl.classList.add('active');
     } else {
-        btnEl.style.backgroundColor = 'transparent'
-        btnEl.style.color = '#6c757d'
+        btnEl.style.backgroundColor = 'transparent';
+        btnEl.style.color = '#6c757d';
+        btnEl.classList.remove('active');
     }
 }
 
@@ -176,7 +183,7 @@ export function toggleButton(btnEl, state) {
  *  Sets the color scheme based on the user's system preference.
  */
 export function setColorScheme() {
-    const colorScheme = detectSystemColorScheme();
+    const colorScheme = deviceUtils.detectSystemColorScheme();
     const darkSchemeSelector = document.getElementById('useDarkScheme');
     if (colorScheme === 'light') {
         switchScheme('light');
@@ -185,4 +192,97 @@ export function setColorScheme() {
         switchScheme('dark');
         darkSchemeSelector.checked = true;
     };
+}
+
+/**
+ * Toggles the UI's visibilty.
+ * 
+ * @param {boolean} makeVisible - Whether or not the UI should be visible.
+ */
+function toggleUIVisibility(makeVisible) {
+    const uiContainer = document.getElementById('uiContainer')
+    if (makeVisible) {
+        uiContainer.style.opacity = '1';
+    } else {
+        uiContainer.style.opacity = '0';
+    }
+    handleInteractionTimer();
+}
+
+/**
+ * Sets or clears the timer which toggles the UI depending on user interaction.
+ */
+function handleInteractionTimer() {
+    const fullScreenBtn = document.getElementById("fullscreenBtn");
+    clearTimeout(interactionTimer);
+    if (fullScreenBtn.classList.contains("active")) {
+        interactionTimer = setTimeout(() => toggleUIVisibility(false), 2500);
+    }
+}
+
+/**
+ * Handle GUI changes on fullscreen mode.
+ * @param {boolean} isFullscreen - Indicates if fullscreen mode is active.
+ */
+export function toggleGUI(isFullscreen) {
+    const isPortrait = deviceUtils.isPortraitMode()
+    const btnEl = document.getElementById("fullscreenBtn");
+
+    if (isFullscreen) {
+        if (deviceUtils.isAppleDevice()) {
+            StatusBar.hide();
+        } else if (deviceUtils.isTouchDevice()) {
+            AndroidFullScreen.immersiveMode();
+        }
+        toggleButton(btnEl, "active");
+    } else {
+        if (deviceUtils.isAppleDevice()) {
+            if (!isiPhone()) {
+                StatusBar.show();
+                toggleButton(btnEl, "inactive");
+            }
+            else if (isPortrait && iOSFullscreen) {
+                StatusBar.show();
+                toggleButton(btnEl, "inactive");
+            }
+        } else {
+            if (deviceUtils.isTouchDevice()) {
+                AndroidFullScreen.showSystemUI();
+            }
+            toggleButton(btnEl, "inactive");
+        }
+    }
+
+    handleInteractionTimer();
+    document.addEventListener('mousemove', () => toggleUIVisibility(true));
+    document.addEventListener('touchstart', () => toggleUIVisibility(true));
+    document.addEventListener('keypress', () => toggleUIVisibility(true));
+
+    iOSFullscreen = isFullscreen;
+}
+
+/**
+ * Toggle fullscreen mode.
+ */
+export function toggleFullscreen() {
+    if (deviceUtils.isAppleDevice()) {
+        toggleGUI(!iOSFullscreen)
+    } else if (!document.fullscreenElement) {
+        document.documentElement.requestFullscreen();
+    } else if (document.exitFullscreen) {
+        document.exitFullscreen();
+    }
+}
+
+/**
+ * Adjusts toast container positions for touch devices.
+ */
+export function adjustToastsForTouch() {
+    if (deviceUtils.isTouchDevice() || deviceUtils.isAppleDevice()) {
+        const toastContainers = document.querySelectorAll('.toast-container');
+        toastContainers.forEach(container => {
+            container.classList.remove('top-0', 'start-0', 'end-0');
+            container.classList.add('top-50', 'start-50', 'translate-middle');
+        });
+    }
 }

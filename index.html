@@ -14,23 +14,25 @@
 </head>
 
 <body>
-    <button type="button" class="btn btn-outline-secondary btn-lg" id="infoMenuBtn">
-        <div class="d-flex align-items-center justify-content-center">
-            <i class="bx bx-info-circle bx-sm"></i>
+    <div id="uiContainer">
+        <button type="button" class="btn btn-outline-secondary btn-lg" id="infoMenuBtn">
+            <div class="d-flex align-items-center justify-content-center">
+                <i class="bx bx-info-circle bx-sm"></i>
+            </div>
+        </button>
+        <div class="d-flex config-button-container">
+            <button type="button" class="btn btn-outline-secondary btn-lg me-2" id="optionsMenuBtn">
+                <div class="d-flex align-items-center justify-content-center">
+                    <i class="bx bx-cog bx-sm"></i>
+                </div>
+            </button>
+            <button type="button" class="btn btn-outline-secondary btn-lg" id="fullscreenBtn">
+                <div class="d-flex align-items-center justify-content-center">
+                    <i class="bx bx-expand bx-sm"></i>
+                </div>
+            </button>
         </div>
-    </button>
-    <div class="d-flex config-button-container">
-        <button type="button" class="btn btn-outline-secondary btn-lg me-2" id="optionsMenuBtn">
-            <div class="d-flex align-items-center justify-content-center">
-                <i class="bx bx-cog bx-sm"></i>
-            </div>
-        </button>
-        <button type="button" class="btn btn-outline-secondary btn-lg" id="fullscreenBtn">
-            <div class="d-flex align-items-center justify-content-center">
-                <i class="bx bx-expand bx-sm"></i>
-            </div>
-        </button>
-    </div>    
+    </div>
 
     <div class="toast-container position-fixed top-0 start-0 p-3" id="infoToast">
         <div id="infoMenu" class="toast" role="alert" aria-live="assertive" aria-atomic="true" data-bs-autohide="false">
@@ -81,7 +83,7 @@
                             <td>
                                 <div class="row justify-content-center align-items-center">
                                     <div class="col text-end h6" id="lightScheme">Light<i class='bx bx-sun ps-2'></i></div>
-                                    <div class="col-auto form-check form-switch align-items-center pe-0">
+                                    <div class="d-flex col-auto form-check form-switch justify-content-center pe-0 me-0">
                                         <input class="form-check-input" type="checkbox" role="switch" id="useDarkScheme" checked>
                                     </div>
                                     <div class="col text-start h6" id="darkScheme"><i class='bx bx-moon pe-2'></i>Dark</div>
@@ -92,7 +94,7 @@
                             <td>
                                 <div class="row justify-content-center align-items-center">
                                     <div class="col text-end h6" id="roundClock">Classic<i class='bx bx-time-five ps-2'></i></div>
-                                    <div class="col-auto form-check form-switch align-items-center pe-0">
+                                    <div class="d-flex col-auto form-check form-switch justify-content-center pe-0 me-0">
                                         <input class="form-check-input" type="checkbox" role="switch" id="useDynamicClock" checked>
                                     </div>
                                     <div class="col text-start h6" id="dynamicClock"><i class='bx bx-tab pe-2'></i>Dynamic</div>
@@ -137,8 +139,8 @@
                             <td class="py-2">
                                 <div class="row justify-content-center align-items-center">
                                     <div class="col text-end h6 mb-0" id="twelveHour">12-hour</div>
-                                    <div class="col-auto form-check form-switch align-items-center pe-0 mb-0">
-                                        <input class="form-check-input" type="checkbox" role="switch" id="useTwentyFourHour" checked>
+                                    <div class="d-flex col-auto form-check form-switch align-items-center justify-content-center pe-0 me-0">
+                                        <input class="form-check-input" type="checkbox" role="switch" id="useTwentyFourHour">
                                     </div>
                                     <div class="col text-start h6 mb-0" id="twentyFourHour">24-hour</div>
                                 </div>
