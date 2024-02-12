@@ -103,3 +103,28 @@ export function detectSystemColorScheme() {
 
     return 'dark';
 }
+
+/**
+ * Emulates Bootstrap's hover effect on the given button.
+ */
+export function onMouseEnter(btnEl) {
+    return function() {
+        btnEl.style.backgroundColor = colorManager.BUTTON_COLORS.ACTIVE_BG;
+        btnEl.style.color = colorManager.BUTTON_COLORS.ACTIVE;
+    };
+}
+
+/**
+ * Emulates disabling Bootstrap's hover effect on the given button.
+ */
+export function onMouseLeave(btnEl) {
+    return function() {
+        if (btnEl.classList.contains('active')) {
+            btnEl.style.backgroundColor = colorManager.BUTTON_COLORS.ACTIVE_BG;
+            btnEl.style.color = colorManager.BUTTON_COLORS.ACTIVE;
+        } else {
+            btnEl.style.backgroundColor = colorManager.BUTTON_COLORS.INACTIVE_BG;
+            btnEl.style.color = colorManager.BUTTON_COLORS.INACTIVE;
+        }
+    };
+}

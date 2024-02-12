@@ -168,6 +168,9 @@ export function setLanuage() {
  * @param {string} state - The state to set the button, either 'active' or 'inactive'
  */
 export function toggleButton(btnEl, state) {
+    btnEl.removeEventListener('mouseenter', deviceUtils.onMouseEnter);
+    btnEl.removeEventListener('mouseleave', deviceUtils.onMouseLeave);
+
     if (state === 'active') {
         btnEl.style.backgroundColor = colorManager.BUTTON_COLORS.ACTIVE_BG;
         btnEl.style.color = colorManager.BUTTON_COLORS.ACTIVE;
@@ -177,6 +180,9 @@ export function toggleButton(btnEl, state) {
         btnEl.style.color = colorManager.BUTTON_COLORS.INACTIVE;
         btnEl.classList.remove('active');
     }
+
+    btnEl.addEventListener('mouseenter', deviceUtils.onMouseEnter);
+    btnEl.addEventListener('mouseleave', deviceUtils.onMouseLeave);
 }
 
 /**
