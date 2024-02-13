@@ -4,7 +4,7 @@
 
 
 import { AndroidFullScreen } from '@awesome-cordova-plugins/android-full-screen';
-import { toggleGUI } from './uiUtils';
+import * as uiUtils from './uiUtils';
 
 /**
  * Check if the current device is a touch device.
@@ -86,10 +86,12 @@ export function handleOrientationChange() {
     const isPortrait = isPortraitMode()
 
     if (isiPhone()) {
-        isPortrait ? toggleGUI(false) : toggleGUI(true);
+        isPortrait ? uiUtils.toggleGUI(false) : uiUtils.toggleGUI(true);
     } else if (isTouchDevice() && !document.fullscreenElement) {
         isPortrait ? AndroidFullScreen.showSystemUI() : AndroidFullScreen.showUnderSystemUI();
     }
+
+    uiUtils.toggleUIVisibility(true);
 }
 
 /**

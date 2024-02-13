@@ -57,9 +57,7 @@ document.getElementById('fullscreenBtn').addEventListener('click', UIUtils.toggl
 document.addEventListener('fullscreenchange', () => {
     const isFullscreen = !!document.fullscreenElement;
     UIUtils.toggleGUI(isFullscreen);
-    if (!isFullscreen) {
-        DeviceUtils.handleOrientationChange();
-    }
+    if (!isFullscreen) DeviceUtils.handleOrientationChange();
 });
 window.addEventListener("orientationchange", DeviceUtils.handleOrientationChange);
 window.addEventListener('resize', onWindowResize);

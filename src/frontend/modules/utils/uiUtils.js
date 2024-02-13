@@ -226,7 +226,7 @@ export function setColorScheme() {
  * 
  * @param {boolean} makeVisible - Whether or not the UI should be visible.
  */
-function toggleUIVisibility(makeVisible) {
+export function toggleUIVisibility(makeVisible) {
     const uiContainer = document.getElementById('uiContainer')
     if (makeVisible) {
         uiContainer.style.opacity = '1';
@@ -239,7 +239,7 @@ function toggleUIVisibility(makeVisible) {
 /**
  * Sets or clears the timer which toggles the UI depending on user interaction.
  */
-function handleInteractionTimer() {
+export function handleInteractionTimer() {
     const fullscreenBtn = document.getElementById("fullscreenBtn");
     clearTimeout(interactionTimer);
     if (fullscreenBtn.classList.contains("active")) {
