@@ -63,7 +63,12 @@ export function setupToastToggle(buttonId, toastId) {
     });
 }
 
+/**
+ * Sets up the toggle for entering and exiting full screen.
+ */
 export function setupFullscreenToggle() {
+    if (deviceUtils.isiPhone()) return;
+
     const fullscreenBtn = document.getElementById("fullscreenBtn");
     fullscreenBtn.addEventListener('click', () => {
         if (fullscreenBtn.classList.contains('active')) {
@@ -194,7 +199,7 @@ export function toggleButton(btnEl, state) {
     const isActive = state === 'active';
     btnEl.classList.toggle('active', isActive);
 
-    if (deviceUtils.isTouchDevice()) {
+    if (deviceUtils.isTouchDevice() || deviceUtils.isAppleDevice()) {
         const colors = colorManager.BUTTON_COLORS;
         btnEl.style.backgroundColor = isActive ? colors.ACTIVE_BG : colors.INACTIVE_BG;
         btnEl.style.color = isActive ? colors.ACTIVE : colors.INACTIVE;
