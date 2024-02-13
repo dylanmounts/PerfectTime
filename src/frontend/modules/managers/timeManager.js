@@ -86,7 +86,6 @@ class TimeManager {
      * @returns {Promise<string>} A promise that resolves with the formatted time string.
      */
     async generateTimeStringAsync(time) {
-        // Simulate asynchronous behavior
         return new Promise(resolve => {
             let digitalTime = time.toLocaleTimeString(language, {
                 hour12: !useTwentyFourHour,
