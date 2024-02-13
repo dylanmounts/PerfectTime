@@ -21,7 +21,7 @@ export function interpolateValue(distance) {
     if (distance <= goldenRadius) {
         scaleFactor = 1;
     } else {
-        scaleFactor = 1 + (distance - goldenRadius) * (goldenRadius / 2);
+        scaleFactor = goldenRadius / 2 + (distance - goldenRadius) * (goldenRadius / distance);
     }
 
     return SIZES.NUMBER_SIZE / 2 * scaleFactor;
