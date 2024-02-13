@@ -200,7 +200,7 @@ export function toggleButton(btnEl, state) {
     btnEl.classList.toggle('active', isActive);
 
     if (deviceUtils.isTouchDevice() || deviceUtils.isAppleDevice()) {
-                const colors = colorManager.BUTTON_COLORS;
+        const colors = colorManager.BUTTON_COLORS;
         btnEl.style.backgroundColor = isActive ? colors.ACTIVE_BG : colors.INACTIVE_BG;
         btnEl.style.color = isActive ? colors.ACTIVE : colors.INACTIVE;
     }
