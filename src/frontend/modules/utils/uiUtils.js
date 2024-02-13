@@ -63,7 +63,12 @@ export function setupToastToggle(buttonId, toastId) {
     });
 }
 
+/**
+ * Sets up the toggle for entering and exiting full screen.
+ */
 export function setupFullscreenToggle() {
+    if (deviceUtils.isiPhone()) return;
+
     const fullscreenBtn = document.getElementById("fullscreenBtn");
     fullscreenBtn.addEventListener('click', () => {
         if (fullscreenBtn.classList.contains('active')) {
@@ -194,7 +199,7 @@ export function toggleButton(btnEl, state) {
     const isActive = state === 'active';
     btnEl.classList.toggle('active', isActive);
 
-    if (deviceUtils.isTouchDevice()) {
+    if (deviceUtils.isTouchDevice() || deviceUtils.isAppleDevice()) {
         const colors = colorManager.BUTTON_COLORS;
         btnEl.style.backgroundColor = isActive ? colors.ACTIVE_BG : colors.INACTIVE_BG;
         btnEl.style.color = isActive ? colors.ACTIVE : colors.INACTIVE;
@@ -221,7 +226,7 @@ export function setColorScheme() {
  * 
  * @param {boolean} makeVisible - Whether or not the UI should be visible.
  */
-function toggleUIVisibility(makeVisible) {
+export function toggleUIVisibility(makeVisible) {
     const uiContainer = document.getElementById('uiContainer')
     if (makeVisible) {
         uiContainer.style.opacity = '1';
@@ -234,7 +239,7 @@ function toggleUIVisibility(makeVisible) {
 /**
  * Sets or clears the timer which toggles the UI depending on user interaction.
  */
-function handleInteractionTimer() {
+export function handleInteractionTimer() {
     const fullscreenBtn = document.getElementById("fullscreenBtn");
     clearTimeout(interactionTimer);
     if (fullscreenBtn.classList.contains("active")) {
