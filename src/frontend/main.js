@@ -26,16 +26,9 @@ import * as DeviceUtils from './modules/utils/deviceUtils';
 import * as UIUtils from './modules/utils/uiUtils';
 
 // Initialize and configure UI components
-UIUtils.setupToastToggle(
-    'optionsMenuBtn', 'optionsMenu',
-    UIUtils.styleButtonForToastVisible,
-    UIUtils.styleButtonForToastHidden
-);
-UIUtils.setupToastToggle(
-    'infoMenuBtn', 'infoMenu',
-    UIUtils.styleButtonForToastVisible,
-    UIUtils.styleButtonForToastHidden
-);
+UIUtils.setupToastToggle('optionsMenuBtn', 'optionsMenu');
+UIUtils.setupToastToggle('infoMenuBtn', 'infoMenu');
+UIUtils.setupFullscreenToggle();
 UIUtils.adjustToastsForTouch();
 UIUtils.setLanuage();
 UIUtils.setColorScheme();

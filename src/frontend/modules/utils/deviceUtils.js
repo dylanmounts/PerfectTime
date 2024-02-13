@@ -4,6 +4,7 @@
 
 
 import { AndroidFullScreen } from '@awesome-cordova-plugins/android-full-screen';
+import { toggleGUI } from './uiUtils';
 
 /**
  * Check if the current device is a touch device.
