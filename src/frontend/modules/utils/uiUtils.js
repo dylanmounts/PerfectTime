@@ -193,6 +193,12 @@ export function setLanuage() {
 export function toggleButton(btnEl, state) {
     const isActive = state === 'active';
     btnEl.classList.toggle('active', isActive);
+
+    if (deviceUtils.isTouchDevice()) {
+        const colors = colorManager.BUTTON_COLORS;
+        btnEl.style.backgroundColor = isActive ? colors.ACTIVE_BG : colors.INACTIVE_BG;
+        btnEl.style.color = isActive ? colors.ACTIVE : colors.INACTIVE;
+    }
 }
 
 /**
