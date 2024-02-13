@@ -3,9 +3,9 @@ const path = require('path');
 const fs = require('fs');
 const rateLimit = require('express-rate-limit');
 const app = express();
-const port = process.env.PORT || 8100;
-const hostname = process.env.HOSTNAME || '127.0.0.1';
-const isWebApp = process.env.IS_WEB_APP === 'true';
+const port = process.env.PERFECT_PORT || 8100;
+const hostname = process.env.PERFECT_HOSTNAME || '127.0.0.1';
+const isWebApp = process.env.PERFECT_WEB_APP === 'true';
 const allowedOrigins = ['https://perfecttime.org', 'https://www.perfecttime.org'];
 
 if (isWebApp) {
