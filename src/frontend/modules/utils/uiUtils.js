@@ -200,7 +200,7 @@ export function toggleButton(btnEl, state) {
     btnEl.classList.toggle('active', isActive);
 
     if (deviceUtils.isTouchDevice() || deviceUtils.isAppleDevice()) {
-        const colors = colorManager.BUTTON_COLORS;
+                const colors = colorManager.BUTTON_COLORS;
         btnEl.style.backgroundColor = isActive ? colors.ACTIVE_BG : colors.INACTIVE_BG;
         btnEl.style.color = isActive ? colors.ACTIVE : colors.INACTIVE;
     }
@@ -267,9 +267,10 @@ export function toggleGUI(isFullscreen) {
             if (!deviceUtils.isiPhone() && !window.IS_WEB_APP) {
                 StatusBar.show();
                 toggleButton(btnEl, "inactive");
-            }
-            else if (isPortrait && iOSFullscreen && !window.IS_WEB_APP) {
+            } else if (isPortrait && iOSFullscreen && !window.IS_WEB_APP) {
                 StatusBar.show();
+                toggleButton(btnEl, "inactive");
+            } else if (deviceUtils.isiPhone() && window.IS_WEB_APP) {
                 toggleButton(btnEl, "inactive");
             }
         } else {
