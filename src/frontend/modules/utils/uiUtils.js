@@ -267,9 +267,10 @@ export function toggleGUI(isFullscreen) {
             if (!deviceUtils.isiPhone() && !window.IS_WEB_APP) {
                 StatusBar.show();
                 toggleButton(btnEl, "inactive");
-            }
-            else if (isPortrait && iOSFullscreen && !window.IS_WEB_APP) {
+            } else if (isPortrait && iOSFullscreen && !window.IS_WEB_APP) {
                 StatusBar.show();
+                toggleButton(btnEl, "inactive");
+            } else if (deviceUtils.isiPhone() && window.IS_WEB_APP) {
                 toggleButton(btnEl, "inactive");
             }
         } else {
