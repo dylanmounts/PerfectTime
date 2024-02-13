@@ -83,6 +83,10 @@ export const createOuterMinuteHand = (handLength, isDynamic) => {
     return outerMinuteHand;
 };
 
+export const createBackdrop = () => new THREE.Mesh(
+    geometriesJs.createBackdrop(), MATERIALS.backdrop
+)
+
 export const createPost = () => {
     const post = new THREE.Mesh(geometriesJs.createPost(), MATERIALS.post);
     post.rotation.x = Math.PI / 2
