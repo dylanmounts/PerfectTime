@@ -120,6 +120,7 @@ export function addClock(scene, hoursFont, minutesFont, isDynamic = true) {
     scene.add(meshesJs.createClockFace(isDynamic));
     scene.add(meshesJs.createClockBezel(isDynamic));
     scene.add(meshesJs.createPost());
+    scene.add(meshesJs.createBackdrop());
     if (isDynamic) scene.add(meshesJs.createClockFrame());
 
     createIndicators(scene, isDynamic);

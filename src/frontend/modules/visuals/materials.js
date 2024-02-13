@@ -13,6 +13,7 @@ export let MATERIALS;
 const buildMaterials = () => {
     const COLORS = getCurrentScheme();
     const materials = {
+        backdrop: new THREE.MeshPhongMaterial({ color: COLORS.BACKDROP }),
         clockBezel: new THREE.MeshPhongMaterial({ color: COLORS.CLOCK_BEZEL }),
         clockFace: new THREE.MeshPhongMaterial({ color: COLORS.CLOCK_FACE }),
         complicationFrame: new THREE.MeshPhongMaterial({ color: COLORS.COMPLICATION_FRAME }),
