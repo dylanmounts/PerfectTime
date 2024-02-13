@@ -258,7 +258,7 @@ export function toggleGUI(isFullscreen) {
         toggleButton(btnEl, "active");
     } else {
         if (deviceUtils.isAppleDevice()) {
-            if (!isiPhone()) {
+            if (!deviceUtils.isiPhone()) {
                 StatusBar.show();
                 toggleButton(btnEl, "inactive");
             }
