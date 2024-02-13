@@ -3,7 +3,8 @@
  */
 
 
-import { Button, Toast } from 'bootstrap';
+import { AndroidFullScreen } from '@awesome-cordova-plugins/android-full-screen';
+import { Toast } from 'bootstrap';
 import { StatusBar } from '@capacitor/status-bar';
 
 import * as deviceUtils from './deviceUtils';
@@ -19,10 +20,8 @@ let interactionTimer;
  *
  * @param {string} buttonId - The ID of the button that triggers the toast.
  * @param {string} toastId - The ID of the toast element.
- * @param {Function} styleVisible - Function to style the button when toast is visible.
- * @param {Function} styleHidden - Function to style the button when toast is hidden.
  */
-export function setupToastToggle(buttonId, toastId, styleVisible, styleHidden) {
+export function setupToastToggle(buttonId, toastId) {
     const buttonEl = document.getElementById(buttonId);
     const toastEl = document.getElementById(toastId);
     if (!buttonEl || !toastEl) return;
@@ -31,28 +30,23 @@ export function setupToastToggle(buttonId, toastId, styleVisible, styleHidden) {
 
     buttonEl.addEventListener('click', () => {
         if (toastEl.classList.contains('show')) {
-            buttonEl.classList.remove('active');
-            toggleButton(buttonEl, 'inactive');
+            toggleButton(buttonEl, 'active');
             toast.hide();
         } else {
-            buttonEl.classList.add('active');
-            toggleButton(buttonEl, 'active');
+            buttonEl.classList.remove('active');
+            toggleButton(buttonEl, 'inactive');
             toast.show();
         }
     });
 
     toastEl.addEventListener('show.bs.toast', () => {
-        styleVisible(buttonEl);
         if (!buttonEl.classList.contains('active')) {
-            buttonEl.classList.add('active');
             toggleButton(buttonEl, 'active');
         }
     });
 
     toastEl.addEventListener('hide.bs.toast', () => {
-        styleHidden(buttonEl);
         if (buttonEl.classList.contains('active')) {
-            buttonEl.classList.remove('active');
             toggleButton(buttonEl, 'inactive');
         }
     });
@@ -63,7 +57,19 @@ export function setupToastToggle(buttonId, toastId, styleVisible, styleHidden) {
         const toastClicked = toastEl.contains(e.target);
 
         if (toastShown && !toastShowing && !toastClicked) {
+            toggleButton(buttonEl, 'inactive');
             toast.hide();
+        }
+    });
+}
+
+export function setupFullscreenToggle() {
+    const fullscreenBtn = document.getElementById("fullscreenBtn");
+    fullscreenBtn.addEventListener('click', () => {
+        if (fullscreenBtn.classList.contains('active')) {
+            toggleButton(fullscreenBtn, 'inactive');
+        } else {
+            toggleButton(fullscreenBtn, 'active');
         }
     });
 }
@@ -185,19 +191,8 @@ export function setLanuage() {
  * @param {string} state - The state to set the button, either 'active' or 'inactive'
  */
 export function toggleButton(btnEl, state) {
-    if (!deviceUtils.isTouchDevice()) {
-        Button.getOrCreateInstance(btnEl).toggle();
-        return;
-    }
-    if (state === 'active') {
-        btnEl.style.backgroundColor = colorManager.BUTTON_COLORS.ACTIVE_BG;
-        btnEl.style.color = colorManager.BUTTON_COLORS.ACTIVE;
-        btnEl.classList.add('active');
-    } else {
-        btnEl.style.backgroundColor = colorManager.BUTTON_COLORS.INACTIVE_BG;
-        btnEl.style.color = colorManager.BUTTON_COLORS.INACTIVE;
-        btnEl.classList.remove('active');
-    }
+    const isActive = state === 'active';
+    btnEl.classList.toggle('active', isActive);
 }
 
 /**
@@ -234,9 +229,9 @@ function toggleUIVisibility(makeVisible) {
  * Sets or clears the timer which toggles the UI depending on user interaction.
  */
 function handleInteractionTimer() {
-    const fullScreenBtn = document.getElementById("fullscreenBtn");
+    const fullscreenBtn = document.getElementById("fullscreenBtn");
     clearTimeout(interactionTimer);
-    if (fullScreenBtn.classList.contains("active")) {
+    if (fullscreenBtn.classList.contains("active")) {
         interactionTimer = setTimeout(() => toggleUIVisibility(false), 2500);
     }
 }
@@ -305,20 +300,5 @@ export function adjustToastsForTouch() {
             container.classList.remove('top-0', 'start-0', 'end-0');
             container.classList.add('top-50', 'start-50', 'translate-middle');
         });
-    }
-}
-
-// Style functions for toast buttons
-export function styleButtonForToastVisible(btn) {
-    if (deviceUtils.isTouchDevice()) {
-        btn.style.backgroundColor = colorManager.BUTTON_COLORS.ACTIVE_BG;
-        btn.style.color = colorManager.BUTTON_COLORS.ACTIVE;
-    }
-}
-
-export function styleButtonForToastHidden(btn) {
-    if (deviceUtils.isTouchDevice()) {
-        btn.style.backgroundColor = colorManager.BUTTON_COLORS.INACTIVE_BG;
-        btn.style.color = colorManager.BUTTON_COLORS.INACTIVE;
     }
 }
