@@ -251,19 +251,19 @@ export function toggleGUI(isFullscreen) {
     const btnEl = document.getElementById("fullscreenBtn");
 
     if (isFullscreen) {
-        if (deviceUtils.isAppleDevice()) {
+        if (deviceUtils.isAppleDevice() && !window.IS_WEB_APP) {
             StatusBar.hide();
-        } else if (deviceUtils.isTouchDevice()) {
+        } else if (deviceUtils.isTouchDevice() && !window.IS_WEB_APP) {
             AndroidFullScreen.immersiveMode();
         }
         toggleButton(btnEl, "active");
     } else {
         if (deviceUtils.isAppleDevice()) {
-            if (!deviceUtils.isiPhone()) {
+            if (!deviceUtils.isiPhone() && !window.IS_WEB_APP) {
                 StatusBar.show();
                 toggleButton(btnEl, "inactive");
             }
-            else if (isPortrait && iOSFullscreen) {
+            else if (isPortrait && iOSFullscreen && !window.IS_WEB_APP) {
                 StatusBar.show();
                 toggleButton(btnEl, "inactive");
             }
@@ -287,7 +287,7 @@ export function toggleGUI(isFullscreen) {
  * Toggle fullscreen mode.
  */
 export function toggleFullscreen() {
-    if (deviceUtils.isAppleDevice()) {
+    if (deviceUtils.isAppleDevice() && !window.IS_WEB_APP) {
         toggleGUI(!iOSFullscreen)
     } else if (!document.fullscreenElement) {
         document.documentElement.requestFullscreen();
