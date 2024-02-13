@@ -53,7 +53,7 @@ function createNumbers(scene, hoursFont, minutesFont, isDyanmic = true) {
         const minuteNumber = i * 5;
 
         const minuteDistanceFromCenter = distanceToEdge(angle) * 23/40
-        const minuteGeometry = createMinuteGeometry(minuteNumber, minutesFont, minuteDistanceFromCenter, isDyanmic);
+        const minuteGeometry = createMinuteGeometry(minuteNumber, minutesFont, distanceFromCenter, isDyanmic);
         minuteGeometry.center();
 
         const minuteMesh = meshesJs.createMinuteMesh(minuteGeometry);
