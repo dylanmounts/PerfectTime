@@ -57,8 +57,8 @@ export const createClockFrame = () => {
 };
 export const createBackdrop = () => new THREE.PlaneGeometry(100, 100);
 export const createPost = () => new THREE.CylinderGeometry(
-    scaleValue(CONSTANTS.SIZES.POST_RADIUS),
-    scaleValue(CONSTANTS.SIZES.POST_RADIUS),
+    CONSTANTS.SIZES.POST_RADIUS,
+    CONSTANTS.SIZES.POST_RADIUS,
     CONSTANTS.SIZES.POST_HEIGHT,
     CONSTANTS.SEGMENTS / 2
 );
