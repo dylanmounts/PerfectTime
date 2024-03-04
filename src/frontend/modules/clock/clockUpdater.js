@@ -40,6 +40,7 @@ export let useDynamicClock = false;
 export let useTwentyFourHour = false;
 let currentTime = null;
 let lastTime = new Date;
+let lastMinute = null;
 let lastSecond = null;
 let lastDayDate = null;
 let lastDayDateExists = null;
@@ -96,6 +97,7 @@ export function updateClock(scene, digitalFont, dayDateFont, hoursFont, minutesF
         : calculateSecondAngle(seconds);
 
     updateClockStyle(scene, hoursFont, minutesFont);
+    updateTitleTime();
     updateLanguage();
     updateTimeFormat();
     updateCameraSlider();
@@ -284,6 +286,12 @@ export function updateDigitalDisplay(scene, font) {
 
     // If the digital time dispaly doesn't exist then we don't need to update it
     if (!digitalDisplayExists) {
+
+        // Force the title time to update even if the digital display isn't showing
+        if (language !== lastLanguage || useTwentyFourHour !== lastTimeFormat) {
+            updateTitleTime(true);
+        }
+
         updateState();
         return;
     }
@@ -292,6 +300,7 @@ export function updateDigitalDisplay(scene, font) {
     let timeStr;
     if (language !== lastLanguage || useTwentyFourHour !== lastTimeFormat || !timeManager.nextTimeStr) {
         timeStr = timeManager.generateTimeString(currentTime);
+        updateTitleTime(true);
     } else {
         timeStr = timeManager.nextTimeStr;
     }
@@ -562,4 +571,26 @@ function updateTimeFormat() {
 
 export function toggleResizeHandled(isHandled) {
     resizeHandled = isHandled;
+}
+
+/**
+ * Updates the HTML title to reflect the current time.
+ * @param {boolean} forceUpdate - If true, forces an update even if the minute hasn't changed.
+ */
+function updateTitleTime(forceUpdate = false) {
+    const currentMinute = currentTime.getMinutes()
+    if (lastMinute === currentMinute && !forceUpdate) {
+        return;
+    }
+
+    let titleString = currentTime.toLocaleTimeString(language, {
+        hour12: !useTwentyFourHour,
+        hour: 'numeric',
+        minute: '2-digit',
+    });
+    titleString += " | PerfectTime.org"
+
+    document.title = titleString;
+
+    lastMinute = currentMinute;
 }
