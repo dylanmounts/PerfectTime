@@ -7,7 +7,7 @@ import { AndroidFullScreen } from '@awesome-cordova-plugins/android-full-screen'
 import { Toast } from 'bootstrap';
 import { StatusBar } from '@capacitor/status-bar';
 
-import { language } from '../clock/clockUpdater';
+import { language, useTwentyFourHour } from '../clock/clockUpdater';
 import * as deviceUtils from './deviceUtils';
 import { updateCameraZoom } from '../managers/sceneManager';
 import { timeManager } from '../managers/timeManager';
