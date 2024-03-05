@@ -577,9 +577,12 @@ export function toggleResizeHandled(isHandled) {
  * @param {boolean} forceUpdate - If true, forces an update even if the minute hasn't changed.
  */
 export function updateTitleTime(forceUpdate = false) {
-    if (currentTime === null || (!forceUpdate && lastMinute === currentTime.getMinutes())) {
-        return;
-    }
+    const shouldUpdate = (
+        timeManager.currentTime !== null
+            && (forceUpdate || lastMinute !== timeManager.currentTime.getMinutes())
+    );
+
+    if (!shouldUpdate) return;
 
     let titleString = currentTime.toLocaleTimeString(language, {
         hour12: !useTwentyFourHour,
@@ -590,5 +593,5 @@ export function updateTitleTime(forceUpdate = false) {
 
     document.title = titleString;
 
-    lastMinute = currentTime.getMinutes();
+    lastMinute = timeManager.currentTime.getMinutes();
 }
