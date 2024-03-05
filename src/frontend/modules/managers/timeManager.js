@@ -15,7 +15,6 @@ import { language, useTwentyFourHour } from "../clock/clockUpdater"
 class TimeManager {
     constructor() {
         this.timeOffset = null;
-        this.currentTime = null;
         this.currentTimeStr = null;
         this.nextTimeStr = null;
         this.fetchPerfectTime();
@@ -45,8 +44,6 @@ class TimeManager {
             if (this.timeOffset === null) {
                 this.timeOffset = 0;
             }
-        } finally {
-            this.getCurrentTime();
         }
     }
 
@@ -57,9 +54,7 @@ class TimeManager {
      */
     getCurrentTime() {
         if (this.timeOffset === null) {
-            const serverTime = new Date();
-            this.currentTime = serverTime;
-            return serverTime;
+            return new Date();
         }
 
         const currentTime = new Date(Date.now() + this.timeOffset);
@@ -71,7 +66,6 @@ class TimeManager {
             this.prepareNextTimeString(currentTime);
         }
 
-        this.currentTime = currentTime;
         return currentTime;
     }
 
