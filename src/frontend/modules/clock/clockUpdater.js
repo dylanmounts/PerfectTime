@@ -577,8 +577,7 @@ export function toggleResizeHandled(isHandled) {
  * @param {boolean} forceUpdate - If true, forces an update even if the minute hasn't changed.
  */
 export function updateTitleTime(forceUpdate = false) {
-    const currentMinute = currentTime.getMinutes()
-    if (lastMinute === currentMinute && !forceUpdate) {
+    if (currentTime === null || (!forceUpdate && lastMinute === currentTime.getMinutes())) {
         return;
     }
 
@@ -591,5 +590,5 @@ export function updateTitleTime(forceUpdate = false) {
 
     document.title = titleString;
 
-    lastMinute = currentMinute;
+    lastMinute = currentTime.getMinutes();
 }
