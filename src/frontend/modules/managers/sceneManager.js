@@ -252,6 +252,7 @@ export async function initializeScene() {
     setInterval(() => {
         updateTitleTime();
     }, 100);
+
     setInterval(() => {
         timeManager.fetchPerfectTime();
     }, PERFECT_TIME_SYNC_SECONDS * 1000);
