@@ -36,6 +36,7 @@ UIUtils.setupColorSchemeToggle();
 UIUtils.setupTimeFormatToggle();
 UIUtils.setupDynamicClockToggle();
 UIUtils.setupZoomControls();
+UIUtils.setupTitleTime();
 
 // Create checkbox event listeners for clock features
 const clockOptions = [

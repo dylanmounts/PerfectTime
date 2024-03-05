@@ -15,6 +15,7 @@ import * as constantsJs from '../constants.js';
 import { switchScheme } from '../managers/colorManager.js';
 import { dynamicClockRatio, updateCamera, updateCameraSlider } from '../managers/sceneManager.js';
 import { timeManager } from '../managers/timeManager.js';
+import { updateTitleTime } from '../utils/uiUtils.js';
 import { distanceToEdge, scaleValue } from '../utils/sizeUtils.js';
 import * as materialsJs from '../visuals/materials.js'
 import * as meshesJs from '../visuals/meshes.js';
@@ -40,7 +41,6 @@ export let useDynamicClock = false;
 export let useTwentyFourHour = false;
 let currentTime = null;
 let lastTime = new Date;
-let lastMinute = null;
 let lastSecond = null;
 let lastDayDate = null;
 let lastDayDateExists = null;
@@ -570,30 +570,4 @@ function updateTimeFormat() {
 
 export function toggleResizeHandled(isHandled) {
     resizeHandled = isHandled;
-}
-
-/**
- * Updates the HTML title to reflect the current time.
- * @param {boolean} forceUpdate - If true, forces an update even if the minute hasn't changed.
- */
-export function updateTitleTime(forceUpdate = false) {
-    const foundTime = timeManager.getCurrentTime()
-
-    const shouldUpdate = (
-        foundTime !== null
-            && (forceUpdate || lastMinute !== foundTime.getMinutes())
-    );
-
-    if (!shouldUpdate) return;
-
-    let titleString = foundTime.toLocaleTimeString(language, {
-        hour12: !useTwentyFourHour,
-        hour: 'numeric',
-        minute: '2-digit',
-    });
-    titleString += " | PerfectTime.org"
-
-    document.title = titleString;
-
-    lastMinute = foundTime.getMinutes();
 }

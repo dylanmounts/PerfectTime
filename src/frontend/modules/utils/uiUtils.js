@@ -7,13 +7,16 @@ import { AndroidFullScreen } from '@awesome-cordova-plugins/android-full-screen'
 import { Toast } from 'bootstrap';
 import { StatusBar } from '@capacitor/status-bar';
 
+import { language } from '../clock/clockUpdater';
 import * as deviceUtils from './deviceUtils';
 import { updateCameraZoom } from '../managers/sceneManager';
+import { timeManager } from '../managers/timeManager';
 import * as colorManager from '../managers/colorManager';
 
 
 let iOSFullscreen = false;
 let interactionTimer;
+let lastMinute = null;
 
 /**
  * Sets up a toggle for a Bootstrap toast element and manages button styles.
@@ -313,4 +316,39 @@ export function adjustToastsForTouch() {
             container.classList.add('top-50', 'start-50', 'translate-middle');
         });
     }
+}
+
+/**
+ * Sets the interval for updating the time displayed in the HTML title.
+ */
+export function setupTitleTime() {
+    setInterval(() => {
+        updateTitleTime();
+    }, 250);
+}
+
+/**
+ * Updates the HTML title to reflect the current time.
+ * @param {boolean} forceUpdate - If true, forces an update even if the minute hasn't changed.
+ */
+export function updateTitleTime(forceUpdate = false) {
+    const foundTime = timeManager.getCurrentTime()
+
+    const shouldUpdate = (
+        foundTime !== null
+            && (forceUpdate || lastMinute !== foundTime.getMinutes())
+    );
+
+    if (!shouldUpdate) return;
+
+    let titleString = foundTime.toLocaleTimeString(language, {
+        hour12: !useTwentyFourHour,
+        hour: 'numeric',
+        minute: '2-digit',
+    });
+    titleString += " | PerfectTime.org"
+
+    document.title = titleString;
+
+    lastMinute = foundTime.getMinutes();
 }
