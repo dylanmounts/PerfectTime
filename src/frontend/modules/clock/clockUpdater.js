@@ -97,7 +97,6 @@ export function updateClock(scene, digitalFont, dayDateFont, hoursFont, minutesF
         : calculateSecondAngle(seconds);
 
     updateClockStyle(scene, hoursFont, minutesFont);
-    updateTitleTime();
     updateLanguage();
     updateTimeFormat();
     updateCameraSlider();
@@ -577,7 +576,7 @@ export function toggleResizeHandled(isHandled) {
  * Updates the HTML title to reflect the current time.
  * @param {boolean} forceUpdate - If true, forces an update even if the minute hasn't changed.
  */
-function updateTitleTime(forceUpdate = false) {
+export function updateTitleTime(forceUpdate = false) {
     const currentMinute = currentTime.getMinutes()
     if (lastMinute === currentMinute && !forceUpdate) {
         return;
