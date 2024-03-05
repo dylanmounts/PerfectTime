@@ -12,7 +12,7 @@ import { MAX_ZOOM, PERFECT_TIME_SYNC_SECONDS, SIZES, ZOOM_EXPONENT } from '../co
 import { dayDateFontManager, digitalFontManager, hoursFontManager, minutesFontManager } from './fontManager';
 import { timeManager } from './timeManager';
 import { addClock, destroyClock } from '../clock/clockConstructor';
-import { useDynamicClock, toggleResizeHandled, updateClock, updateTitleTime } from '../clock/clockUpdater';
+import { useDynamicClock, toggleResizeHandled, updateClock } from '../clock/clockUpdater';
 
 
 const scene = new THREE.Scene();
@@ -248,10 +248,6 @@ function animate() {
  */
 export async function initializeScene() {
     setupScene();
-
-    setInterval(() => {
-        updateTitleTime();
-    }, 250);
 
     setInterval(() => {
         timeManager.fetchPerfectTime();
