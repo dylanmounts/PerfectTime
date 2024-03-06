@@ -5,7 +5,7 @@
 let currentScheme;
 
 const LIGHT_SECOND_HAND = 0xAE2E24;
-const DARK_SECOND_HAND = 0x822622;
+const DARK_SECOND_HAND = 0xAE2E24;
 
 const DARK_COLORS = {
     '-100': 0x101214,
