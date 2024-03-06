@@ -43,62 +43,75 @@ export const createClockFrame = () => {
     return clockFrame;
 }
 
-export const createHourHand = (handLength, isDynamic) => {
+export const createHourHand = (isDynamic) => {
+    const referenceAngle = dynamicClockRatio < 1 ? 0 : Math.PI / 2;
+    const handLength = isDynamic
+        ? distanceToEdge(referenceAngle) * 2/3
+        : CONSTANTS.HOUR_HAND_BASE_LENGTH
+
     const hourHand = new THREE.Mesh(
         geometriesJs.createHourHandGeometry(handLength, isDynamic),
         MATERIALS.hourHand
     );
+
     hourHand.position.z = CONSTANTS.SIZES.CLOCK_THICKNESS / 2 + CONSTANTS.SIZES.POST_HEIGHT - 0.005;
     hourHand.name = 'hourHand';
     return hourHand;
 };
 
-export const createOuterHourHand = (handLength, isDynamic) => {
+export const createOuterHourHand = (isDynamic) => {
+    const referenceAngle = dynamicClockRatio < 1 ? 0 : Math.PI / 2;
+    const handLength = isDynamic
+        ? distanceToEdge(referenceAngle) * 2/3
+        : CONSTANTS.HOUR_HAND_BASE_LENGTH
+
     const outerHourHand = new THREE.Mesh(
         geometriesJs.createOuterHourHandGeometry(handLength, isDynamic),
         MATERIALS.outerHourHand
     );
+
     outerHourHand.position.z = CONSTANTS.SIZES.CLOCK_THICKNESS / 2 + CONSTANTS.SIZES.POST_HEIGHT - 0.006;
     outerHourHand.name = 'outerHourHand';
     return outerHourHand;
 };
 
-export const createMinuteHand = (handLength, isDynamic) => {
+export const createMinuteHand = (isDynamic) => {
+    const referenceAngle = dynamicClockRatio < 1 ? 0 : Math.PI / 2;
+    const handLength = isDynamic
+        ? distanceToEdge(referenceAngle)
+        : CONSTANTS.MINUTE_HAND_BASE_LENGTH
+
     const minuteHand = new THREE.Mesh(
         geometriesJs.createMinuteHandGeometry(handLength, isDynamic),
         MATERIALS.minuteHand
     );
+
     minuteHand.position.z = CONSTANTS.SIZES.CLOCK_THICKNESS / 2 + CONSTANTS.SIZES.POST_HEIGHT - 0.003;
     minuteHand.name = 'minuteHand';
     return minuteHand;
 };
 
-export const createOuterMinuteHand = (handLength, isDynamic) => {
+export const createOuterMinuteHand = (isDynamic) => {
+    const referenceAngle = dynamicClockRatio < 1 ? 0 : Math.PI / 2;
+    const handLength = isDynamic
+        ? distanceToEdge(referenceAngle)
+        : CONSTANTS.MINUTE_HAND_BASE_LENGTH
+
     const outerMinuteHand = new THREE.Mesh(
         geometriesJs.createOuterMinuteHandGeometry(handLength, isDynamic),
         MATERIALS.outerMinuteHand
     );
+
     outerMinuteHand.position.z = CONSTANTS.SIZES.CLOCK_THICKNESS / 2 + CONSTANTS.SIZES.POST_HEIGHT - 0.004;
     outerMinuteHand.name = 'outerMinuteHand';
     return outerMinuteHand;
 };
 
-export const createBackdrop = () => new THREE.Mesh(
-    geometriesJs.createBackdrop(), MATERIALS.backdrop
-)
-
-export const createPost = () => {
-    const post = new THREE.Mesh(geometriesJs.createPost(), MATERIALS.post);
-    post.rotation.x = Math.PI / 2
-    post.position.z = CONSTANTS.SIZES.CLOCK_THICKNESS / 2 + CONSTANTS.SIZES.POST_HEIGHT / 2;
-    return post
-}
-
 export const createSecondHand = (isDynamic) => {
     const referenceAngle = dynamicClockRatio < 1 ? 0 : Math.PI / 2;
     const handLength = isDynamic
         ? distanceToEdge(referenceAngle)
-        : CONSTANTS.SECOND_HAND_BASE_DISTANCE
+        : CONSTANTS.SECOND_HAND_BASE_LENGTH
 
     const secondHand = new THREE.Mesh(
         geometriesJs.createSecondHandGeometry(handLength, isDynamic),
@@ -114,7 +127,7 @@ export const createOuterSecondHand = (isDynamic) => {
     const referenceAngle = dynamicClockRatio < 1 ? 0 : Math.PI / 2;
     const handLength = isDynamic
         ? distanceToEdge(referenceAngle)
-        : CONSTANTS.SECOND_HAND_BASE_DISTANCE
+        : CONSTANTS.SECOND_HAND_BASE_LENGTH
 
     const outerSecondHand = new THREE.Mesh(
         geometriesJs.createOuterSecondHandGeometry(handLength, isDynamic),
@@ -143,6 +156,17 @@ export const createDayDateBox = (width, height, isDynamic) => {
     dayDateBox.name = "dayDateBox";
     return dayDateBox;
 };
+
+export const createBackdrop = () => new THREE.Mesh(
+    geometriesJs.createBackdrop(), MATERIALS.backdrop
+)
+
+export const createPost = () => {
+    const post = new THREE.Mesh(geometriesJs.createPost(), MATERIALS.post);
+    post.rotation.x = Math.PI / 2
+    post.position.z = CONSTANTS.SIZES.CLOCK_THICKNESS / 2 + CONSTANTS.SIZES.POST_HEIGHT / 2;
+    return post
+}
 
 /**
  * Removes a mesh by name from the specified Three.js.

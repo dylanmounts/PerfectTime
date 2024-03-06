@@ -10,33 +10,16 @@ import { scaleValue } from '../utils/sizeUtils.js';
 
 
 /**
- * Calculates the length of a clock hand.
- * 
- * @param {number} handLengthRatio - Proportional length of the clock hand relative to the clock's radius.
- * @param {number} scale - Scaling factor to adjust the overall size of the clock hand.
- * @returns {number} Length of the clock hand.
- */
-export const calculateHandLength = (handLengthRatio, scale) => {
-    const scaledClockRadius = (SIZES.CLOCK_RADIUS - SIZES.BEZEL_RADIUS / 2) * handLengthRatio;
-    const piScaledIndicatorHeight = SIZES.MINUTE_HAND_TIP_WIDTH * SIZES.MINUTE_HAND_SCALE * Math.PI
-    const bevelScaledIndicatorHeight = piScaledIndicatorHeight - SIZES.INDICATOR_BEVEL_SIZE / 1.25
-    const lengthScale = scale === 1 ? 0 : SIZES.INDICATOR_BEVEL_SIZE;
-    return scaledClockRadius + bevelScaledIndicatorHeight - lengthScale;
-};
-
-/**
  * Adjusts the initial length of a clock hand.
  * 
  * @param {number} initialLength - The initial length of the clock hand before adjustment.
  * @param {number} scale - Scaling factor to further adjust the hand's length.
  * @returns {number} The adjusted length of the clock hand.
  */
-export const adjustHandLength = (initialLength, scale, isDynamic = true) => {
-    const lengthScale = scale === 1 ? 0 : SIZES.INDICATOR_BEVEL_SIZE;
-    const adjustedLength = isDynamic
-        ? initialLength - scaleValue(lengthScale)
-        : initialLength - lengthScale;
-    return adjustedLength;
+export const adjustHandLength = (initialLength, scale) => {
+    const scaledBevel = scaleValue(SIZES.INDICATOR_BEVEL_SIZE)
+    const lengthScale = scale === 1 ? 0 : scaledBevel + (scaledBevel / initialLength);
+    return initialLength - lengthScale;
 }
 
 /**
@@ -54,16 +37,15 @@ export const createClockHand = (tipWidth, baseWidth, baseOffset, handLength, sca
     baseWidth = isDynamic
         ? scaleValue(baseWidth * scale)
         : baseWidth * scale;
-    baseOffset = isDynamic
-        ? scaleValue(baseOffset * scale)
-        : baseOffset * scale;
     tipWidth = isDynamic
         ? scaleValue(tipWidth * scale)
         : tipWidth * scale;
+    baseOffset *= scale
 
-    const adjustedLength = adjustHandLength(handLength, scale, isDynamic);
+    const adjustedLength = adjustHandLength(handLength, scale);
     const triangleHeight = tipWidth * Math.PI;
     const shape = new THREE.Shape();
+
     shape.moveTo(0, -baseOffset);
     shape.lineTo(-baseWidth / 2, 0);
 

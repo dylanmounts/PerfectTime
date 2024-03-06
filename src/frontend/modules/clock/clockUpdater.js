@@ -432,64 +432,87 @@ export function toggleMinuteNumbers(isChecked) {
 
 // Adds or removes the hour hand from the scene based user configurations
 export function updateHourHand(scene, angle) {
-    const hourHand = scene.getObjectByName('hourHand');
-    const outerHourHand = scene.getObjectByName('outerHourHand');
+    if (!hourHandExists) {
+        meshesJs.removeMeshByName(scene, 'hourHand');
+        meshesJs.removeMeshByName(scene, 'outerHourHand');
+        return;
+    }
 
-    [hourHand, outerHourHand].forEach(hand => {
-        if (hand) {
-            hand.geometry.dispose();
-            scene.remove(hand);
-        }
-    });
+    let hourHand = scene.getObjectByName('hourHand');
+    let outerHourHand = scene.getObjectByName('outerHourHand');
 
-    if (!hourHandExists) return;
+    if (!hourHand) {
+        scene.add(meshesJs.createHourHand(useDynamicClock));
+        scene.add(meshesJs.createOuterHourHand(useDynamicClock));
+
+        hourHand = scene.getObjectByName('hourHand');
+        outerHourHand = scene.getObjectByName('outerHourHand');
+    }
 
     const edgeScaledLength = useDynamicClock
         ? distanceToEdge(angle) * 2/3
-        : constantsJs.SIZES.CLOCK_RADIUS * 5/8
-    const minuteScaledLength = minuteHandLength * 2/3
-    let handLength;
-    if (useDynamicClock) {
-        handLength = Math.min(edgeScaledLength, minuteScaledLength);
-    } else {
-        handLength = edgeScaledLength;
-    }
+        : constantsJs.HOUR_HAND_BASE_LENGTH;
 
-    const hourHandMesh = meshesJs.createHourHand(handLength, useDynamicClock);
-    const outerHourHandMesh = meshesJs.createOuterHourHand(handLength, useDynamicClock);
-    hourHandMesh.rotation.z = -angle;
-    outerHourHandMesh.rotation.z = -angle;
-
-    scene.add(hourHandMesh);
-    scene.add(outerHourHandMesh);
-}
-
-// Adds or removes the minute hand from the scene based user configurations
-export function updateMinuteHand(scene, angle) {
-    const minuteHand = scene.getObjectByName('minuteHand');
-    const outerMinuteHand = scene.getObjectByName('outerMinuteHand');
-
-    [minuteHand, outerMinuteHand].forEach(hand => {
-        if (hand) {
-            hand.geometry.dispose();
-            scene.remove(hand);
-        }
-    });
-
-    if (!minuteHandExists) return;
+    const minuteScaledLength = minuteHandLength * 2/3;
 
     const handLength = useDynamicClock
+        ? Math.min(edgeScaledLength, minuteScaledLength)
+        : edgeScaledLength;
+
+    const baseHandLength = dynamicClockRatio < 1
+        ? distanceToEdge(0) * 2/3
+        : distanceToEdge(Math.PI / 2) * 2/3; 
+
+    const handLengthScale = handLength / baseHandLength
+
+    const scaleFactor = useDynamicClock
+        ? handLengthScale
+        : 1
+    
+    hourHand.scale.y = scaleFactor;
+    outerHourHand.scale.y = scaleFactor;
+
+    hourHand.rotation.z = -angle;
+    outerHourHand.rotation.z = -angle;
+}
+
+export function updateMinuteHand(scene, angle) {
+    if (!minuteHandExists) {
+        meshesJs.removeMeshByName(scene, 'minuteHand');
+        meshesJs.removeMeshByName(scene, 'outerMinuteHand');
+        return;
+    }
+
+    let minuteHand = scene.getObjectByName('minuteHand')
+    let outerMinuteHand = scene.getObjectByName('outerMinuteHand');
+
+    if (!minuteHand) {
+        scene.add(meshesJs.createMinuteHand(useDynamicClock));
+        scene.add(meshesJs.createOuterMinuteHand(useDynamicClock));
+
+        minuteHand = scene.getObjectByName('minuteHand');
+        outerMinuteHand = scene.getObjectByName('outerMinuteHand');
+    }
+
+    minuteHandLength = useDynamicClock
         ? distanceToEdge(angle)
-        : constantsJs.SIZES.CLOCK_RADIUS * 47 / 48
-    minuteHandLength = handLength;
+        : constantsJs.MINUTE_HAND_BASE_LENGTH;
 
-    const minuteHandMesh = meshesJs.createMinuteHand(handLength, useDynamicClock);
-    const outerMinuteHandMesh = meshesJs.createOuterMinuteHand(handLength, useDynamicClock);
-    minuteHandMesh.rotation.z = -angle;
-    outerMinuteHandMesh.rotation.z = -angle;
+    const baseHandLength = dynamicClockRatio < 1
+        ? distanceToEdge(0)
+        : distanceToEdge(Math.PI / 2);
 
-    scene.add(minuteHandMesh);
-    scene.add(outerMinuteHandMesh);
+    const handLengthScale = minuteHandLength / baseHandLength
+
+    const scaleFactor = useDynamicClock
+        ? handLengthScale
+        : 1
+    
+    minuteHand.scale.y = scaleFactor;
+    outerMinuteHand.scale.y = scaleFactor;
+
+    minuteHand.rotation.z = -angle;
+    outerMinuteHand.rotation.z = -angle;
 }
 
 // Adds or removes the second hand from the scene based user configurations
@@ -513,7 +536,7 @@ export function updateSecondHand(scene, angle) {
 
     const handLength = useDynamicClock
         ? distanceToEdge(angle)
-        : constantsJs.SECOND_HAND_BASE_DISTANCE;
+        : constantsJs.SECOND_HAND_BASE_LENGTH;
 
     const baseHandLength = dynamicClockRatio < 1
         ? distanceToEdge(0)
