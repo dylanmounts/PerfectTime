@@ -35,7 +35,10 @@ export const adjustHandLength = (initialLength, scale) => {
  */
 export const createClockHand = (tipWidth, baseWidth, baseOffset, handLength, scale = 1, isDynamic = true) => {
     const adjustedLength = adjustHandLength(handLength, scale);
-    const tipHeight = tipWidth * Math.PI;
+    const tipHeight = (tipWidth === SIZES.SECOND_HAND_TIP_WIDTH) 
+        ? SIZES.SECOND_HAND_TIP_WIDTH * Math.PI
+        : SIZES.MINUTE_HAND_TIP_WIDTH * Math.PI;
+    const shape = new THREE.Shape();
 
     baseWidth = isDynamic
         ? scaleValue(baseWidth * scale)
@@ -44,8 +47,6 @@ export const createClockHand = (tipWidth, baseWidth, baseOffset, handLength, sca
         ? scaleValue(tipWidth * scale)
         : tipWidth * scale;
     baseOffset *= scale
-
-    const shape = new THREE.Shape();
 
     shape.moveTo(0, -baseOffset);
     shape.lineTo(-baseWidth / 2, 0);
