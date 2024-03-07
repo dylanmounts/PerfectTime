@@ -7,6 +7,7 @@ import * as THREE from 'three';
 
 import { SIZES } from '../constants.js';
 import { scaleValue } from '../utils/sizeUtils.js';
+import { dynamicClockRatio } from '../managers/sceneManager.js';
 
 
 /**
@@ -34,6 +35,18 @@ export const adjustHandLength = (initialLength, scale) => {
  * @returns {THREE.Shape} A THREE.Shape object representing the clock hand.
  */
 export const createClockHand = (tipWidth, baseWidth, baseOffset, handLength, scale = 1, isDynamic = true) => {
+    const adjustedLength = adjustHandLength(handLength, scale);
+
+    let tipHeight = tipWidth * Math.PI;
+    if (isDynamic) {
+        const dynamicHeight = scaleValue(tipWidth) * Math.PI * Math.max(1 / dynamicClockRatio, 1);
+        const minHeight = Math.max(dynamicHeight, adjustedLength / 25);
+        const maxHeight = Math.min(minHeight, adjustedLength / 42);
+        tipHeight = (tipWidth === SIZES.SECOND_HAND_TIP_WIDTH)
+            ? maxHeight / 2
+            : maxHeight;
+    }
+
     baseWidth = isDynamic
         ? scaleValue(baseWidth * scale)
         : baseWidth * scale;
@@ -42,19 +55,17 @@ export const createClockHand = (tipWidth, baseWidth, baseOffset, handLength, sca
         : tipWidth * scale;
     baseOffset *= scale
 
-    const adjustedLength = adjustHandLength(handLength, scale);
-    const triangleHeight = tipWidth * Math.PI;
     const shape = new THREE.Shape();
 
     shape.moveTo(0, -baseOffset);
     shape.lineTo(-baseWidth / 2, 0);
 
     // Start of triangle base
-    shape.lineTo(-tipWidth, adjustedLength - triangleHeight);
+    shape.lineTo(-tipWidth, adjustedLength - tipHeight);
 
     // Triangle tip
     shape.lineTo(0, adjustedLength); // Point of the triangle
-    shape.lineTo(tipWidth, adjustedLength - triangleHeight);
+    shape.lineTo(tipWidth, adjustedLength - tipHeight);
 
     // End of triangle base and back to the start
     shape.lineTo(baseWidth / 2, 0);
