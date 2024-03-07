@@ -7,7 +7,6 @@ import * as THREE from 'three';
 
 import { SIZES } from '../constants.js';
 import { scaleValue } from '../utils/sizeUtils.js';
-import { dynamicClockRatio } from '../managers/sceneManager.js';
 
 
 /**
@@ -36,16 +35,7 @@ export const adjustHandLength = (initialLength, scale) => {
  */
 export const createClockHand = (tipWidth, baseWidth, baseOffset, handLength, scale = 1, isDynamic = true) => {
     const adjustedLength = adjustHandLength(handLength, scale);
-
-    let tipHeight = tipWidth * Math.PI;
-    if (isDynamic) {
-        const dynamicHeight = scaleValue(tipWidth) * Math.PI * Math.max(1 / dynamicClockRatio, 1);
-        const minHeight = Math.max(dynamicHeight, adjustedLength / 25);
-        const maxHeight = Math.min(minHeight, adjustedLength / 42);
-        tipHeight = (tipWidth === SIZES.SECOND_HAND_TIP_WIDTH)
-            ? maxHeight / 2
-            : maxHeight;
-    }
+    const tipHeight = tipWidth * Math.PI;
 
     baseWidth = isDynamic
         ? scaleValue(baseWidth * scale)
