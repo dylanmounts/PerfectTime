@@ -34,6 +34,9 @@ export const adjustHandLength = (initialLength, scale) => {
  * @returns {THREE.Shape} A THREE.Shape object representing the clock hand.
  */
 export const createClockHand = (tipWidth, baseWidth, baseOffset, handLength, scale = 1, isDynamic = true) => {
+    const adjustedLength = adjustHandLength(handLength, scale);
+    const tipHeight = tipWidth * Math.PI;
+
     baseWidth = isDynamic
         ? scaleValue(baseWidth * scale)
         : baseWidth * scale;
@@ -42,19 +45,17 @@ export const createClockHand = (tipWidth, baseWidth, baseOffset, handLength, sca
         : tipWidth * scale;
     baseOffset *= scale
 
-    const adjustedLength = adjustHandLength(handLength, scale);
-    const triangleHeight = tipWidth * Math.PI;
     const shape = new THREE.Shape();
 
     shape.moveTo(0, -baseOffset);
     shape.lineTo(-baseWidth / 2, 0);
 
     // Start of triangle base
-    shape.lineTo(-tipWidth, adjustedLength - triangleHeight);
+    shape.lineTo(-tipWidth, adjustedLength - tipHeight);
 
     // Triangle tip
     shape.lineTo(0, adjustedLength); // Point of the triangle
-    shape.lineTo(tipWidth, adjustedLength - triangleHeight);
+    shape.lineTo(tipWidth, adjustedLength - tipHeight);
 
     // End of triangle base and back to the start
     shape.lineTo(baseWidth / 2, 0);
