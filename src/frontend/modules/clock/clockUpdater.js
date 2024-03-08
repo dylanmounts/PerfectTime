@@ -23,17 +23,17 @@ import * as geometriesJs from '../visuals/geometries.js';
 import { addClock, destroyClock } from './clockConstructor.js';
 
 
-// State variables for the visibility of clock components.
-let dayDateExists = document.getElementById('dayDateOption').checked;
-let digitalDisplayExists = document.getElementById('digitalTimeOption').checked;
-let hourIndicatorsExist = document.getElementById('hourIndicatorsOption').checked;
-let hourNumbersExist = document.getElementById('hoursOption').checked;
-let hourHandExists = document.getElementById('hourHandOption').checked;
-let minuteIndicatorsExist = document.getElementById('minuteIndicatorsOption').checked;
-let minuteNumbersExist = document.getElementById('minutesOption').checked;
-let minuteHandExists = document.getElementById('minuteHandOption').checked;
-let secondHandExists = document.getElementById('secondHandOption').checked;
-let sweepingSeconds = document.getElementById('sweepingSecondsOption').checked;
+// Initialize state variables for the visibility of clock components
+let dayDateExists = sceneManagerJs.initializeState('dayDateOption');
+let digitalDisplayExists = sceneManagerJs.initializeState('digitalTimeOption');
+let hourIndicatorsExist = sceneManagerJs.initializeState('hourIndicatorsOption');
+let hourNumbersExist = sceneManagerJs.initializeState('hoursOption');
+let hourHandExists = sceneManagerJs.initializeState('hourHandOption');
+let minuteIndicatorsExist = sceneManagerJs.initializeState('minuteIndicatorsOption');
+let minuteNumbersExist = sceneManagerJs.initializeState('minutesOption');
+let minuteHandExists = sceneManagerJs.initializeState('minuteHandOption');
+let secondHandExists = sceneManagerJs.initializeState('secondHandOption');
+let sweepingSeconds = sceneManagerJs.initializeState('sweepingSecondsOption');
 
 // State variables for tracking the perfect time and its displays.
 export let language = 'en-US';
@@ -255,6 +255,7 @@ export function updateDayDateDisplay(scene, font) {
 
 export function toggleDayDate(isChecked) {
     dayDateExists = isChecked;
+    localStorage.setItem('dayDateOption', isChecked);
 }
 
 /**
@@ -350,6 +351,7 @@ export function updateDigitalDisplay(scene, font) {
 
 export function toggleDigitalDisplay(isChecked) {
     digitalDisplayExists = isChecked;
+    localStorage.setItem('digitalTimeOption', isChecked);
 }
 
 /**
@@ -383,10 +385,12 @@ function updateIndicators(scene) {
 
 export function toggleHourIndicators(isChecked) {
     hourIndicatorsExist = isChecked;
+    localStorage.setItem('hourIndicatorsOption', isChecked);
 }
 
 export function toggleMinuteIndicators(isChecked) {
     minuteIndicatorsExist = isChecked;
+    localStorage.setItem('minuteIndicatorsOption', isChecked);
 }
 
 /**
@@ -424,10 +428,12 @@ function updateNumber(scene, index, numbersArray, namePrefix, numbersExist, mult
 
 export function toggleHourNumbers(isChecked) {
     hourNumbersExist = isChecked;
+    localStorage.setItem('hoursOption', isChecked);
 }
 
 export function toggleMinuteNumbers(isChecked) {
     minuteNumbersExist = isChecked;
+    localStorage.setItem('minutesOption', isChecked);
 }
 
 // Adds or removes the hour hand from the scene based user configurations
@@ -557,18 +563,22 @@ export function updateSecondHand(scene, angle) {
 
 export function toggleHourHand(isChecked) {
     hourHandExists = isChecked;
+    localStorage.setItem('hourHandOption', isChecked);
 }
 
 export function toggleMinuteHand(isChecked) {
     minuteHandExists = isChecked;
+    localStorage.setItem('minuteHandOption', isChecked);
 }
 
 export function toggleSecondHand(isChecked) {
     secondHandExists = isChecked;
+    localStorage.setItem('secondHandOption', isChecked);
 }
 
 export function toggleSweepingSeconds(isChecked) {
     sweepingSeconds = isChecked;
+    localStorage.setItem('sweepingSecondsOption', isChecked);
 }
 
 // Populates the field reporting how ahead/behind the user's device's clock is
@@ -584,11 +594,13 @@ export function updateTimeOffset() {
 // Sets the language for the clock's displays based on the selected value
 function updateLanguage() {
     language = document.getElementById('languageSelect').value;
+    localStorage.setItem('language', language);
 }
 
 // Sets the time format (12 or 24-hour) for the digital display based on the selected value
 function updateTimeFormat() {
     useTwentyFourHour = document.getElementById('useTwentyFourHour').checked;
+    localStorage.setItem('useTwentyFourHour', useTwentyFourHour);
 }
 
 export function toggleResizeHandled(isHandled) {
