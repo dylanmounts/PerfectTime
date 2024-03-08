@@ -95,10 +95,18 @@ export function getCurrentScheme() {
     return currentScheme;
 };
 
-export function switchScheme(scheme = 'dark') {
-    currentScheme = scheme === 'dark' ? DARK_SCHEME : LIGHT_SCHEME;
+/**
+ * Switches the website's color scheme between light and dark modes.
+ * @param {string} [scheme] - The desired color scheme ('dark' or 'light').
+ */
+export function switchScheme(scheme) {
+    if (!scheme) {
+        scheme = localStorage.getItem('useDarkScheme') === 'false' ? 'light' : 'dark';
+    }
     const htmlElement = document.documentElement;
-    htmlElement.setAttribute('data-bs-theme', scheme === 'dark' ? 'dark': 'light');
+    htmlElement.setAttribute('data-bs-theme', scheme);
+    currentScheme = scheme === 'dark' ? DARK_SCHEME : LIGHT_SCHEME;
+    localStorage.setItem('useDarkScheme', scheme === 'dark' ? 'true' : 'false');
 }
 switchScheme();
 
