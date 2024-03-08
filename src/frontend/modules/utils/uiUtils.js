@@ -161,14 +161,18 @@ export function setupDynamicClockToggle() {
     const roundClock = document.getElementById('roundClock');
     const dynamicClock = document.getElementById('dynamicClock');
     const useDynamicClock = document.getElementById('useDynamicClock');
-    initializeState('useDynamicClock');
+
+    const isDynamicClock = initializeState('useDynamicClock');
+    useDynamicClock.checked = isDynamicClock;
 
     roundClock.addEventListener('click', () => {
         useDynamicClock.checked = false;
+        localStorage.setItem('useDynamicClock', 'false');
     })
 
     dynamicClock.addEventListener('click', () => {
         useDynamicClock.checked = true;
+        localStorage.setItem('useDynamicClock', 'true');
     })
 }
 
