@@ -9,7 +9,7 @@ import { StatusBar } from '@capacitor/status-bar';
 
 import { language, useTwentyFourHour } from '../clock/clockUpdater';
 import * as deviceUtils from './deviceUtils';
-import { updateCameraZoom } from '../managers/sceneManager';
+import { initializeState, updateCameraZoom } from '../managers/sceneManager';
 import { timeManager } from '../managers/timeManager';
 import * as colorManager from '../managers/colorManager';
 
@@ -129,16 +129,10 @@ export function setupZoomControls() {
  * Initializes the controls for toggling between light and dark color scheme.
  */
 export function setupColorSchemeToggle() {
-    const lightScheme = document.getElementById('lightScheme');
-    const darkScheme = document.getElementById('darkScheme');
     const useDarkScheme = document.getElementById('useDarkScheme');
 
-    lightScheme.addEventListener('click', () => {
-        useDarkScheme.checked = false;
-    });
-
-    darkScheme.addEventListener('click', () => {
-        useDarkScheme.checked = true;
+    useDarkScheme.addEventListener('change', () => {
+        colorManager.switchScheme(useDarkScheme.checked ? 'dark' : 'light');
     });
 }
 
@@ -149,6 +143,7 @@ export function setupTimeFormatToggle() {
     const twelveHour = document.getElementById('twelveHour');
     const twentyFourHour = document.getElementById('twentyFourHour');
     const useTwentyFourHour = document.getElementById('useTwentyFourHour');
+    initializeState('useTwentyFourHour');
 
     twelveHour.addEventListener('click', () => {
         useTwentyFourHour.checked = false;
@@ -167,29 +162,47 @@ export function setupDynamicClockToggle() {
     const dynamicClock = document.getElementById('dynamicClock');
     const useDynamicClock = document.getElementById('useDynamicClock');
 
+    const isDynamicClock = initializeState('useDynamicClock');
+    useDynamicClock.checked = isDynamicClock;
+
     roundClock.addEventListener('click', () => {
         useDynamicClock.checked = false;
+        localStorage.setItem('useDynamicClock', 'false');
     })
 
     dynamicClock.addEventListener('click', () => {
         useDynamicClock.checked = true;
+        localStorage.setItem('useDynamicClock', 'true');
     })
 }
 
 /**
- * Sets the language based on the user's browser settings.
+ * Sets the language based on localStorage or the user's browser settings.
  */
-export function setLanuage() {
-    const userLanguage = navigator.language || navigator.userLanguage;
+export function setLanguage() {
+    let languageSetting = localStorage.getItem('language');
+
+    if (!languageSetting) {
+        const userLanguage = navigator.language || 'en-US';
+        languageSetting = userLanguage;
+    }
 
     const selectElement = document.getElementById('languageSelect');
+    let languageFound = false;
+
     for (let i = 0; i < selectElement.options.length; i++) {
         const option = selectElement.options[i];
-
-        if (userLanguage.startsWith(option.value.split('-')[0])) {
+        if (languageSetting.startsWith(option.value.split('-')[0])) {
             option.selected = true;
+            languageFound = true;
+            localStorage.setItem('language', option.value);
             break;
         }
+    }
+
+    if (!languageFound) {
+        selectElement.value = 'en-US';
+        localStorage.setItem('language', 'en-US');
     }
 }
 
@@ -210,18 +223,23 @@ export function toggleButton(btnEl, state) {
 }
 
 /**
- *  Sets the color scheme based on the user's system preference.
+ * Sets the color scheme based on the user or system preference.
  */
 export function setColorScheme() {
-    const colorScheme = deviceUtils.detectSystemColorScheme();
+    let preferredScheme = localStorage.getItem('useDarkScheme');
     const darkSchemeSelector = document.getElementById('useDarkScheme');
-    if (colorScheme === 'light') {
-        colorManager.switchScheme('light');
-        darkSchemeSelector.checked = false;
+
+    // If user preference exists in localStorage, apply it
+    if (preferredScheme !== null) {
+        preferredScheme = preferredScheme === 'true';
+        colorManager.switchScheme(preferredScheme ? 'dark' : 'light');
+        darkSchemeSelector.checked = preferredScheme;
     } else {
-        colorManager.switchScheme('dark');
-        darkSchemeSelector.checked = true;
-    };
+        // Otherwise, use system preference
+        const systemScheme = deviceUtils.detectSystemColorScheme();
+        colorManager.switchScheme(systemScheme);
+        darkSchemeSelector.checked = (systemScheme === 'dark');
+    }
 }
 
 /**

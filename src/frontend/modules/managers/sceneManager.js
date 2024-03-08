@@ -262,3 +262,26 @@ export async function initializeScene() {
     animate();
     onWindowResize(); // To update the camera and renderer
 }
+
+/**
+ * Initializes the state of a specified element based on its saved value in localStorage.
+ * If value exists, it uses the element's current checked state and saves it to localStorage.
+ * 
+ * @param {string} id The ID of the HTML element to initialize.
+ * @returns {boolean} The final state of the element based on localStorage or its current state.
+ */
+export function initializeState(id) {
+    // Check if the setting exists in localStorage
+    let storedValue = localStorage.getItem(id);
+    if (storedValue !== null) {
+        // If it does, parse the stored string value to a boolean
+        storedValue = storedValue === 'true';
+        document.getElementById(id).checked = storedValue;
+        return storedValue;
+    } else {
+        // If it doesn't exist, use the current checkbox value and update localStorage
+        const currentValue = document.getElementById(id).checked;
+        localStorage.setItem(id, currentValue);
+        return currentValue;
+    }
+}
