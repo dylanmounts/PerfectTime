@@ -116,12 +116,12 @@ export function updateClock(scene, digitalFont, dayDateFont, hoursFont, minutesF
 function calculateHourAngle(hours, minutes, seconds) {
     return (Math.PI / 6) * hours + 
            (Math.PI / 360) * minutes + 
-           (Math.PI / 21600) * seconds
+           (Math.PI / 21600) * seconds;
 }
 
 function calculateMinuteAngle(minutes, seconds) {
     return (Math.PI / 30) * minutes + 
-           (Math.PI / 1800) * seconds
+           (Math.PI / 1800) * seconds;
 }
 
 function calculateSecondAngle(seconds) {
@@ -156,7 +156,7 @@ function updateClockStyle(scene, hoursFont, minutesFont) {
 
     if ((useDarkScheme !== lastColorScheme)) {
         switchScheme(useDarkScheme ? 'dark' : 'light');
-        materialsJs.rebuildMaterials()
+        materialsJs.rebuildMaterials();
     }
 
     resizeHandled = false;
