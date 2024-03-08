@@ -13,7 +13,7 @@ import * as THREE from 'three';
 
 import * as constantsJs from '../constants.js';
 import { switchScheme } from '../managers/colorManager.js';
-import { dynamicClockRatio, updateCamera, updateCameraSlider } from '../managers/sceneManager.js';
+import * as sceneManagerJs from '../managers/sceneManager.js';
 import { timeManager } from '../managers/timeManager.js';
 import { updateTitleTime } from '../utils/uiUtils.js';
 import { distanceToEdge, scaleValue } from '../utils/sizeUtils.js';
@@ -99,7 +99,7 @@ export function updateClock(scene, digitalFont, dayDateFont, hoursFont, minutesF
     updateClockStyle(scene, hoursFont, minutesFont);
     updateLanguage();
     updateTimeFormat();
-    updateCameraSlider();
+    sceneManagerJs.updateCameraSlider();
     updateTimeOffset();
     updateDigitalDisplay(scene, digitalFont);
     updateDayDateDisplay(scene, dayDateFont);
@@ -162,7 +162,7 @@ function updateClockStyle(scene, hoursFont, minutesFont) {
     resizeHandled = false;
     destroyClock(scene);
     addClock(scene, hoursFont, minutesFont, useDynamicClock);
-    updateCamera(useDynamicClock);
+    sceneManagerJs.updateCamera(useDynamicClock);
 
     lastClockShape = useDynamicClock;
     lastColorScheme = useDarkScheme;
@@ -217,9 +217,9 @@ export function updateDayDateDisplay(scene, font) {
     // Position the display
     let centerY;
     if (useDynamicClock) {
-        centerY = dynamicClockRatio < 1
-            ? constantsJs.DAY_DATE_BASE_Y / dynamicClockRatio
-            : constantsJs.DAY_DATE_BASE_Y / (dynamicClockRatio / 1.5)
+        centerY = sceneManagerJs.dynamicClockRatio < 1
+            ? constantsJs.DAY_DATE_BASE_Y / sceneManagerJs.dynamicClockRatio
+            : constantsJs.DAY_DATE_BASE_Y / (sceneManagerJs.dynamicClockRatio / 1.5)
     } else {
         centerY = constantsJs.DAY_DATE_BASE_Y * 2
     }
@@ -312,9 +312,9 @@ export function updateDigitalDisplay(scene, font) {
     // Position the display
     let centerY;
     if (useDynamicClock) {
-        centerY = dynamicClockRatio < 1
-            ? constantsJs.DIGITAL_DISPLAY_BASE_Y / dynamicClockRatio
-            : constantsJs.DIGITAL_DISPLAY_BASE_Y / (dynamicClockRatio / 1.5)
+        centerY = sceneManagerJs.dynamicClockRatio < 1
+            ? constantsJs.DIGITAL_DISPLAY_BASE_Y / sceneManagerJs.dynamicClockRatio
+            : constantsJs.DIGITAL_DISPLAY_BASE_Y / (sceneManagerJs.dynamicClockRatio / 1.5)
     } else {
         centerY = constantsJs.DIGITAL_DISPLAY_BASE_Y * 2
     }
@@ -459,7 +459,7 @@ export function updateHourHand(scene, angle) {
         ? Math.min(edgeScaledLength, minuteScaledLength)
         : edgeScaledLength;
 
-    const baseHandLength = dynamicClockRatio < 1
+    const baseHandLength = sceneManagerJs.dynamicClockRatio < 1
         ? distanceToEdge(0) * 2/3
         : distanceToEdge(Math.PI / 2) * 2/3; 
 
@@ -498,7 +498,7 @@ export function updateMinuteHand(scene, angle) {
         ? distanceToEdge(angle)
         : constantsJs.MINUTE_HAND_BASE_LENGTH;
 
-    const baseHandLength = dynamicClockRatio < 1
+    const baseHandLength = sceneManagerJs.dynamicClockRatio < 1
         ? distanceToEdge(0)
         : distanceToEdge(Math.PI / 2);
 
@@ -538,7 +538,7 @@ export function updateSecondHand(scene, angle) {
         ? distanceToEdge(angle)
         : constantsJs.SECOND_HAND_BASE_LENGTH;
 
-    const baseHandLength = dynamicClockRatio < 1
+    const baseHandLength = sceneManagerJs.dynamicClockRatio < 1
         ? distanceToEdge(0)
         : distanceToEdge(Math.PI / 2);
 
