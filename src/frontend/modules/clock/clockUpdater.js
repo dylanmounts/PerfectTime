@@ -163,6 +163,7 @@ function updateClockStyle(scene, hoursFont, minutesFont) {
     destroyClock(scene);
     addClock(scene, hoursFont, minutesFont, useDynamicClock);
     sceneManagerJs.updateCamera(useDynamicClock);
+    localStorage.setItem('useDynamicClock', useDynamicClock);
 
     lastClockShape = useDynamicClock;
     lastColorScheme = useDarkScheme;
