@@ -30,7 +30,7 @@ UIUtils.setupToastToggle('optionsMenuBtn', 'optionsMenu');
 UIUtils.setupToastToggle('infoMenuBtn', 'infoMenu');
 UIUtils.setupFullscreenToggle();
 UIUtils.adjustToastsForTouch();
-UIUtils.setLanuage();
+UIUtils.setLanguage();
 UIUtils.setColorScheme();
 UIUtils.setupColorSchemeToggle();
 UIUtils.setupTimeFormatToggle();
