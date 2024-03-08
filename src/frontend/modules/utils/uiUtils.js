@@ -319,12 +319,25 @@ export function adjustToastsForTouch() {
 }
 
 /**
+ * Handles changes when the app becomes visible after being inactive
+ */
+function handleVisibilityChange() {
+    if (!document.hidden) {
+        updateTitleTime();
+    }
+}
+
+/**
  * Sets the interval for updating the time displayed in the HTML title.
  */
 export function setupTitleTime() {
     setInterval(() => {
         updateTitleTime();
     }, 250);
+    document.addEventListener(
+        "visibilitychange",
+        handleVisibilityChange
+    );
 }
 
 /**
