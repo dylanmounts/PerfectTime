@@ -177,21 +177,32 @@ export function setupDynamicClockToggle() {
 }
 
 /**
- * Sets the language based on the user's browser settings.
+ * Sets the language based on localStorage or the user's browser settings.
  */
-export function setLanuage() {
-    const userLanguage = navigator.language || navigator.userLanguage;
-    localStorage.setItem('language', 'en-US')
+export function setLanguage() {
+    let languageSetting = localStorage.getItem('language');
+
+    if (!languageSetting) {
+        const userLanguage = navigator.language || 'en-US';
+        languageSetting = userLanguage;
+    }
 
     const selectElement = document.getElementById('languageSelect');
+    let languageFound = false;
+
     for (let i = 0; i < selectElement.options.length; i++) {
         const option = selectElement.options[i];
-
-        if (userLanguage.startsWith(option.value.split('-')[0])) {
+        if (languageSetting.startsWith(option.value.split('-')[0])) {
             option.selected = true;
+            languageFound = true;
             localStorage.setItem('language', option.value);
             break;
         }
+    }
+
+    if (!languageFound) {
+        selectElement.value = 'en-US';
+        localStorage.setItem('language', 'en-US');
     }
 }
 
