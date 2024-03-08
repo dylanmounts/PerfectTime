@@ -46,7 +46,7 @@ export const createClockHand = (tipWidth, baseWidth, baseOffset, handLength, sca
     tipWidth = isDynamic
         ? scaleValue(tipWidth * scale)
         : tipWidth * scale;
-    baseOffset *= scale
+    baseOffset *= scale;
 
     shape.moveTo(0, -baseOffset);
     shape.lineTo(-baseWidth / 2, 0);
