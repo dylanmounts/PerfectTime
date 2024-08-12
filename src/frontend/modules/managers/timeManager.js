@@ -16,7 +16,6 @@ class TimeManager {
     constructor() {
         this.timeOffset = null;
         this.currentTimeStr = null;
-        this.nextTimeStr = null;
         this.fetchPerfectTime();
     }
 
@@ -58,49 +57,13 @@ class TimeManager {
         }
 
         const currentTime = new Date(Date.now() + this.timeOffset);
-        if (!this.currentTimeStr || !this.nextTimeStr) {
-            this.currentTimeStr = this.generateTimeString(currentTime);
-            this.prepareNextTimeString(currentTime);
-        } else {
-            this.currentTimeStr = this.nextTimeStr;
-            this.prepareNextTimeString(currentTime);
-        }
+        this.currentTimeStr = this.generateTimeString(currentTime);
 
         return currentTime;
     }
 
     /**
-     * Asynchronously prepares the string representation of the next second's time.
-     *
-     * @param {Date} currentTime The current time from which the next time string is calculated.
-     */
-    async prepareNextTimeString(currentTime) {
-        const nextTime = new Date(currentTime.getTime() + 1000);
-        this.nextTimeStr = await this.generateTimeStringAsync(nextTime);
-    }
-
-    /**
-     * Asynchronously generates a string representation of the provided time.
-     * 
-     * @param {Date} time The time to be formatted into a string.
-     * @returns {Promise<string>} A promise that resolves with the formatted time string.
-     */
-    async generateTimeStringAsync(time) {
-        return new Promise(resolve => {
-            let digitalTime = time.toLocaleTimeString(language, {
-                hour12: !useTwentyFourHour,
-                hour: 'numeric',
-                minute: '2-digit',
-                second: '2-digit'
-            });
-            digitalTime = digitalTime.replace(/^24/, '00');
-
-            resolve(`\u007C\u200B${digitalTime}\u200B\u007C`);
-        });
-    }
-
-    /**
-     * Generates a string representation of the provided time, intended for immediate display.
+     * Generates a string representation of the provided time.
      *
      * @param {Date} time The time to be formatted into a string.
      * @returns {string} The formatted time string.
