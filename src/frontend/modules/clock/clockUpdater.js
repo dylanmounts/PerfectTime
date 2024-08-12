@@ -299,11 +299,11 @@ export function updateDigitalDisplay(scene, font) {
 
     // Use the next digital time string, unless it needs to be updated
     let timeStr;
-    if (language !== lastLanguage || useTwentyFourHour !== lastTimeFormat || !timeManager.nextTimeStr) {
+    if (language !== lastLanguage || useTwentyFourHour !== lastTimeFormat || !timeManager.currentTimeStr) {
         timeStr = timeManager.generateTimeString(currentTime);
         updateTitleTime(true);
     } else {
-        timeStr = timeManager.nextTimeStr;
+        timeStr = timeManager.currentTimeStr;
     }
 
     // Create and add new digital time display
